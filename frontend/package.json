@@ -1,0 +1,30 @@
+{
+  "name": "frontend",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:preview": "vitest-preview",
+    "test:ui": "vitest --ui",
+    "test:ui:coverage": "vitest --watch --ui --coverage",
+    "test:watch": "vitest --watch",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "4.1.18",
+    "astro": "5.17.1",
+    "tailwindcss": "4.1.18"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "10.4.1",
+    "@vitest/coverage-v8": "4.0.18",
+    "@vitest/ui": "4.0.18",
+    "happy-dom": "20.6.1",
+    "vitest": "4.0.18",
+    "vitest-preview": "0.0.3"
+  }
+}
