@@ -1,18 +1,22 @@
 {
   "name": "frontend",
-  "type": "module",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
-    "dev": "astro dev",
+    "astro": "astro",
     "build": "astro build",
+    "dev": "astro dev",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "preview": "astro preview",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "test:preview": "vitest-preview",
     "test:ui": "vitest --ui",
     "test:ui:coverage": "vitest --watch --ui --coverage",
-    "test:watch": "vitest --watch",
-    "astro": "astro"
+    "test:watch": "vitest --watch"
   },
   "dependencies": {
     "@tailwindcss/vite": "4.1.18",
@@ -24,7 +28,12 @@
     "@vitest/coverage-v8": "4.0.18",
     "@vitest/ui": "4.0.18",
     "happy-dom": "20.6.1",
+    "oxfmt": "0.31.0",
+    "oxlint": "1.46.0",
     "vitest": "4.0.18",
     "vitest-preview": "0.0.3"
+  },
+  "lint-staged": {
+    "*": "oxfmt --no-error-on-unmatched-pattern"
   }
 }
