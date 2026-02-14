@@ -7,7 +7,7 @@ type AstroComponentFactory = Parameters<AstroContainer["renderToString"]>[0];
 export async function renderAstroComponent(
   Component: AstroComponentFactory,
   options: ContainerRenderOptions = {}
-) {
+): Promise<DocumentFragment> {
   const container = await AstroContainer.create();
   const result = await container.renderToString(Component, options);
 
