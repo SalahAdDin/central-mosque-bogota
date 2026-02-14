@@ -19,8 +19,25 @@ export default defineConfig([
   },
   // TODO: bug ESLINT 10 support
   // sonarjs.configs.recommended,
+  tseslint.configs.strict,
+  tseslint.configs.stylistic,
+  /* TODO: https://github.com/typescript-eslint/typescript-eslint/issues/11952
+  tseslint.configs.strictTypeChecked,
+  tseslint.configs.stylisticTypeChecked,
   {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+      },
+    },
+  }, */
+  // TODO: bug ESLINT 10 support: https://github.com/eslint-stylistic/eslint-stylistic/issues/1124
+  // stylistic.configs.recommended,
+  // TODO: bug ESLINT 10 support: https://github.com/un-ts/eslint-plugin-import-x/issues/421
+  // importX.configs.recommended,
+  importX.configs.typescript,
+  {
+    files: ["**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"],
     // ...importX.configs.recommended,
     plugins: { js, "import-x": importX, "@stylistic": stylistic },
     /*     extends: [
@@ -57,31 +74,6 @@ export default defineConfig([
       ],
       "@stylistic/quotes": ["error", "double"],
       "@stylistic/semi": ["error", "always"],
-    },
-  },
-  // TODO: bug ESLINT 10 support
-  // astro.configs.recommended,
-  tseslint.configs.strict,
-  tseslint.configs.stylistic,
-  /* TODO: https://github.com/typescript-eslint/typescript-eslint/issues/11952
-  tseslint.configs.strictTypeChecked,
-  tseslint.configs.stylisticTypeChecked,
-  {
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-      },
-    },
-  }, */
-  {
-    files: ["**/*.{ts,tsx,mts,cts}"],
-    extends: [js.configs.recommended, importX.configs.typescript],
-    languageOptions: {
-      parser: tseslint.parser,
-      ecmaVersion: "latest",
-      sourceType: "module",
-    },
-    rules: {
       "@typescript-eslint/array-type": [
         "error",
         {
@@ -112,6 +104,8 @@ export default defineConfig([
       "indent": "off",
     },
   },
+  // TODO: bug ESLINT 10 support: https://github.com/ota-meshi/eslint-plugin-astro/issues/528
+  // astro.configs.recommended,
   {
     files: ["**/*.json"],
     plugins: { json },
