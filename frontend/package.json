@@ -52,5 +52,10 @@
   },
   "lint-staged": {
     "*": "oxfmt --no-error-on-unmatched-pattern"
-  }
+  },
+  "engines": {
+    "node": ">=24",
+    "pnpm": ">=10"
+  },
+  "packageManager": "pnpm@10.29.3"
 }
