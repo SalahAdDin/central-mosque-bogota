@@ -1,19 +1,117 @@
+import css from "@eslint/css";
 import js from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
 import json from "@eslint/json";
 import markdown from "@eslint/markdown";
-import css from "@eslint/css";
+import stylistic from "@stylistic/eslint-plugin";
+import vitest from "@vitest/eslint-plugin";
+// import astro from "eslint-plugin-astro";
+import { importX } from "eslint-plugin-import-x";
+import jestDOM from "eslint-plugin-jest-dom";
+// import sonarjs from "eslint-plugin-sonarjs";
+import testingLibrary from "eslint-plugin-testing-library";
 import { defineConfig } from "eslint/config";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default defineConfig([
   {
-    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
-    plugins: { js },
-    extends: ["js/recommended"],
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
+    ignores: ["coverage", "dist", "node_modules", ".astro", ".github"],
   },
-  tseslint.configs.recommended,
+  // TODO: bug ESLINT 10 support
+  // sonarjs.configs.recommended,
+  {
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
+    // ...importX.configs.recommended,
+    plugins: { js, "import-x": importX, "@stylistic": stylistic },
+    /*     extends: [
+      js.configs.recommended,
+      importX.configs.recommended,
+      stylistic.configs.recommended,
+    ], */
+    extends: [
+      "js/recommended",
+      "import-x/recommended",
+      "@stylistic/recommended",
+    ],
+    languageOptions: { globals: { ...globals.browser, ...globals.node } },
+    rules: {
+      "@stylistic/comma-dangle": [
+        "error",
+        {
+          arrays: "only-multiline",
+          objects: "only-multiline",
+          imports: "only-multiline",
+          exports: "only-multiline",
+          functions: "never",
+        },
+      ],
+      "@stylistic/function-paren-newline": "warn",
+      "@stylistic/implicit-arrow-linebreak": "warn",
+      "@stylistic/linebreak-style": ["error", "unix"],
+      "@stylistic/operator-linebreak": "warn",
+      "@stylistic/object-curly-newline": [
+        "error",
+        {
+          ExportDeclaration: { multiline: true, minProperties: 5 },
+        },
+      ],
+      "@stylistic/quotes": ["error", "double"],
+      "@stylistic/semi": ["error", "always"],
+    },
+  },
+  // TODO: bug ESLINT 10 support
+  // astro.configs.recommended,
+  tseslint.configs.strict,
+  tseslint.configs.stylistic,
+  /* TODO: https://github.com/typescript-eslint/typescript-eslint/issues/11952
+  tseslint.configs.strictTypeChecked,
+  tseslint.configs.stylisticTypeChecked,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+      },
+    },
+  }, */
+  {
+    files: ["**/*.{ts,tsx,mts,cts}"],
+    extends: [js.configs.recommended, importX.configs.typescript],
+    languageOptions: {
+      parser: tseslint.parser,
+      ecmaVersion: "latest",
+      sourceType: "module",
+    },
+    rules: {
+      "@typescript-eslint/array-type": [
+        "error",
+        {
+          default: "generic",
+        },
+      ],
+      "@typescript-eslint/ban-ts-comment": [
+        "error",
+        {
+          "ts-expect-error": "allow-with-description",
+        },
+      ],
+      "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+      "@typescript-eslint/explicit-function-return-type": 1,
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          selector: "typeParameter",
+          format: ["PascalCase"],
+          custom: { regex: "^T[A-Z]", match: true },
+        },
+      ],
+      "import-x/no-extraneous-dependencies": [
+        "error",
+        { devDependencies: true },
+      ],
+      "import-x/no-unresolved": "error",
+      "indent": "off",
+    },
+  },
   {
     files: ["**/*.json"],
     plugins: { json },
@@ -43,5 +141,36 @@ export default defineConfig([
     plugins: { css },
     language: "css/css",
     extends: ["css/recommended"],
+  },
+  {
+    files: ["src/**/*.test.[tj]s?(x)"],
+    ignores: ["src/**/*.e2e.test.[tj]s?(x)"],
+    ...jestDOM.configs["flat/recommended"],
+    ...testingLibrary.configs["flat/react"],
+    ...vitest.configs.recommended,
+    rules: {
+      ...vitest.configs.recommended.rules,
+      "vitest/valid-title": [
+        "error",
+        {
+          mustMatch: {
+            it: [
+              "^should.*when.+$",
+              "Test title must include 'should' and 'when'",
+            ],
+          },
+        },
+      ],
+    },
+    settings: {
+      vitest: {
+        typecheck: true,
+      },
+    },
+    languageOptions: {
+      globals: {
+        ...vitest.environments.env.globals,
+      },
+    },
   },
 ]);
