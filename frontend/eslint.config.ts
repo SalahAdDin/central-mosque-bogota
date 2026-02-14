@@ -4,7 +4,7 @@ import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import stylistic from "@stylistic/eslint-plugin";
 import vitest from "@vitest/eslint-plugin";
-// import astro from "eslint-plugin-astro";
+import astro from "eslint-plugin-astro";
 import { importX } from "eslint-plugin-import-x";
 import jestDOM from "eslint-plugin-jest-dom";
 // import sonarjs from "eslint-plugin-sonarjs";
@@ -104,8 +104,7 @@ export default defineConfig([
       "indent": "off",
     },
   },
-  // TODO: bug ESLINT 10 support: https://github.com/ota-meshi/eslint-plugin-astro/issues/528
-  // astro.configs.recommended,
+  astro.configs.recommended,
   {
     files: ["**/*.json"],
     plugins: { json },
