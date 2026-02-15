@@ -4,13 +4,16 @@ import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import stylistic from "@stylistic/eslint-plugin";
 import vitest from "@vitest/eslint-plugin";
+import parserAstro from "astro-eslint-parser";
 import astro from "eslint-plugin-astro";
+import betterTailwindcss from "eslint-plugin-better-tailwindcss";
 import { importX } from "eslint-plugin-import-x";
 import jestDOM from "eslint-plugin-jest-dom";
 // import sonarjs from "eslint-plugin-sonarjs";
 import testingLibrary from "eslint-plugin-testing-library";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
+import { tailwind4 } from "tailwind-csstree";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
@@ -113,6 +116,21 @@ export default defineConfig([
   },
   astro.configs.recommended,
   {
+    files: ["**/*.astro"],
+    extends: [betterTailwindcss.configs.recommended],
+    settings: {
+      "better-tailwindcss": {
+        entryPoint: "./src/styles/global.css",
+      },
+    },
+    languageOptions: {
+      parser: parserAstro,
+      parserOptions: {
+        parser: tseslint.parser,
+      },
+    },
+  },
+  {
     files: ["**/*.json"],
     plugins: { json },
     language: "json/json",
@@ -141,6 +159,9 @@ export default defineConfig([
     plugins: { css },
     language: "css/css",
     extends: ["css/recommended"],
+    languageOptions: {
+      customSyntax: tailwind4,
+    },
   },
   {
     files: ["src/**/*.test.[tj]s?(x)"],
