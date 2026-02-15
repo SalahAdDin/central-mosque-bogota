@@ -25,6 +25,9 @@
     "tailwindcss": "4.1.18"
   },
   "devDependencies": {
+    "@commitlint/cli": "20.4.1",
+    "@commitlint/config-conventional": "20.4.1",
+    "@commitlint/types": "20.4.0",
     "@eslint/css": "0.14.1",
     "@eslint/js": "10.0.1",
     "@eslint/json": "1.0.1",
@@ -47,7 +50,7 @@
     "globals": "17.3.0",
     "happy-dom": "20.6.1",
     "husky": "9.1.7",
-    "lint-staged": "^16.2.7",
+    "lint-staged": "16.2.7",
     "oxfmt": "0.32.0",
     "typescript-eslint": "8.55.0",
     "vitest": "4.0.18",

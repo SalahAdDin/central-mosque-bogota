@@ -65,6 +65,13 @@ export default defineConfig([
       "@stylistic/function-paren-newline": "warn",
       "@stylistic/implicit-arrow-linebreak": "warn",
       "@stylistic/linebreak-style": ["error", "unix"],
+      "@stylistic/member-delimiter-style": [
+        "error",
+        {
+          multiline: { delimiter: "semi", requireLast: true },
+          singleline: { delimiter: "semi", requireLast: false },
+        },
+      ],
       "@stylistic/operator-linebreak": "warn",
       "@stylistic/object-curly-newline": [
         "error",
