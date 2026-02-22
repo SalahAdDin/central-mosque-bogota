@@ -3,6 +3,14 @@ import { getViteConfig } from "astro/config";
 // import { coverageConfigDefaults } from "vitest/config";
 
 export default getViteConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        banner:
+          "/* ﷽ - In the name of Allah, the Most Gracious, the Most Merciful */",
+      },
+    },
+  },
   test: {
     globals: true,
     clearMocks: true,
