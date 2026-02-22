@@ -9,7 +9,7 @@ import astro from "eslint-plugin-astro";
 import betterTailwindcss from "eslint-plugin-better-tailwindcss";
 import { importX } from "eslint-plugin-import-x";
 import jestDOM from "eslint-plugin-jest-dom";
-// import sonarjs from "eslint-plugin-sonarjs";
+import { configs as sonarjs } from "eslint-plugin-sonarjs";
 import testingLibrary from "eslint-plugin-testing-library";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
@@ -18,42 +18,53 @@ import tseslint from "typescript-eslint";
 
 export default defineConfig([
   {
-    ignores: ["coverage", "dist", "node_modules", ".astro", ".github"],
+    ignores: [
+      "coverage",
+      "dist",
+      "node_modules",
+      ".astro",
+      ".github",
+      ".vscode",
+    ],
   },
-  // TODO: bug ESLINT 10 support
-  // sonarjs.configs.recommended,
-  tseslint.configs.strict,
-  tseslint.configs.stylistic,
-  /* TODO: https://github.com/typescript-eslint/typescript-eslint/issues/11952
-  tseslint.configs.strictTypeChecked,
-  tseslint.configs.stylisticTypeChecked,
   {
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-      },
+    ...sonarjs.recommended,
+    ignores: ["**/*.{json,md,css}"],
+    rules: {
+      "sonarjs/todo-tag": "warn",
     },
-  }, */
-  // TODO: bug ESLINT 10 support: https://github.com/eslint-stylistic/eslint-stylistic/issues/1124
-  // stylistic.configs.recommended,
+  },
+  // Uncomment to enable TypeScript support without type checking to fast linting
+  // https://typescript-eslint.io/getting-started/typed-linting/#performance
+  // tseslint.configs.strict,
+  // tseslint.configs.stylistic,
+  // TODO: bug Astro support https://github.com/eslint-stylistic/eslint-stylistic/issues/259
+  stylistic.configs.recommended,
   // TODO: bug ESLINT 10 support: https://github.com/un-ts/eslint-plugin-import-x/issues/421
   // importX.configs.recommended,
   importX.configs.typescript,
   {
+    // ...sonarjs.recommended,
     files: ["**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"],
     // ...importX.configs.recommended,
-    plugins: { js, "import-x": importX, "@stylistic": stylistic },
+    plugins: { js, "import-x": importX },
     /*     extends: [
       js.configs.recommended,
       importX.configs.recommended,
       stylistic.configs.recommended,
-    ], */
+      ], */
     extends: [
       "js/recommended",
       "import-x/recommended",
-      "@stylistic/recommended",
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
     ],
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+      parserOptions: {
+        projectService: true,
+      },
+    },
     rules: {
       "@stylistic/comma-dangle": [
         "error",
@@ -116,11 +127,13 @@ export default defineConfig([
   },
   astro.configs.recommended,
   {
+    // ...sonarjs.recommended,
     files: ["**/*.astro"],
     extends: [betterTailwindcss.configs.recommended],
     settings: {
       "better-tailwindcss": {
         entryPoint: "./src/styles/global.css",
+        detectComponentClasses: true,
       },
     },
     languageOptions: {
@@ -129,23 +142,20 @@ export default defineConfig([
         parser: tseslint.parser,
       },
     },
+    // TODO: bug https://github.com/eslint-stylistic/eslint-stylistic/issues/259
+    rules: {
+      "@stylistic/arrow-parens": "warn",
+      "@stylistic/jsx-one-expression-per-line": "warn",
+      "@stylistic/member-delimiter-style": "warn",
+      "@stylistic/multiline-ternary": "warn",
+      "@stylistic/quotes": "warn",
+      "@stylistic/semi": "warn",
+    },
   },
   {
     files: ["**/*.json"],
     plugins: { json },
     language: "json/json",
-    extends: ["json/recommended"],
-  },
-  {
-    files: ["**/*.jsonc"],
-    plugins: { json },
-    language: "json/jsonc",
-    extends: ["json/recommended"],
-  },
-  {
-    files: ["**/*.json5"],
-    plugins: { json },
-    language: "json/json5",
     extends: ["json/recommended"],
   },
   {
