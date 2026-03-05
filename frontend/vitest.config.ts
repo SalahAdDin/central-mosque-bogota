@@ -1,7 +1,14 @@
-/// <reference types="vitest/config" />
 import { getViteConfig } from "astro/config";
-// import { coverageConfigDefaults } from "vitest/config";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { coverageConfigDefaults } from "vitest/config";
 
+const dirname
+  = typeof __dirname !== "undefined"
+    ? __dirname
+    : path.dirname(fileURLToPath(import.meta.url));
+
+// TODO: Astro v6 requires Vitest 4.1 to avoid issues
 export default getViteConfig({
   build: {
     rollupOptions: {
@@ -11,16 +18,25 @@ export default getViteConfig({
       },
     },
   },
+  resolve: {
+    alias: {
+      "@components": path.resolve(dirname, "src/components"),
+      "@layouts": path.resolve(dirname, "src/layouts"),
+      "@styles": path.resolve(dirname, "src/styles"),
+      "@utils": path.resolve(dirname, "src/utils"),
+      "@": path.resolve(dirname, "src"),
+    },
+  },
   test: {
     globals: true,
-    clearMocks: true,
     css: true,
-    include: ["src/**/*.{test,spec}.{astro,js,jsx,ts,tsx}"],
-    exclude: ["tests"],
+    clearMocks: true,
+    restoreMocks: true,
+    passWithNoTests: true,
     coverage: {
-      //   exclude: [...coverageConfigDefaults.exclude],
+      exclude: [...coverageConfigDefaults.exclude],
       provider: "v8",
-      reporter: ["text", "html"],
+      reporter: ["html", "verbose"],
       thresholds: {
         branches: 90,
         functions: 95,
@@ -28,8 +44,17 @@ export default getViteConfig({
         statements: 80,
       },
     },
-    passWithNoTests: true,
-    environment: "happy-dom",
-    setupFiles: ["./src/vitest.setup.ts"],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: "unit",
+          include: ["src/**/*.{test,spec}.{astro,js,jsx,ts,tsx}"],
+          exclude: ["tests"],
+          environment: "node",
+          setupFiles: ["./src/vitest.setup.ts"],
+        },
+      },
+    ],
   },
 });
