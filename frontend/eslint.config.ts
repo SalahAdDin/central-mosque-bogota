@@ -11,22 +11,20 @@ import { importX } from "eslint-plugin-import-x";
 import jestDOM from "eslint-plugin-jest-dom";
 import { configs as sonarjs } from "eslint-plugin-sonarjs";
 import testingLibrary from "eslint-plugin-testing-library";
-import { defineConfig } from "eslint/config";
+import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 import { tailwind4 } from "tailwind-csstree";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-  {
-    ignores: [
-      "coverage",
-      "dist",
-      "node_modules",
-      ".astro",
-      ".github",
-      ".vscode",
-    ],
-  },
+  globalIgnores([
+    "coverage",
+    "dist",
+    "node_modules",
+    ".astro",
+    ".github",
+    ".vscode",
+  ]),
   {
     ...sonarjs.recommended,
     ignores: ["**/*.{json,md,css}"],
@@ -39,8 +37,8 @@ export default defineConfig([
   // tseslint.configs.strict,
   // tseslint.configs.stylistic,
   // TODO: bug Astro support https://github.com/eslint-stylistic/eslint-stylistic/issues/259
-  stylistic.configs.recommended,
   // TODO: bug ESLINT 10 support: https://github.com/un-ts/eslint-plugin-import-x/issues/421
+  stylistic.configs.recommended,
   // importX.configs.recommended,
   importX.configs.typescript,
   {
@@ -48,11 +46,13 @@ export default defineConfig([
     files: ["**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"],
     // ...importX.configs.recommended,
     plugins: { js, "import-x": importX },
-    /*     extends: [
+    /*
+    extends: [
       js.configs.recommended,
       importX.configs.recommended,
       stylistic.configs.recommended,
-      ], */
+    ],
+    */
     extends: [
       "js/recommended",
       "import-x/recommended",
@@ -127,7 +127,6 @@ export default defineConfig([
   },
   astro.configs.recommended,
   {
-    // ...sonarjs.recommended,
     files: ["**/*.astro"],
     extends: [betterTailwindcss.configs.recommended],
     settings: {
