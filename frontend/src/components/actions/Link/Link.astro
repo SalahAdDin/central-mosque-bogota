@@ -1,0 +1,281 @@
+---
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@utils/styles.utils";
+import type { IconPosition } from "@utils/ui.constants";
+
+/**
+ * @component Link
+ * @title Link
+ * @description A semantic text link for navigation and inline actions.
+ * @figmaUrl https://www.figma.com/design/koxai7zw5vIuBzuVxe5T2l/bejamas-ui?node-id=2609-10438&t=YFStJ3V8fXEO8QD8-4
+ *
+ * @preview
+ *
+ * <div class="flex flex-wrap items-center gap-3 md:flex-row">
+ *   <Link href="/">Default link</Link>
+ *   <Link href="/" color="secondary">Secondary link</Link>
+ *   <Link href="/" disabled={true}>Disabled link</Link>
+ * </div>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import Link from "@components/actions/Link.astro";
+ * ---
+ *
+ * <Link href="/about">About us</Link>
+ * ```
+ *
+ * ## External link
+ *
+ * External links automatically receive appropriate `target` and `rel` attributes.
+ *
+ * ```astro nocollapse
+ * ---
+ * import Link from "@components/actions/Link.astro";
+ * ---
+ *
+ * <Link href="https://example.com">
+ *   Visit example.com
+ * </Link>
+ * ```
+ *
+ * @examples
+ *
+ * ### Sizes
+ *
+ * <div class="flex flex-col items-start gap-4 sm:flex-row">
+ *   <Link href="/" size="xs">Extra small</Link>
+ *   <Link href="/" size="sm">Small</Link>
+ *   <Link href="/" size="md">Medium</Link>
+ *   <Link href="/" size="lg">Large</Link>
+ *   <Link href="/" size="xl">Extra large</Link>
+ * </div>
+ *
+ * ### Colors
+ *
+ * <div class="flex flex-col items-start gap-4 sm:flex-row">
+ *   <Link href="/" color="primary">Primary</Link>
+ *   <Link href="/" color="secondary">Secondary</Link>
+ *   <Link href="/" color="accent">Accent</Link>
+ *   <Link href="/" color="info">Info</Link>
+ *   <Link href="/" color="success">Success</Link>
+ *   <Link href="/" color="warning">Warning</Link>
+ *   <Link href="/" color="error">Error</Link>
+ * </div>
+ *
+ * ### Icon positions
+ *
+ * <div class="flex flex-col items-start gap-4 sm:flex-row">
+ *   <Link href="/" Icon={ArrowUpRightIcon} iconPosition="leading">
+ *     Leading icon
+ *   </Link>
+ *   <Link href="/" Icon={ArrowUpRightIcon} iconPosition="trailing">
+ *     Trailing icon
+ *   </Link>
+ * </div>
+ *
+ * ### Icon only
+ *
+ * <div class="flex items-start gap-3">
+ *   <Link
+ *     href="/"
+ *     onlyIcon={true}
+ *     ariaLabel="Open"
+ *     Icon={ArrowUpRightIcon}
+ *   />
+ *   <Link
+ *     href="/"
+ *     onlyIcon={true}
+ *     color="secondary"
+ *     ariaLabel="Go to docs"
+ *     Icon={BookIcon}
+ *   />
+ * </div>
+ *
+ * ### Disabled
+ *
+ * <Link href="/" disabled={true}>
+ *   Disabled navigation
+ * </Link>
+ */
+
+type AstroIconComponent = (props: Record<string, unknown>) => unknown;
+
+const linkVariants = cva(
+  `
+    inline-flex items-center gap-1 font-medium
+    transition-colors
+    focus-visible:outline-2 focus-visible:outline-offset-4
+  `,
+  {
+    variants: {
+      size: {
+        xs: "text-xs",
+        sm: "text-sm",
+        md: "text-base",
+        lg: "text-base",
+        xl: "text-lg",
+      },
+      color: {
+        navbar: `
+          text-inherit
+          hover:text-white
+          focus-visible:outline-white
+        `,
+        neutral: `
+          text-slate-700
+          hover:text-slate-900
+          focus-visible:outline-slate-300
+        `,
+        primary: `
+          text-primary
+          hover:text-primary/90
+          focus-visible:outline-primary/40
+        `,
+        secondary: `
+          text-secondary
+          hover:text-secondary/90
+          focus-visible:outline-secondary/40
+        `,
+        accent: `
+          text-amber-700
+          hover:text-amber-800
+          focus-visible:outline-amber-300
+        `,
+        info: `
+          text-sky-700
+          hover:text-sky-800
+          focus-visible:outline-sky-300
+        `,
+        success: `
+          text-emerald-700
+          hover:text-emerald-800
+          focus-visible:outline-emerald-300
+        `,
+        warning: `
+          text-amber-700
+          hover:text-amber-800
+          focus-visible:outline-amber-300
+        `,
+        error: `
+          text-red-700
+          hover:text-red-800
+          focus-visible:outline-red-300
+        `,
+      },
+      disabledStyle: {
+        true: `
+          cursor-not-allowed line-through opacity-60
+          hover:text-inherit
+        `,
+      },
+    },
+    defaultVariants: {
+      size: "md",
+      color: "primary",
+    },
+  },
+);
+
+type LinkVariants = VariantProps<typeof linkVariants>;
+
+interface Props extends LinkVariants {
+  /**
+   * Destination URL of the link. When `disabled` is true the href is removed.
+   */
+  href?: string;
+  /**
+   * Accessible label for assistive technologies.
+   * Recommended when `onlyIcon` is true and there is no visible text.
+   */
+  ariaLabel?: string;
+  /**
+   * Additional Tailwind classes merged via `cn`.
+   * Useful for one-off overrides from the consuming component.
+   */
+  classes?: string;
+  /**
+   * Optional icon component rendered inside the link.
+   */
+  Icon?: AstroIconComponent;
+  /**
+   * Icon placement relative to the link content when `onlyIcon` is false.
+   * - `leading`: icon before the text
+   * - `trailing`: icon after the text
+   */
+  iconPosition?: IconPosition;
+  /**
+   * When true, renders the link as an icon-only control.
+   * The icon is centered and the underline is removed.
+   */
+  onlyIcon?: boolean;
+  /**
+   * When true, visually and functionally disables the link.
+   * Applies a strike-through style, disables pointer events and sets aria-disabled.
+   */
+  disabled?: boolean;
+  /**
+   * Any other attributes are forwarded to the underlying <a> element.
+   * For example: target, rel, data-* attributes or event handlers.
+   */
+  [key: string]: unknown;
+}
+
+const {
+  size = "md",
+  color = "primary",
+  onlyIcon = false,
+  disabled = false,
+  href,
+  ariaLabel,
+  classes,
+  Icon,
+  iconPosition = "leading",
+  ...rest
+} = Astro.props as Props;
+
+const isExternal = typeof href === "string" && /^https?:\/\//.test(href ?? "");
+
+const targetFromProps = rest.target as string | undefined;
+const relFromProps = rest.rel as string | undefined;
+
+const target =
+  targetFromProps ?? (isExternal && !disabled ? "_blank" : undefined);
+
+const rel =
+  relFromProps ?? (isExternal && !disabled ? "noreferrer noopener" : undefined);
+
+const classesMerged = cn(
+  linkVariants({
+    size,
+    color,
+    disabledStyle: disabled,
+  }),
+  disabled && "pointer-events-none",
+  classes,
+);
+---
+
+<a
+  href={disabled ? undefined : href}
+  class={classesMerged}
+  aria-disabled={disabled || undefined}
+  aria-label={ariaLabel}
+  target={target}
+  rel={rel}
+  {...rest}
+>
+  {
+    onlyIcon && Icon ? (
+      <Icon />
+    ) : (
+      <>
+        {iconPosition === "leading" && Icon && <Icon />}
+        <slot />
+        {iconPosition === "trailing" && Icon && <Icon />}
+      </>
+    )
+  }
+</a>

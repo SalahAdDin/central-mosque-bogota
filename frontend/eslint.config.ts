@@ -24,7 +24,6 @@ export default defineConfig([
     ".astro",
     ".github",
     ".vscode",
-    "src/styles/global.css",
   ]),
   {
     ...sonarjs.recommended,

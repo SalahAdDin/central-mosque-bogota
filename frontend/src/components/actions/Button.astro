@@ -1,0 +1,422 @@
+---
+import { cva, type VariantProps } from "class-variance-authority";
+import type { HTMLTag, Polymorphic } from "astro/types";
+
+import { cn } from "@utils/styles.utils";
+import type { IconPosition } from "@utils/ui.constants";
+
+/**
+ * @component Button
+ * @title Button
+ * @description Semantic button component for actions and navigation.
+ * Renders either a `<button>` or an `<a>` depending on the `href` prop and
+ * exposes size, color and variant controls via class-variance-authority.
+ * Supports icon-only and icon-with-label layouts with flexible icon placement.
+ * @figmaUrl
+ *
+ * @preview
+ *
+ * <div class="flex flex-wrap items-center gap-2 md:flex-row">
+ *   <Button>Button</Button>
+ *   <Button
+ *     variant="outline"
+ *     onlyIcon={true}
+ *     ariaLabel="Submit"
+ *     Icon={ArrowUpIcon}
+ *   />
+ * </div>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import Button from "@components/actions/Button.astro";
+ * ---
+ *
+ * <Button>Click me</Button>
+ * ```
+ *
+ * ## Link
+ *
+ * When `href` is provided the component renders as an anchor element.
+ *
+ * ```astro nocollapse
+ * ---
+ * import Button from "@components/actions/Button.astro";
+ * ---
+ *
+ * <Button href="https://centralmosque.co">Visit site</Button>
+ * ```
+ *
+ * @examples
+ *
+ * ### Variants
+ *
+ * <div class="flex flex-col items-start gap-4 sm:flex-row">
+ *   <Button variant="normal">Normal</Button>
+ *   <Button variant="soft">Soft</Button>
+ *   <Button variant="outline">Outline</Button>
+ * </div>
+ *
+ * ### Colors
+ *
+ * <div class="flex flex-col items-start gap-4 sm:flex-row">
+ *   <Button color="primary">Primary</Button>
+ *   <Button color="secondary">Secondary</Button>
+ *   <Button color="accent">Accent</Button>
+ *   <Button color="success">Success</Button>
+ *   <Button color="warning">Warning</Button>
+ *   <Button color="error">Error</Button>
+ * </div>
+ *
+ * ### Sizes
+ *
+ * <div class="flex flex-col items-start gap-6 sm:flex-row">
+ *   <div class="flex items-start gap-2">
+ *     <Button size="xs" variant="outline">
+ *       Extra small
+ *     </Button>
+ *     <Button
+ *       size="xs"
+ *       onlyIcon={true}
+ *       ariaLabel="Submit"
+ *       variant="outline"
+ *       Icon={ArrowUpRightIcon}
+ *     />
+ *   </div>
+ *   <div class="flex items-start gap-2">
+ *     <Button size="md" variant="outline">
+ *       Medium
+ *     </Button>
+ *     <Button
+ *       size="md"
+ *       onlyIcon={true}
+ *       ariaLabel="Submit"
+ *       variant="outline"
+ *       Icon={ArrowUpRightIcon}
+ *     />
+ *   </div>
+ *   <div class="flex items-start gap-2">
+ *     <Button size="xl" variant="outline">
+ *       Extra large
+ *     </Button>
+ *     <Button
+ *       size="xl"
+ *       onlyIcon={true}
+ *       ariaLabel="Submit"
+ *       variant="outline"
+ *       Icon={ArrowUpRightIcon}
+ *     />
+ *   </div>
+ * </div>
+ *
+ * ### Icon positions
+ *
+ * <div class="flex flex-col items-start gap-4 sm:flex-row">
+ *   <Button Icon={ArrowUpRightIcon} iconPosition="leading">
+ *     Leading icon
+ *   </Button>
+ *   <Button Icon={ArrowUpRightIcon} iconPosition="trailing">
+ *     Trailing icon
+ *   </Button>
+ * </div>
+ *
+ * ### Icon only
+ *
+ * <div class="flex items-start gap-2">
+ *   <Button
+ *     onlyIcon={true}
+ *     size="md"
+ *     ariaLabel="Play"
+ *     Icon={PlayIcon}
+ *   />
+ *   <Button
+ *     onlyIcon={true}
+ *     size="lg"
+ *     color="secondary"
+ *     ariaLabel="Search"
+ *     Icon={SearchIcon}
+ *   />
+ * </div>
+ *
+ * ### Full width
+ *
+ * <Button fullWidth={true}>
+ *   Full-width action
+ * </Button>
+ */
+
+type AstroIconComponent = (props: Record<string, unknown>) => unknown;
+/**
+ * Tailwind-based visual variants for the Button component.
+ *
+ * Variants:
+ * - `variant`: surface style (`normal`, `soft`, `outline`)
+ * - `size`: typography and padding scale
+ * - `iconSize`: square size when `onlyIcon` is enabled
+ * - `color`: solid color style for the `normal` variant
+ * - `softColor`: tinted background style for the `soft` variant
+ * - `outlineColor`: bordered style for the `outline` variant
+ * - `fullWidth`: optional `w-full` layout
+ * - `onlyIcon`: removes horizontal padding for icon-only buttons
+ */
+const buttonVariants = cva(
+  `
+    inline-flex items-center justify-center gap-2 rounded-lg font-bold
+    transition-colors
+    focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none
+    disabled:cursor-not-allowed disabled:opacity-50
+  `,
+  {
+    variants: {
+      variant: {
+        normal: "",
+        soft: "",
+        outline: "border bg-transparent",
+      },
+      size: {
+        xs: "px-3 py-1.5 text-xs",
+        sm: "px-3 py-2 text-sm",
+        md: "px-4 py-2.5 text-base",
+        lg: "px-5 py-3 text-lg",
+        xl: "px-6 py-3.5 text-xl",
+      },
+      iconSize: {
+        xs: "size-8",
+        sm: "size-9",
+        md: "size-10",
+        lg: "size-11",
+        xl: "size-12",
+      },
+      color: {
+        neutral: `
+          bg-slate-900 text-white
+          hover:bg-slate-800
+          focus-visible:ring-slate-900
+        `,
+        primary: `
+          bg-primary text-white
+          hover:bg-primary/90
+          focus-visible:ring-primary
+        `,
+        secondary: `
+          bg-secondary text-white
+          hover:bg-secondary/90
+          focus-visible:ring-secondary
+        `,
+        accent: `
+          bg-amber-600 text-white
+          hover:bg-amber-700
+          focus-visible:ring-amber-600
+        `,
+        info: `
+          bg-sky-600 text-white
+          hover:bg-sky-700
+          focus-visible:ring-sky-600
+        `,
+        success: `
+          bg-emerald-600 text-white
+          hover:bg-emerald-700
+          focus-visible:ring-emerald-600
+        `,
+        warning: `
+          bg-amber-500 text-slate-900
+          hover:bg-amber-600
+          focus-visible:ring-amber-500
+        `,
+        error: `
+          bg-red-600 text-white
+          hover:bg-red-700
+          focus-visible:ring-red-600
+        `,
+      },
+      softColor: {
+        neutral: `
+          bg-slate-100 text-slate-800
+          hover:bg-slate-200
+          focus-visible:ring-slate-300
+        `,
+        primary: `
+          bg-primary/10 text-primary
+          hover:bg-primary/15
+          focus-visible:ring-primary/40
+        `,
+        secondary: `
+          bg-secondary/10 text-secondary
+          hover:bg-secondary/15
+          focus-visible:ring-secondary/40
+        `,
+        accent: `
+          bg-amber-100 text-amber-800
+          hover:bg-amber-200
+          focus-visible:ring-amber-300
+        `,
+        info: `
+          bg-sky-100 text-sky-800
+          hover:bg-sky-200
+          focus-visible:ring-sky-300
+        `,
+        success: `
+          bg-emerald-100 text-emerald-800
+          hover:bg-emerald-200
+          focus-visible:ring-emerald-300
+        `,
+        warning: `
+          bg-amber-100 text-amber-800
+          hover:bg-amber-200
+          focus-visible:ring-amber-300
+        `,
+        error: `
+          bg-red-100 text-red-800
+          hover:bg-red-200
+          focus-visible:ring-red-300
+        `,
+      },
+      outlineColor: {
+        neutral: `
+          border-slate-300 text-slate-800
+          hover:bg-slate-50
+          focus-visible:ring-slate-300
+        `,
+        primary: `
+          border-primary text-primary
+          hover:bg-primary/5
+          focus-visible:ring-primary
+        `,
+        secondary: `
+          border-secondary text-secondary
+          hover:bg-secondary/5
+          focus-visible:ring-secondary
+        `,
+        accent: `
+          border-amber-300 text-amber-800
+          hover:bg-amber-50
+          focus-visible:ring-amber-300
+        `,
+        info: `
+          border-sky-300 text-sky-700
+          hover:bg-sky-50
+          focus-visible:ring-sky-300
+        `,
+        success: `
+          border-emerald-300 text-emerald-700
+          hover:bg-emerald-50
+          focus-visible:ring-emerald-300
+        `,
+        warning: `
+          border-amber-300 text-amber-800
+          hover:bg-amber-50
+          focus-visible:ring-amber-300
+        `,
+        error: `
+          border-red-300 text-red-700
+          hover:bg-red-50
+          focus-visible:ring-red-300
+        `,
+      },
+      fullWidth: {
+        true: "w-full",
+      },
+      onlyIcon: {
+        true: "p-0",
+      },
+    },
+    defaultVariants: {
+      variant: "normal",
+      size: "md",
+      color: "primary",
+    },
+  },
+);
+
+type ButtonVariants = VariantProps<typeof buttonVariants>;
+
+/**
+ * Public props for the Button component.
+ *
+ * Extends visual variants from `buttonVariants` and adds behavior and
+ * accessibility-focused options like `href`, `type`, and `ariaLabel`.
+ */
+interface Props<Tag extends HTMLTag = "button" | "a"> extends Polymorphic<
+  { as: Tag } & ButtonVariants
+> {
+  /**
+   * Disables interaction and applies disabled visual styles.
+   */
+  disabled?: boolean;
+  /**
+   * Additional Tailwind classes merged on top of variant classes via `cn`.
+   */
+  classes?: string;
+  /**
+   * Optional icon component rendered inside the button.
+   */
+  Icon?: AstroIconComponent;
+  /**
+   * Icon placement relative to the text when `onlyIcon` is false.
+   * - `leading`: icon before the label
+   * - `trailing`: icon after the label
+   */
+  iconPosition?: IconPosition;
+  /**
+   * Renders the button as an icon-only control.
+   * The `size` variant maps to `iconSize` for square dimensions.
+   */
+  onlyIcon?: boolean;
+  /**
+   * When true, stretches the button to the full available width (`w-full`).
+   */
+  fullWidth?: boolean;
+  /**
+   * Any additional attributes are forwarded to the underlying element.
+   */
+  [key: string]: unknown;
+}
+
+const {
+  as: Tag = "button",
+  variant = "normal",
+  size = "md",
+  color = "primary",
+  onlyIcon = false,
+  fullWidth = false,
+  disabled = false,
+  classes: className,
+  Icon,
+  iconPosition = "leading",
+  ...rest
+} = Astro.props as Props<typeof Tag>;
+
+const resolvedColor = {
+  soft: { softColor: color },
+  outline: { outlineColor: color },
+  normal: { color },
+}[variant];
+
+const classes = cn(
+  buttonVariants({
+    variant,
+    size: onlyIcon ? undefined : size,
+    iconSize: onlyIcon ? size : undefined,
+    onlyIcon,
+    fullWidth,
+    ...resolvedColor,
+  }),
+  disabled && "pointer-events-none opacity-50",
+  className,
+);
+---
+
+<Tag {...rest} class={classes}>
+  {
+    onlyIcon && Icon ? (
+      <Icon />
+    ) : (
+      <>
+        {iconPosition === "leading" && Icon && <Icon />}
+        <slot />
+        {iconPosition === "trailing" && Icon && <Icon />}
+      </>
+    )
+  }
+</Tag>
