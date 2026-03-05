@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* TODO  https://github.com/humanwhocodes/tailwind-csstree/issues/2 */
+/* eslint-disable-next-line */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 @theme {
   --breakpoint-sm: 22.8125rem; /* 365px */
   --breakpoint-md: 48rem; /* 768px */

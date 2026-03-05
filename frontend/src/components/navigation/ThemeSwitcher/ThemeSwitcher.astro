@@ -1,0 +1,110 @@
+---
+import { cva, type VariantProps } from "class-variance-authority";
+
+import Icon from "@components/data/display/Icon.astro";
+import { cn } from "@utils/styles.utils";
+
+/**
+ * @component ThemeSwitch
+ * @title Theme switch
+ * @description A compact toggle for cycling between light, dark, and system themes.
+ *
+ * @preview
+ *
+ * <div class="flex items-center gap-4">
+ *   <ThemeSwitch />
+ * </div>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import ThemeSwitch from "@components/actions/ThemeSwitch.astro";
+ * ---
+ *
+ * <ThemeSwitch />
+ * ```
+ */
+
+const themeSwitchVariants = cva(
+  `
+    inline-flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all
+    focus-visible:ring-2 focus-visible:ring-slate-500
+    focus-visible:ring-offset-2 focus-visible:outline-none
+    dark:bg-slate-900 dark:text-slate-50
+  `,
+  {
+    variants: {
+      size: {
+        sm: "h-8 w-8 text-sm",
+        md: "h-10 w-10 text-base",
+        lg: "h-11 w-11 text-base",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+    },
+  },
+);
+
+type ThemeSwitchVariants = VariantProps<typeof themeSwitchVariants>;
+
+interface Props extends ThemeSwitchVariants {
+  /**
+   * Extra Tailwind classes applied to the toggle button.
+   */
+  class?: string;
+  /**
+   * Any additional attributes are forwarded to the underlying <button>.
+   */
+  [key: string]: unknown;
+}
+
+const { size = "md", class: className, ...rest } = Astro.props as Props;
+
+const buttonClass = cn(themeSwitchVariants({ size }), className);
+
+/* TODO: at loading page, the icon settled by data-theme-setting
+        by default is loaded before to put the right one
+*/
+---
+
+<style>
+  [data-theme-icon] {
+    @apply hidden;
+  }
+
+  [data-theme-toggle][data-theme-setting="light"] [data-theme-icon="light"] {
+    @apply block;
+  }
+
+  [data-theme-toggle][data-theme-setting="dark"] [data-theme-icon="dark"] {
+    @apply block;
+  }
+
+  [data-theme-toggle][data-theme-setting="system"] [data-theme-icon="system"] {
+    @apply block;
+  }
+</style>
+
+<button
+  type="button"
+  class={buttonClass}
+  data-theme-toggle
+  data-theme-setting="system"
+  aria-label="Toggle theme"
+  {...rest}
+>
+  <Icon icon="light_mode" size="md" data-theme-icon="light" />
+  <Icon icon="dark_mode" size="md" data-theme-icon="dark" />
+  <Icon icon="computer" size="md" data-theme-icon="system" />
+</button>
+
+<script>
+  import { initThemeToggle } from "./theme-switcher.controller";
+
+  const setup = () => initThemeToggle();
+
+  document.addEventListener("DOMContentLoaded", setup);
+  document.addEventListener("astro:after-swap", setup);
+</script>
