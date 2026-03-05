@@ -1,0 +1,154 @@
+---
+import Icon from "@components/data/display/Icon.astro";
+import Link from "@components/actions/Link/Link.astro";
+import Button from "@components/actions/Button.astro";
+import type { OtherIcon } from "@utils/ui.constants";
+import SvgIcon from "@components/data/display/SvgIcon.astro";
+
+type ContactInfo = {
+  address: string;
+  phone: string;
+  email: string;
+};
+
+type NavLink = {
+  label: string;
+  href: string;
+};
+
+type RightsTexts = {
+  copyRight: string;
+  privacyPolicy: NavLink;
+  termsAndConditions: NavLink;
+};
+
+interface Props {
+  lemma?: string;
+  socialNetworkLinks?: Array<NavLink & { icon: OtherIcon }>;
+  fastLinks?: Array<NavLink>;
+  contactInfo: ContactInfo;
+  rightsText: RightsTexts;
+}
+
+const {
+  lemma,
+  socialNetworkLinks = [],
+  fastLinks = [],
+  contactInfo,
+  rightsText,
+} = Astro.props as Props;
+
+const hasContent = Boolean(
+  lemma || socialNetworkLinks.length > 0 || fastLinks.length > 0 || rightsText,
+);
+
+if (!hasContent) {
+  throw new Error(
+    "Footer requires at least one of lemma, socialNetworkLinks, fastLinks or rightsText.",
+  );
+}
+---
+
+<footer class="bg-secondary text-white pt-20 pb-10">
+  <section
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-16"
+  >
+    <div class="col-span-1 md:col-span-1">
+      <!-- Mosque branding -->
+      <div class="flex items-center gap-3 mb-6">
+        <div class="bg-white px-3 py-1.5 rounded-full">
+          <Icon icon="mosque" class="text-secondary text-3xl" />
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight block leading-tight">
+            Mezquita Central
+          </span>
+          <span class="text-xs opacity-80 uppercase tracking-widest">
+            de Bogotá
+          </span>
+        </div>
+      </div>
+      <!-- Mosque lemma -->
+      {lemma && <p class="text-blue-100/70 leading-relaxed mb-6">{lemma}</p>}
+      <!-- Mosque social networks -->
+      <ul class="flex gap-4">
+        {
+          socialNetworkLinks.map(({ label, href, icon }) => (
+            <li>
+              <Link
+                classes="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary"
+                href={href}
+                aria-label={label}
+              >
+                <SvgIcon icon={icon} classes="w-5 h-5 fill-current" />
+              </Link>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="col-span-1">
+      <h4 class="text-lg font-bold mb-6">Enlaces Rápidos</h4>
+      <ul class="space-y-4 text-blue-100/70">
+        {
+          fastLinks.map(({ label, href }) => (
+            <li>
+              <Link href={href} color="navbar">
+                {label}
+              </Link>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="col-span-1">
+      <h4 class="text-lg font-bold mb-6">Contacto</h4>
+      <ul class="space-y-4 text-blue-100/70">
+        <li class="flex gap-3">
+          <Icon
+            icon="location_on"
+            class="text-blue-400 text-sm items-baseline"
+          />
+          <address class="not-italic">{contactInfo.address}</address>
+        </li>
+        <li class="flex gap-3">
+          <Icon icon="phone" class="text-blue-400 text-sm" />
+          <phone>{contactInfo.phone}</phone>
+        </li>
+        <li class="flex gap-3">
+          <Icon icon="email" class="text-blue-400 text-sm" />
+          <email>{contactInfo.email}</email>
+        </li>
+      </ul>
+    </div>
+    <div class="col-span-1">
+      <h4 class="text-lg font-bold mb-6">Newsletter</h4>
+      <p class="text-sm text-blue-100/70 mb-4">
+        Suscríbete para recibir actualizaciones de la comunidad y noticias.
+      </p>
+      <form class="flex flex-col gap-2">
+        <input
+          class="bg-white/10 border-white/20 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-secondary text-white placeholder-blue-100/30"
+          placeholder="Tu correo electrónico"
+          type="email"
+        />
+        <Button color="primary" type="submit" variant="solid">
+          Suscribirse
+        </Button>
+      </form>
+    </div>
+  </section>
+  <section
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 flex flex-col md:flex-row justify-between items-center text-sm text-blue-100/40"
+  >
+    <p>{rightsText?.copyRight}</p>
+    <div class="flex gap-6 mt-4 md:mt-0">
+      <Link color="navbar" href={rightsText?.privacyPolicy.href}>
+        {rightsText?.privacyPolicy.label}
+      </Link>
+      <Link color="navbar" href={rightsText?.termsAndConditions.href}>
+        {rightsText?.termsAndConditions.label}
+      </Link>
+    </div>
+  </section>
+</footer>
