@@ -24,7 +24,6 @@ export default defineConfig([
     ".astro",
     ".github",
     ".vscode",
-    "src/styles/global.css",
   ]),
   {
     ...sonarjs.recommended,
@@ -38,25 +37,15 @@ export default defineConfig([
   // tseslint.configs.strict,
   // tseslint.configs.stylistic,
   // TODO: bug Astro support https://github.com/eslint-stylistic/eslint-stylistic/issues/259
-  // TODO: bug ESLINT 10 support: https://github.com/un-ts/eslint-plugin-import-x/issues/421
   stylistic.configs.recommended,
+  // TODO: bug defineConfig support: https://github.com/un-ts/eslint-plugin-import-x/issues/469
   // importX.configs.recommended,
   importX.configs.typescript,
   {
-    // ...sonarjs.recommended,
     files: ["**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"],
-    // ...importX.configs.recommended,
     plugins: { js, "import-x": importX },
-    /*
     extends: [
       js.configs.recommended,
-      importX.configs.recommended,
-      stylistic.configs.recommended,
-    ],
-    */
-    extends: [
-      "js/recommended",
-      "import-x/recommended",
       tseslint.configs.strictTypeChecked,
       tseslint.configs.stylisticTypeChecked,
     ],
