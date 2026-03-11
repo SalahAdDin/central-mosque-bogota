@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 /* TODO  https://github.com/humanwhocodes/tailwind-csstree/issues/2 */
-/* eslint-disable-next-line */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
@@ -21,10 +20,12 @@
   --container-8xl: 88rem; /* 1408px */
   --container-90rem: 90rem; /* 1440px */
   --container-9xl: 96rem; /* 1536px */
+}
 
-  --font-display: "Plus Jakarta Sans Variable", sans-serif;
-  --font-sans: "Public Sans Variable", sans-serif;
-  --font-symbols: "Material Symbols Outlined", sans-serif;
+@theme inline {
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+  --font-symbols: var(--font-symbols);
 }
 
 @layer base {
@@ -34,7 +35,7 @@
       "wght" 400,
       "GRAD" 0,
       "opsz" 24;
-    font-family: "Material Symbols Outlined Variable", sans-serif;
+    font-family: var(--font-symbols);
     font-weight: normal;
     font-style: normal;
     font-size: 24px;

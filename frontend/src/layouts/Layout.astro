@@ -1,8 +1,7 @@
 ---
-import "@fontsource-variable/public-sans";
-import "@fontsource-variable/plus-jakarta-sans";
-import "@fontsource-variable/material-symbols-outlined";
-import materialSymbolsOutlined from "@fontsource-variable/material-symbols-outlined/files/material-symbols-outlined-latin-wght-normal.woff2";
+import Footer from "@components/layout/Footer.astro";
+import Header from "@components/layout/Header.astro";
+import { Font } from "astro:assets";
 
 import "@styles/global.css";
 ---
@@ -18,15 +17,11 @@ import "@styles/global.css";
     <meta name="generator" content={Astro.generator} />
     <title>Astro Basics</title>
 
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href={materialSymbolsOutlined}
-      crossorigin="anonymous"
-    />
+    <Font cssVariable="--font-display" />
+    <Font cssVariable="--font-sans" />
+    <Font cssVariable="--font-symbols" preload />
   </head>
-  <body>
+  <body class="font-display">
     <slot />
   </body>
 </html>

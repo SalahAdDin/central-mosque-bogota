@@ -1,9 +1,26 @@
 import tailwindcss from "@tailwindcss/vite";
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
+  fonts: [
+    {
+      provider: fontProviders.fontsource(),
+      name: "Plus Jakarta Sans",
+      cssVariable: "--font-display",
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Public Sans",
+      cssVariable: "--font-sans",
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Material Symbols Outlined",
+      cssVariable: "--font-symbols",
+    },
+  ],
   i18n: {
     defaultLocale: "es",
     locales: ["en", "es", "ar", "tr"],
