@@ -11,6 +11,6 @@
     "types": ["vitest/globals", "@testing-library/jest-dom"],
     "verbatimModuleSyntax": true
   },
-  "include": [".astro/types.d.ts", "**/*"],
+  "include": [".astro/types.d.ts", "**/*", ".storybook/**/*"],
   "exclude": ["dist"]
 }

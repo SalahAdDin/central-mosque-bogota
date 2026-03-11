@@ -10,6 +10,7 @@ import betterTailwindcss from "eslint-plugin-better-tailwindcss";
 import { importX } from "eslint-plugin-import-x";
 import jestDOM from "eslint-plugin-jest-dom";
 import { configs as sonarjs } from "eslint-plugin-sonarjs";
+import storybook from "eslint-plugin-storybook";
 import testingLibrary from "eslint-plugin-testing-library";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
@@ -24,6 +25,7 @@ export default defineConfig([
     ".astro",
     ".github",
     ".vscode",
+    "!.storybook",
   ]),
   {
     ...sonarjs.recommended,
@@ -193,4 +195,5 @@ export default defineConfig([
       },
     },
   },
+  ...storybook.configs["flat/recommended"],
 ]);

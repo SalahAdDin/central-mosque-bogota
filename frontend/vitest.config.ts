@@ -1,3 +1,5 @@
+import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+import { playwright } from "@vitest/browser-playwright";
 import { getViteConfig } from "astro/config";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -53,6 +55,29 @@ export default getViteConfig({
           exclude: ["tests"],
           environment: "node",
           setupFiles: ["./src/vitest.setup.ts"],
+        },
+      },
+      {
+        extends: true,
+        plugins: [
+          // TODO: https://github.com/storybookjs/storybook/issues/33748
+          storybookTest({
+            configDir: path.join(dirname, ".storybook"),
+          }),
+        ],
+        test: {
+          name: "storybook",
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright({}),
+            instances: [
+              {
+                browser: "chromium",
+              },
+            ],
+          },
+          setupFiles: [".storybook/vitest.setup.ts"],
         },
       },
     ],
