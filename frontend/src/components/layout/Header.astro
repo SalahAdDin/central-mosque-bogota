@@ -1,0 +1,63 @@
+---
+import ThemeSwitcher from "@components/navigation/ThemeSwitcher/ThemeSwitcher.astro";
+import Icon from "@components/data/display/Icon.astro";
+import Button from "@components/actions/Button.astro";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+import LanguagePicker from "@components/navigation/LanguagePicker/LanguagePicker.astro";
+import Link from "@components/actions/Link/Link.astro";
+import type { TNavLink } from "@utils/types";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+interface Props {
+  navLinks: Array<TNavLink>;
+}
+
+const { navLinks } = Astro.props as Props;
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-secondary shadow-lg">
+  <div
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-8 flex items-center justify-between h-20"
+  >
+    <!-- Mosque branding -->
+    <section class="flex items-center gap-3">
+      <div class="bg-white px-3 py-1.5 rounded-full">
+        <Icon icon="mosque" class="text-secondary text-3xl" />
+      </div>
+      <div>
+        <span
+          class="text-xl font-bold tracking-tight block leading-tight dark:text-white"
+        >
+          Mezquita Central
+        </span>
+        <span
+          class="text-xs opacity-80 uppercase tracking-widest dark:text-white"
+        >
+          de Bogotá
+        </span>
+      </div>
+    </section>
+    <nav
+      class="hidden lg:flex items-center gap-5 xl:gap-8 text-[13px] xl:text-sm font-semibold text-white/90"
+    >
+      {navLinks.map(({ label, href }) => (
+        <Link href={href} color="navbar">
+          {label}
+        </Link>
+      ))}
+    </nav>
+    <section class="flex items-center gap-2 xl:gap-4">
+      <LanguagePicker />
+      <ThemeSwitcher />
+      <Button
+        as="a"
+        class="rounded-full transition-all transform hover:scale-105 shadow-md"
+        href="/donate"
+      >
+        {t("header.donate-now")}
+      </Button>
+    </section>
+  </div>
+</header>
