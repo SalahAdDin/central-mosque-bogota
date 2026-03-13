@@ -1,0 +1,92 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+import Icon from "@components/data/display/Icon.astro";
+import { dropdownItemVariants, type DropdownItemVariants } from "./variants";
+
+/**
+ * @component DropdownSubTrigger
+ * @title Dropdown Sub Trigger
+ * @description Menu item that opens a nested submenu. Intended to be used inside `DropdownSub`.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownSub>
+ *       <DropdownSubTrigger>Advanced</DropdownSubTrigger>
+ *       <DropdownSubContent>
+ *         <DropdownItem>Item A</DropdownItem>
+ *       </DropdownSubContent>
+ *     </DropdownSub>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DropdownSubTrigger } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <DropdownSubTrigger showIndicator={true}>
+ *   Advanced
+ * </DropdownSubTrigger>
+ * ```
+ */
+
+interface Props
+  extends
+    DropdownItemVariants,
+    Omit<HTMLAttributes<"button">, "role" | "type"> {
+  /**
+   * When true, makes the submenu trigger non-interactive.
+   * Sets `aria-disabled`, removes it from roving tab focus, and prevents selection via keyboard navigation.
+   */
+  disabled?: boolean;
+  /**
+   * When true, renders the right chevron indicator to hint there is a submenu.
+   * @default true
+   */
+  showIndicator?: boolean;
+}
+
+const {
+  disabled = false,
+  showIndicator = true,
+  class: className,
+  ...rest
+} = Astro.props as Props;
+---
+
+<button
+  type="button"
+  class={cn(
+    dropdownItemVariants(),
+    "[&[aria-expanded='true']_[data-dropdown-chevron]]:rotate-90",
+    className,
+  )}
+  role="menuitem"
+  aria-haspopup="true"
+  aria-expanded="false"
+  tabindex={disabled ? "-1" : "0"}
+  data-dropdown-item
+  data-dropdown-sub-trigger
+  disabled={disabled}
+  aria-disabled={disabled || undefined}
+  {...rest}
+>
+  <span class="flex items-center gap-3">
+    <slot />
+  </span>
+  {
+    showIndicator ? (
+      <Icon
+        icon="chevron_right"
+        class="text-[18px] opacity-60 transition-transform duration-150 motion-reduce:transition-none"
+        data-dropdown-chevron
+      />
+    ) : null
+  }
+</button>

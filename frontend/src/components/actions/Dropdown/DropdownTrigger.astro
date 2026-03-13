@@ -1,0 +1,56 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+import {
+  dropdownTriggerVariants,
+  type DropdownTriggerVariants,
+} from "./variants";
+
+/**
+ * @component DropdownTrigger
+ * @title Dropdown Trigger
+ * @description Button that toggles a dropdown menu. Must be used inside `Dropdown`.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownItem>Profile</DropdownItem>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <Dropdown>
+ *   <DropdownTrigger>Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownItem>Profile</DropdownItem>
+ *   </DropdownContent>
+ * </Dropdown>
+ * ```
+ */
+
+interface Props
+  extends
+    DropdownTriggerVariants,
+    Omit<HTMLAttributes<"button">, "role" | "type"> {}
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<button
+  type="button"
+  class={cn(dropdownTriggerVariants(), className)}
+  data-dropdown-trigger
+  aria-haspopup="true"
+  aria-expanded="false"
+  {...rest}
+>
+  <slot />
+</button>

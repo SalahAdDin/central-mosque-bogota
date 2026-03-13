@@ -1,0 +1,47 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { cn } from "@utils/styles.utils";
+
+/**
+ * @component DropdownSub
+ * @title Dropdown Sub
+ * @description Wrapper that groups a submenu trigger and its nested content. Use inside `DropdownContent`.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownSub>
+ *       <DropdownSubTrigger>Advanced</DropdownSubTrigger>
+ *       <DropdownSubContent>
+ *         <DropdownItem>Item A</DropdownItem>
+ *       </DropdownSubContent>
+ *     </DropdownSub>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DropdownItem, DropdownSub, DropdownSubContent, DropdownSubTrigger } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <DropdownSub>
+ *   <DropdownSubTrigger>Advanced</DropdownSubTrigger>
+ *   <DropdownSubContent>
+ *     <DropdownItem>Item A</DropdownItem>
+ *   </DropdownSubContent>
+ * </DropdownSub>
+ * ```
+ */
+
+type Props = HTMLAttributes<"div">;
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<div class={cn("relative", className)} data-dropdown-sub {...rest}>
+  <slot />
+</div>

@@ -1,0 +1,42 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component DropdownLabel
+ * @title Dropdown Label
+ * @description Section label for grouping items inside dropdown content. Renders as a non-interactive element.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownLabel>Account</DropdownLabel>
+ *     <DropdownItem>Profile</DropdownItem>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DropdownLabel } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <DropdownLabel>Account</DropdownLabel>
+ * ```
+ */
+
+interface Props extends HTMLAttributes<"div"> {}
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<div
+  class={cn("text-muted-foreground px-2 py-1.5 text-sm font-medium", className)}
+  role="presentation"
+  {...rest}
+>
+  <slot />
+</div>

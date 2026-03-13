@@ -1,0 +1,74 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+import { dropdownContentVariants } from "./variants";
+
+/**
+ * @component DropdownSubContent
+ * @title Dropdown Sub Content
+ * @description Nested menu container rendered for a submenu. Intended to be paired with `DropdownSubTrigger`.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownSub>
+ *       <DropdownSubTrigger>Advanced</DropdownSubTrigger>
+ *       <DropdownSubContent>
+ *         <DropdownItem>Item A</DropdownItem>
+ *         <DropdownItem>Item B</DropdownItem>
+ *       </DropdownSubContent>
+ *     </DropdownSub>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DropdownItem, DropdownSubContent } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <DropdownSubContent animationDuration={150}>
+ *   <DropdownItem>Item A</DropdownItem>
+ * </DropdownSubContent>
+ * ```
+ */
+
+interface Props extends HTMLAttributes<"div"> {
+  /**
+   * Open and close animation duration in milliseconds
+   * @default 150
+   */
+  animationDuration?: number;
+}
+
+const {
+  animationDuration = 150,
+  class: className,
+  ...rest
+} = Astro.props as Props;
+---
+
+<div
+  class={cn(
+    dropdownContentVariants({
+      side: "right",
+      align: "start",
+    }),
+    className,
+  )}
+  data-dropdown-sub-content
+  role="menu"
+  tabindex="-1"
+  aria-orientation="vertical"
+  style={{
+    display: "none",
+    animationDuration: `${animationDuration}ms`,
+  }}
+  {...rest}
+>
+  <slot />
+</div>

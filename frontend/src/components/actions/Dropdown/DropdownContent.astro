@@ -1,0 +1,112 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+import {
+  dropdownContentVariants,
+  type DropdownContentVariants,
+} from "./variants";
+
+/**
+ * @component DropdownContent
+ * @title Dropdown Content
+ * @description Floating menu container for dropdown items. Controls side/align positioning and animation timing.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent side="bottom" align="start">
+ *     <DropdownItem>Profile</DropdownItem>
+ *     <DropdownItem>Settings</DropdownItem>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DropdownContent, DropdownItem } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <DropdownContent side="bottom" align="start" sideOffset={4}>
+ *   <DropdownItem>Profile</DropdownItem>
+ *   <DropdownItem>Settings</DropdownItem>
+ * </DropdownContent>
+ * ```
+ *
+ * @examples
+ * ### Positions
+ *
+ * <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+ *   <div class="space-y-2">
+ *     <div class="text-sm font-medium">Bottom / start</div>
+ *     <DropdownContent side="bottom" align="start" style={{ display: "block", position: "relative" }}>
+ *       <DropdownItem>Item</DropdownItem>
+ *     </DropdownContent>
+ *   </div>
+ *   <div class="space-y-2">
+ *     <div class="text-sm font-medium">Right / center</div>
+ *     <DropdownContent side="right" align="center" style={{ display: "block", position: "relative" }}>
+ *       <DropdownItem>Item</DropdownItem>
+ *     </DropdownContent>
+ *   </div>
+ * </div>
+ */
+
+type Side = "bottom" | "top" | "left" | "right";
+type Align = "start" | "center" | "end";
+
+interface Props extends HTMLAttributes<"div">, DropdownContentVariants {
+  /**
+   * Side of the dropdown
+   * @default bottom
+   */
+  side?: Side;
+  /**
+   * Alignment of the dropdown
+   * @default start
+   */
+  align?: Align;
+  /**
+   * Offset distance in pixels
+   * @default 4
+   */
+  sideOffset?: number;
+  /**
+   * Open and close animation duration in milliseconds
+   * @default 150
+   */
+  animationDuration?: number;
+}
+
+const {
+  side = "bottom",
+  align = "start",
+  sideOffset = 4,
+  animationDuration = 150,
+  class: className,
+  ...rest
+} = Astro.props as Props;
+---
+
+<div
+  class={cn(dropdownContentVariants({ side, align }), className)}
+  data-dropdown-content
+  data-side={side}
+  data-align={align}
+  role="menu"
+  tabindex="-1"
+  aria-orientation="vertical"
+  style={{
+    display: "none",
+    animationDuration: `${animationDuration}ms`,
+    marginTop: side === "bottom" ? `${sideOffset}px` : undefined,
+    marginBottom: side === "top" ? `${sideOffset}px` : undefined,
+    marginLeft: side === "right" ? `${sideOffset}px` : undefined,
+    marginRight: side === "left" ? `${sideOffset}px` : undefined,
+  }}
+  {...rest}
+>
+  <slot />
+</div>

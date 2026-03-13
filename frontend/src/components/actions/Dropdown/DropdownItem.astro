@@ -1,0 +1,65 @@
+---
+import type { HTMLTag, Polymorphic } from "astro/types";
+import { cn } from "@utils/styles.utils";
+
+import { dropdownItemVariants, type DropdownItemVariants } from "./variants";
+
+/**
+ * @component DropdownItem
+ * @title Dropdown Item
+ * @description Focusable menu item used inside dropdown content. Renders as a `<button>` by default, or as an `<a>` via `as="a"`.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownItem>Profile</DropdownItem>
+ *     <DropdownItem as="a" href="/settings">Settings</DropdownItem>
+ *     <DropdownItem disabled={true}>Disabled</DropdownItem>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DropdownItem } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <DropdownItem>Profile</DropdownItem>
+ * <DropdownItem as="a" href="/settings">Settings</DropdownItem>
+ * ```
+ */
+
+interface Props<Tag extends HTMLTag = "button" | "a"> extends Polymorphic<
+  { as: Tag } & DropdownItemVariants
+> {
+  /**
+   * When true, makes the item non-interactive.
+   * Sets `aria-disabled`, removes it from roving tab focus, and prevents selection via keyboard navigation.
+   */
+  disabled?: boolean;
+}
+
+const {
+  as: Tag = "button",
+  disabled = false,
+  class: className,
+  ...rest
+} = Astro.props as Props<typeof Tag>;
+
+const classes = cn(dropdownItemVariants(), className);
+---
+
+<Tag
+  class={classes}
+  role="menuitem"
+  tabindex={disabled ? "-1" : "0"}
+  aria-disabled={disabled || undefined}
+  disabled={disabled}
+  data-dropdown-item
+  {...rest}
+>
+  <slot />
+</Tag>

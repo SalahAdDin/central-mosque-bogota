@@ -1,0 +1,49 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component DropdownShortcut
+ * @title Dropdown Shortcut
+ * @description Right-aligned helper text for items (e.g. keyboard shortcuts). Intended to be placed inside `DropdownItem`.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownItem>
+ *       Search
+ *       <DropdownShortcut>⌘K</DropdownShortcut>
+ *     </DropdownItem>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DropdownItem, DropdownShortcut } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <DropdownItem>
+ *   Search
+ *   <DropdownShortcut>⌘K</DropdownShortcut>
+ * </DropdownItem>
+ * ```
+ */
+
+type Props = HTMLAttributes<"span">;
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<span
+  class={cn(
+    "group-focus/dropdown-item:text-accent-foreground text-muted-foreground ml-auto text-sm tracking-widest transition-colors",
+    className,
+  )}
+  {...rest}
+>
+  <slot />
+</span>
