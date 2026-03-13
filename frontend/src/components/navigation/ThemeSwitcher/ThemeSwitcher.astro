@@ -2,7 +2,9 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
 import Icon from "@components/data/display/Icon.astro";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
 import { cn } from "@utils/styles.utils";
+import type { ThemeSetting } from "@utils/theme.utils";
 
 /**
  * @component ThemeSwitch
@@ -62,6 +64,15 @@ interface Props extends ThemeSwitchVariants {
 
 const { size = "md", class: className, ...rest } = Astro.props as Props;
 
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const LABEL_TEXT: Record<ThemeSetting, string> = {
+  light: t("theme-switcher.light-label"),
+  system: t("theme-switcher.system-label"),
+  dark: t("theme-switcher.dark-label"),
+};
+
 const buttonClass = cn(themeSwitchVariants({ size }), className);
 
 /* TODO: at loading page, the icon settled by data-theme-setting
@@ -92,7 +103,10 @@ const buttonClass = cn(themeSwitchVariants({ size }), className);
   class={buttonClass}
   data-theme-toggle
   data-theme-setting="system"
-  aria-label="Toggle theme"
+  data-label-light={LABEL_TEXT.light}
+  data-label-system={LABEL_TEXT.system}
+  data-label-dark={LABEL_TEXT.dark}
+  aria-label={LABEL_TEXT.system}
   {...rest}
 >
   <Icon icon="light_mode" size="md" data-theme-icon="light" />

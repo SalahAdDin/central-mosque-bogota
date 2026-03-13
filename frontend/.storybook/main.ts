@@ -36,6 +36,7 @@ export default defineMain({
       resolve: {
         alias: {
           "@components": path.resolve(dirname, "../src/components"),
+          "@i18n": path.resolve(dirname, "../src/i18n"),
           "@layouts": path.resolve(dirname, "../src/layouts"),
           "@pages": path.resolve(dirname, "../src/pages"),
           "@styles": path.resolve(dirname, "../src/styles"),

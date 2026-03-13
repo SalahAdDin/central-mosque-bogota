@@ -30,7 +30,7 @@ export function applyTheme(setting: ThemeSetting): void {
 }
 
 export function getNextTheme(setting: ThemeSetting): ThemeSetting {
-  if (setting === "light") return "dark";
-  if (setting === "dark") return "system";
-  return "light";
+  if (setting === "light") return "system";
+  if (setting === "dark") return "light";
+  return "dark";
 }

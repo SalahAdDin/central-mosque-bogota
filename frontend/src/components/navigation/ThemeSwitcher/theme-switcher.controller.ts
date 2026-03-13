@@ -6,11 +6,11 @@ import {
   type ThemeSetting,
 } from "@utils/theme.utils";
 
-const NEXT_LABEL: Record<ThemeSetting, string> = {
-  light: "Switch to dark theme",
-  dark: "Use system theme",
-  system: "Switch to light theme",
-};
+function getNextLabel(toggle: HTMLButtonElement, theme: ThemeSetting): string {
+  if (theme === "light") return toggle.dataset.labelLight ?? "";
+  if (theme === "dark") return toggle.dataset.labelDark ?? "";
+  return toggle.dataset.labelSystem ?? "";
+}
 
 /**
  * Handles the logic for a single theme toggle button.
@@ -68,7 +68,10 @@ class ThemeToggleHandler {
 
     this.toggle.dataset.themeSetting = theme;
     this.toggle.dataset.themeResolved = resolved;
-    this.toggle.setAttribute("aria-label", NEXT_LABEL[theme]);
+    const nextLabel = getNextLabel(this.toggle, theme);
+    if (nextLabel) {
+      this.toggle.setAttribute("aria-label", nextLabel);
+    }
     this.toggle.setAttribute("aria-pressed", String(isDark));
   }
 }
