@@ -1,6 +1,7 @@
 ---
 import { cn } from "@utils/styles.utils";
-import type { OtherIcon } from "@utils/ui.constants";
+import type { HTMLAttributes } from "astro/types";
+import type { TSVGIcon } from "@utils/types";
 
 /**
  * @component SvgIcon
@@ -26,24 +27,15 @@ import type { OtherIcon } from "@utils/ui.constants";
  * <SvgIcon icon="facebook" classes="w-6 h-6 text-blue-600" />
  * ```
  */
-interface Props {
+interface Props extends HTMLAttributes<"svg"> {
   /**
    * The name of the icon to render.
    * Supported values: "facebook", "instagram", "youtube".
    */
-  icon: OtherIcon;
-  /**
-   * Additional classes to apply to the icon wrapper.
-   */
-  classes?: string;
-  /**
-   * Any additional attributes are forwarded to the underlying <span>.
-   * Useful for id, data-* attributes, and event handlers.
-   */
-  [key: string]: any;
+  icon: TSVGIcon;
 }
 
-const { icon, classes: className, ...rest } = Astro.props;
+const { icon, class: className, ...rest } = Astro.props;
 
 const content = {
   facebook: `

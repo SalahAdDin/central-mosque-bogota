@@ -1,4 +1,5 @@
 ---
+import type { HTMLAttributes } from "astro/types";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@utils/styles.utils";
@@ -75,7 +76,7 @@ const iconVariants = cva("items-center justify-center", {
   },
 });
 
-interface Props extends VariantProps<typeof iconVariants> {
+interface Props extends VariantProps<typeof iconVariants>, HTMLAttributes<"span"> {
   /**
    * Name of the Material Symbols glyph to render, e.g. "menu" or "search".
    */
@@ -84,15 +85,6 @@ interface Props extends VariantProps<typeof iconVariants> {
    * Accessible label for the icon. When omitted, the icon is treated as decorative.
    */
   ariaLabel?: string;
-  /**
-   * Extra Tailwind classes applied to the icon wrapper element.
-   */
-  class?: string;
-  /**
-   * Any additional attributes are forwarded to the underlying <span>.
-   * Useful for id, data-* attributes, and event handlers.
-   */
-  [key: string]: any;
 }
 
 const {

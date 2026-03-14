@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import type { HTMLTag, Polymorphic } from "astro/types";
 
 import { cn } from "@utils/styles.utils";
-import type { IconPosition } from "@utils/ui.constants";
+import type { TIconPosition } from "@utils/types";
 
 /**
  * @component Button
@@ -345,10 +345,6 @@ interface Props<Tag extends HTMLTag = "button" | "a"> extends Polymorphic<
    */
   disabled?: boolean;
   /**
-   * Additional Tailwind classes merged on top of variant classes via `cn`.
-   */
-  classes?: string;
-  /**
    * Optional icon component rendered inside the button.
    */
   Icon?: AstroIconComponent;
@@ -357,7 +353,7 @@ interface Props<Tag extends HTMLTag = "button" | "a"> extends Polymorphic<
    * - `leading`: icon before the label
    * - `trailing`: icon after the label
    */
-  iconPosition?: IconPosition;
+  iconPosition?: TIconPosition;
   /**
    * Renders the button as an icon-only control.
    * The `size` variant maps to `iconSize` for square dimensions.
@@ -367,10 +363,6 @@ interface Props<Tag extends HTMLTag = "button" | "a"> extends Polymorphic<
    * When true, stretches the button to the full available width (`w-full`).
    */
   fullWidth?: boolean;
-  /**
-   * Any additional attributes are forwarded to the underlying element.
-   */
-  [key: string]: unknown;
 }
 
 const {
@@ -381,7 +373,7 @@ const {
   onlyIcon = false,
   fullWidth = false,
   disabled = false,
-  classes: className,
+  class: className,
   Icon,
   iconPosition = "leading",
   ...rest

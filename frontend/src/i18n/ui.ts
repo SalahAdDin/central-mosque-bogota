@@ -17,7 +17,7 @@ export const defaultLang = "es";
 export const ui = {
   en: {
     "language-picker.label": "Select language",
-    "header.donate-now": "Donate now",
+    "header.donate-now": "Donate",
     "footer.contact": "Contact",
     "footer.quick-links": "Quick Links",
     "footer.newsletter": "Newsletter",
@@ -31,7 +31,7 @@ export const ui = {
   },
   es: {
     "language-picker.label": "Seleccionar idioma",
-    "header.donate-now": "Donar ahora",
+    "header.donate-now": "Donar",
     "footer.contact": "Contacto",
     "footer.quick-links": "Enlaces rápidos",
     "footer.newsletter": "Boletín",
@@ -45,7 +45,7 @@ export const ui = {
   },
   tr: {
     "language-picker.label": "Dil seç",
-    "header.donate-now": "Şimdi bağış yap",
+    "header.donate-now": "Bağış yap",
     "footer.contact": "İletişim",
     "footer.quick-links": "Hızlı Bağlantılar",
     "footer.newsletter": "Bülten",
@@ -59,7 +59,7 @@ export const ui = {
   },
   ar: {
     "language-picker.label": "اختر اللغة",
-    "header.donate-now": "تبرع الآن",
+    "header.donate-now": "تبرع",
     "footer.contact": "اتصل بنا",
     "footer.quick-links": "روابط سريعة",
     "footer.newsletter": "النشرة البريدية",

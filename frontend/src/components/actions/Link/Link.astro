@@ -1,7 +1,8 @@
 ---
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@utils/styles.utils";
-import type { IconPosition } from "@utils/ui.constants";
+import type { TIconPosition } from "@utils/types";
+import type { HTMLAttributes } from "astro/types";
 
 /**
  * @component Link
@@ -181,21 +182,12 @@ const linkVariants = cva(
 
 type LinkVariants = VariantProps<typeof linkVariants>;
 
-interface Props extends LinkVariants {
-  /**
-   * Destination URL of the link. When `disabled` is true the href is removed.
-   */
-  href?: string;
+interface Props extends LinkVariants, Omit<HTMLAttributes<"a">, "color"> {
   /**
    * Accessible label for assistive technologies.
    * Recommended when `onlyIcon` is true and there is no visible text.
    */
   ariaLabel?: string;
-  /**
-   * Additional Tailwind classes merged via `cn`.
-   * Useful for one-off overrides from the consuming component.
-   */
-  classes?: string;
   /**
    * Optional icon component rendered inside the link.
    */
@@ -205,7 +197,7 @@ interface Props extends LinkVariants {
    * - `leading`: icon before the text
    * - `trailing`: icon after the text
    */
-  iconPosition?: IconPosition;
+  iconPosition?: TIconPosition;
   /**
    * When true, renders the link as an icon-only control.
    * The icon is centered and the underline is removed.
@@ -216,11 +208,6 @@ interface Props extends LinkVariants {
    * Applies a strike-through style, disables pointer events and sets aria-disabled.
    */
   disabled?: boolean;
-  /**
-   * Any other attributes are forwarded to the underlying <a> element.
-   * For example: target, rel, data-* attributes or event handlers.
-   */
-  [key: string]: unknown;
 }
 
 const {
@@ -230,22 +217,11 @@ const {
   disabled = false,
   href,
   ariaLabel,
-  classes,
+  class: className,
   Icon,
   iconPosition = "leading",
   ...rest
 } = Astro.props as Props;
-
-const isExternal = typeof href === "string" && /^https?:\/\//.test(href ?? "");
-
-const targetFromProps = rest.target as string | undefined;
-const relFromProps = rest.rel as string | undefined;
-
-const target =
-  targetFromProps ?? (isExternal && !disabled ? "_blank" : undefined);
-
-const rel =
-  relFromProps ?? (isExternal && !disabled ? "noreferrer noopener" : undefined);
 
 const classesMerged = cn(
   linkVariants({
@@ -254,7 +230,7 @@ const classesMerged = cn(
     disabledStyle: disabled,
   }),
   disabled && "pointer-events-none",
-  classes,
+  className,
 );
 ---
 
@@ -263,8 +239,6 @@ const classesMerged = cn(
   class={classesMerged}
   aria-disabled={disabled || undefined}
   aria-label={ariaLabel}
-  target={target}
-  rel={rel}
   {...rest}
 >
   {

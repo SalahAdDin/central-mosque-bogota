@@ -2,8 +2,9 @@
 import Icon from "@components/data/display/Icon.astro";
 import Link from "@components/actions/Link/Link.astro";
 import Button from "@components/actions/Button.astro";
-import type { OtherIcon } from "@utils/ui.constants";
 import SvgIcon from "@components/data/display/SvgIcon.astro";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+import type { TSVGIcon, TNavLink } from "@utils/types";
 
 type ContactInfo = {
   address: string;
@@ -11,21 +12,16 @@ type ContactInfo = {
   email: string;
 };
 
-type NavLink = {
-  label: string;
-  href: string;
-};
-
 type RightsTexts = {
   copyRight: string;
-  privacyPolicy: NavLink;
-  termsAndConditions: NavLink;
+  privacyPolicy: TNavLink;
+  termsAndConditions: TNavLink;
 };
 
 interface Props {
   lemma?: string;
-  socialNetworkLinks?: Array<NavLink & { icon: OtherIcon }>;
-  fastLinks?: Array<NavLink>;
+  socialNetworkLinks?: Array<TNavLink & { icon: TSVGIcon }>;
+  fastLinks?: Array<TNavLink>;
   contactInfo: ContactInfo;
   rightsText: RightsTexts;
 }
@@ -37,6 +33,9 @@ const {
   contactInfo,
   rightsText,
 } = Astro.props as Props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const hasContent = Boolean(
   lemma || socialNetworkLinks.length > 0 || fastLinks.length > 0 || rightsText,
@@ -76,11 +75,11 @@ if (!hasContent) {
           socialNetworkLinks.map(({ label, href, icon }) => (
             <li>
               <Link
-                classes="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary"
+                class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary"
                 href={href}
                 aria-label={label}
               >
-                <SvgIcon icon={icon} classes="w-5 h-5 fill-current" />
+                <SvgIcon icon={icon} class="w-5 h-5 fill-current" />
               </Link>
             </li>
           ))
@@ -88,7 +87,7 @@ if (!hasContent) {
       </ul>
     </div>
     <div class="col-span-1">
-      <h4 class="text-lg font-bold mb-6">Enlaces Rápidos</h4>
+      <h4 class="text-lg font-bold mb-6">{t("footer.quick-links")}</h4>
       <ul class="space-y-4 text-blue-100/70">
         {
           fastLinks.map(({ label, href }) => (
@@ -102,7 +101,7 @@ if (!hasContent) {
       </ul>
     </div>
     <div class="col-span-1">
-      <h4 class="text-lg font-bold mb-6">Contacto</h4>
+      <h4 class="text-lg font-bold mb-6">{t("footer.contact")}</h4>
       <ul class="space-y-4 text-blue-100/70">
         <li class="flex gap-3">
           <Icon
@@ -122,18 +121,18 @@ if (!hasContent) {
       </ul>
     </div>
     <div class="col-span-1">
-      <h4 class="text-lg font-bold mb-6">Newsletter</h4>
+      <h4 class="text-lg font-bold mb-6">{t("footer.newsletter")}</h4>
       <p class="text-sm text-blue-100/70 mb-4">
-        Suscríbete para recibir actualizaciones de la comunidad y noticias.
+        {t("footer.newsletter-description")}
       </p>
       <form class="flex flex-col gap-2">
         <input
           class="bg-white/10 border-white/20 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-secondary text-white placeholder-blue-100/30"
-          placeholder="Tu correo electrónico"
+          placeholder={t("footer.email-placeholder")}
           type="email"
         />
         <Button color="primary" type="submit" variant="solid">
-          Suscribirse
+          {t("footer.subscribe")}
         </Button>
       </form>
     </div>
