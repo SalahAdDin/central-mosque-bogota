@@ -1,0 +1,38 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component SheetTitle
+ * @title Sheet Title
+ * @description Title typography for `SheetHeader`. Renders an `h2` with a semibold foreground style.
+ *
+ * @preview
+ *
+ * <SheetHeader>
+ *   <SheetTitle>Title</SheetTitle>
+ * </SheetHeader>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { SheetTitle } from "@components/layout/Sheet";
+ * ---
+ *
+ * <SheetTitle>Menu</SheetTitle>
+ * ```
+ */
+
+type Props = HTMLAttributes<"h2">;
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<h2
+  class={cn("text-foreground font-semibold", className)}
+  {...rest}
+  data-slot="sheet-title"
+>
+  <slot />
+</h2>

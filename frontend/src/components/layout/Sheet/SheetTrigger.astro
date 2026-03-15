@@ -1,0 +1,45 @@
+---
+import { DialogTrigger } from "@components/actions/Dialog";
+import type { ComponentProps } from "astro/types";
+
+/**
+ * @component SheetTrigger
+ * @title Sheet Trigger
+ * @description Alias of `DialogTrigger` for `Sheet`. Opens the nearest `SheetContent` (or a specific dialog when `target` is set).
+ *
+ * @preview
+ *
+ * <Sheet>
+ *   <SheetTrigger class="rounded-md border px-3 py-2">Open sheet</SheetTrigger>
+ *   <SheetContent>
+ *     <div class="p-4">Sheet content</div>
+ *   </SheetContent>
+ * </Sheet>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { Sheet, SheetContent, SheetTrigger } from "@components/layout/Sheet";
+ * ---
+ *
+ * <Sheet>
+ *   <SheetTrigger class="rounded-md border px-3 py-2">Open</SheetTrigger>
+ *   <SheetContent side="right">
+ *     <div class="p-4">Content</div>
+ *   </SheetContent>
+ * </Sheet>
+ * ```
+ *
+ * Notes:
+ * - Supports `asChild` and `target` the same way `DialogTrigger` does.
+ */
+
+interface Props extends ComponentProps<typeof DialogTrigger> {}
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<DialogTrigger class={className} {...rest}>
+  <slot />
+</DialogTrigger>

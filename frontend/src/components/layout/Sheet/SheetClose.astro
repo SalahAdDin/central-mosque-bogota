@@ -1,0 +1,42 @@
+---
+import { DialogClose } from "@components/actions/Dialog";
+import type { ComponentProps } from "astro/types";
+
+/**
+ * @component SheetClose
+ * @title Sheet Close
+ * @description Alias of `DialogClose` for `Sheet`. Closes the nearest `SheetContent` when clicked.
+ *
+ * @preview
+ *
+ * <Sheet>
+ *   <SheetTrigger class="rounded-md border px-3 py-2">Open</SheetTrigger>
+ *   <SheetContent>
+ *     <div class="p-4">
+ *       <SheetClose class="rounded-md border px-3 py-2">Close</SheetClose>
+ *     </div>
+ *   </SheetContent>
+ * </Sheet>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import Button from "@components/actions/Button.astro";
+ * import { SheetClose } from "@components/layout/Sheet";
+ * ---
+ *
+ * <SheetClose asChild>
+ *   <Button variant="outline">Cancel</Button>
+ * </SheetClose>
+ * ```
+ */
+
+interface Props extends ComponentProps<typeof DialogClose> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<DialogClose class={className} {...rest}>
+  <slot />
+</DialogClose>

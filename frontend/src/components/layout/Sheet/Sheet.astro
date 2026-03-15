@@ -1,0 +1,60 @@
+---
+import { Dialog } from "@components/actions/Dialog";
+import type { ComponentProps } from "astro/types";
+
+/**
+ * @component Sheet
+ * @title Sheet
+ * @description Off-canvas panel built on top of `Dialog`. Compose with `SheetTrigger` and `SheetContent` to create a mobile menu or side panel.
+ *
+ * @preview
+ *
+ * <Sheet>
+ *   <SheetTrigger class="rounded-md border px-3 py-2">Open</SheetTrigger>
+ *   <SheetContent side="right">
+ *     <SheetHeader>
+ *       <SheetTitle>Menu</SheetTitle>
+ *       <SheetDescription>Quick links and actions</SheetDescription>
+ *     </SheetHeader>
+ *     <div class="p-4">Content</div>
+ *   </SheetContent>
+ * </Sheet>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import {
+ *   Sheet,
+ *   SheetContent,
+ *   SheetDescription,
+ *   SheetHeader,
+ *   SheetTitle,
+ *   SheetTrigger,
+ * } from "@components/layout/Sheet";
+ * ---
+ *
+ * <Sheet closeOnBackdropClick={true} closeOnEsc={true} lockScroll={true}>
+ *   <SheetTrigger class="rounded-md border px-3 py-2">Open</SheetTrigger>
+ *   <SheetContent side="right">
+ *     <SheetHeader>
+ *       <SheetTitle>Title</SheetTitle>
+ *       <SheetDescription>Description</SheetDescription>
+ *     </SheetHeader>
+ *     <div class="p-4">Panel content</div>
+ *   </SheetContent>
+ * </Sheet>
+ * ```
+ *
+ * Notes:
+ * - `Sheet` accepts the same root options as `Dialog`: `closeOnBackdropClick`, `closeOnEsc`, and `lockScroll`.
+ */
+
+interface Props extends ComponentProps<typeof Dialog> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<Dialog class={className} {...rest}>
+  <slot />
+</Dialog>

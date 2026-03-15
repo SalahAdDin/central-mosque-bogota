@@ -1,0 +1,40 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component SheetHeader
+ * @title Sheet Header
+ * @description Header section for `SheetContent`. Provides default spacing for a title and description.
+ *
+ * @preview
+ *
+ * <SheetContent>
+ *   <SheetHeader>
+ *     <SheetTitle>Title</SheetTitle>
+ *     <SheetDescription>Description</SheetDescription>
+ *   </SheetHeader>
+ * </SheetContent>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { SheetHeader, SheetTitle, SheetDescription } from "@components/layout/Sheet";
+ * ---
+ *
+ * <SheetHeader>
+ *   <SheetTitle>Menu</SheetTitle>
+ *   <SheetDescription>Quick actions</SheetDescription>
+ * </SheetHeader>
+ * ```
+ */
+
+interface Props extends HTMLAttributes<"div"> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<header class={cn("flex flex-col gap-1.5 p-4", className)} {...rest}>
+  <slot />
+</header>

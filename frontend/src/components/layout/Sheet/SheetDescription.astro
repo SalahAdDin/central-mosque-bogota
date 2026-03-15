@@ -1,0 +1,34 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component SheetDescription
+ * @title Sheet Description
+ * @description Supporting text for `SheetHeader`. Renders a muted `p` element suitable for short descriptions.
+ *
+ * @preview
+ *
+ * <SheetHeader>
+ *   <SheetDescription>Description text</SheetDescription>
+ * </SheetHeader>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { SheetDescription } from "@components/layout/Sheet";
+ * ---
+ *
+ * <SheetDescription>Quick actions and links</SheetDescription>
+ * ```
+ */
+
+interface Props extends HTMLAttributes<"p"> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<p class={cn("text-muted-foreground text-sm", className)} {...rest}>
+  <slot />
+</p>

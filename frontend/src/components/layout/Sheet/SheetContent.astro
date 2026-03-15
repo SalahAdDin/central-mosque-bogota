@@ -1,0 +1,139 @@
+---
+import Icon from "@components/data/display/Icon.astro";
+import type { HTMLAttributes } from "astro/types";
+import {
+  dialogBackdropVariants,
+  sheetContentVariants,
+  sheetCloseButtonVariants,
+  type SheetContentVariants,
+} from "./variants";
+import { cn } from "@utils/styles.utils";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+
+/**
+ * @component SheetContent
+ * @title Sheet Content
+ * @description Native `<dialog>` element styled as a sliding sheet. Includes a backdrop slot and a built-in close button.
+ *
+ * @preview
+ *
+ * <Sheet>
+ *   <SheetTrigger class="rounded-md border px-3 py-2">Open</SheetTrigger>
+ *   <SheetContent side="right">
+ *     <SheetHeader>
+ *       <SheetTitle>Menu</SheetTitle>
+ *       <SheetDescription>Choose an option</SheetDescription>
+ *     </SheetHeader>
+ *     <div class="p-4">Content</div>
+ *     <SheetFooter>
+ *       <SheetClose class="rounded-md border px-3 py-2">Close</SheetClose>
+ *     </SheetFooter>
+ *   </SheetContent>
+ * </Sheet>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import {
+ *   Sheet,
+ *   SheetClose,
+ *   SheetContent,
+ *   SheetDescription,
+ *   SheetFooter,
+ *   SheetHeader,
+ *   SheetTitle,
+ *   SheetTrigger,
+ * } from "@components/layout/Sheet";
+ * ---
+ *
+ * <Sheet>
+ *   <SheetTrigger class="rounded-md border px-3 py-2">Open</SheetTrigger>
+ *   <SheetContent side="left">
+ *     <SheetHeader>
+ *       <SheetTitle>Title</SheetTitle>
+ *       <SheetDescription>Description</SheetDescription>
+ *     </SheetHeader>
+ *     <div class="p-4">Panel content</div>
+ *     <SheetFooter>
+ *       <SheetClose class="rounded-md border px-3 py-2">Close</SheetClose>
+ *     </SheetFooter>
+ *   </SheetContent>
+ * </Sheet>
+ * ```
+ *
+ * @examples
+ *
+ * ### Sides
+ *
+ * <div class="grid gap-2 sm:grid-cols-2">
+ *   <Sheet>
+ *     <SheetTrigger class="rounded-md border px-3 py-2">Right</SheetTrigger>
+ *     <SheetContent side="right"><div class="p-4">Right</div></SheetContent>
+ *   </Sheet>
+ *   <Sheet>
+ *     <SheetTrigger class="rounded-md border px-3 py-2">Left</SheetTrigger>
+ *     <SheetContent side="left"><div class="p-4">Left</div></SheetContent>
+ *   </Sheet>
+ *   <Sheet>
+ *     <SheetTrigger class="rounded-md border px-3 py-2">Top</SheetTrigger>
+ *     <SheetContent side="top"><div class="p-4">Top</div></SheetContent>
+ *   </Sheet>
+ *   <Sheet>
+ *     <SheetTrigger class="rounded-md border px-3 py-2">Bottom</SheetTrigger>
+ *     <SheetContent side="bottom"><div class="p-4">Bottom</div></SheetContent>
+ *   </Sheet>
+ * </div>
+ *
+ * Notes:
+ * - Named slots:
+ *   - `backdrop`: override the overlay element (add `slot="backdrop"` to your element).
+ *   - `icon`: override the close icon (add `slot="icon"` to your element).
+ * - The built-in close button is always rendered and can be targeted via `[data-dialog-close]` or `[data-slot="sheet-close"]`.
+ */
+
+interface SheetContentProps
+  extends HTMLAttributes<"dialog">, SheetContentVariants {}
+
+const {
+  side = "right",
+  class: className,
+  ...rest
+} = Astro.props as SheetContentProps;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<!-- dialog overlay -->
+<slot name="backdrop">
+  <div
+    class={dialogBackdropVariants()}
+    data-state="closed"
+    data-slot="dialog-backdrop"
+  >
+  </div>
+</slot>
+
+<dialog
+  class={cn(sheetContentVariants({ side }), className)}
+  data-dialog-content
+  data-state="closed"
+  data-close-duration="300"
+  {...rest}
+  data-slot="sheet-content"
+>
+  <slot />
+  <button
+    type="button"
+    class={sheetCloseButtonVariants()}
+    data-dialog-close
+    data-slot="sheet-close"
+    aria-label={t("dialog.close")}
+  >
+    <slot name="icon">
+      <Icon icon="close" class="transition-opacity" />
+    </slot>
+    <span class="sr-only">{t("sheet.close")}</span>
+  </button>
+</dialog>
