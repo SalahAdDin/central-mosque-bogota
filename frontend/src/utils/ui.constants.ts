@@ -3,9 +3,9 @@
  * These correspond to the semantic colors defined in the global CSS variables.
  */
 export const COLORS = [
-  "neutral",
   "primary",
   "secondary",
+  "neutral",
   "accent",
   "info",
   "success",
@@ -31,8 +31,8 @@ export const SIZES = ["xs", "sm", "md", "lg", "xl"] as const;
 
 /**
  * Visual style variants available for components like Buttons and Badges.
- * - normal: Solid background with contrasting text
+ * - solid: Solid background with contrasting text
  * - soft: Low-opacity background with colored text
  * - outline: Transparent background with colored border and text
  */
-export const VARIANTS = ["normal", "soft", "outline"] as const;
+export const VARIANTS = ["solid", "soft", "outline"] as const;
