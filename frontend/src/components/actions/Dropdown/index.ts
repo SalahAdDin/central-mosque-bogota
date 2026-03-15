@@ -32,7 +32,7 @@ export {
   DropdownVariants,
 };
 
-/* Unsafe assignment of an error typed value.
+/* TODO: Unsafe assignment of an error typed value.
 export default {
   Root: Dropdown,
   Trigger: DropdownTrigger,

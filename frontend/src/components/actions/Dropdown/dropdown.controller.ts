@@ -331,7 +331,10 @@ class DropdownRootController {
   }
 
   private initialize(): void {
-    const trigger = this.root.querySelector<HTMLButtonElement>("[data-dropdown-trigger]");
+    let trigger = this.root.querySelector<HTMLButtonElement>("[data-dropdown-trigger]");
+    if (trigger?.hasAttribute("data-dropdown-as-child")) {
+      trigger = trigger.firstElementChild as HTMLButtonElement;
+    }
     const menu = this.root.querySelector<HTMLElement>("[data-dropdown-content]");
     if (!trigger || !menu) return;
 
