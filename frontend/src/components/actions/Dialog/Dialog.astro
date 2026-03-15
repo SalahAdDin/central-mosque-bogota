@@ -1,0 +1,85 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component Dialog
+ * @title Dialog
+ * @description Root wrapper that wires up `DialogTrigger`, `DialogContent`, and `DialogClose` behavior.
+ *
+ * @preview
+ *
+ * <Dialog>
+ *   <DialogTrigger class="rounded-md border px-3 py-2">Open</DialogTrigger>
+ *   <DialogContent>
+ *     Dialog content
+ *   </DialogContent>
+ * </Dialog>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { Dialog, DialogContent, DialogTrigger } from "@components/actions/Dialog";
+ * ---
+ *
+ * <Dialog>
+ *   <DialogTrigger class="rounded-md border px-3 py-2">Open</DialogTrigger>
+ *   <DialogContent>
+ *     Dialog content
+ *   </DialogContent>
+ * </Dialog>
+ * ```
+ *
+ * @examples
+ *
+ * ### Disable close interactions
+ *
+ * ```astro nocollapse
+ * ---
+ * import { Dialog, DialogContent, DialogTrigger } from "@components/actions/Dialog";
+ * ---
+ *
+ * <Dialog closeOnBackdropClick={false} closeOnEsc={false} lockScroll={false}>
+ *   <DialogTrigger class="rounded-md border px-3 py-2">Open</DialogTrigger>
+ *   <DialogContent>
+ *     Dialog content
+ *   </DialogContent>
+ * </Dialog>
+ * ```
+ */
+
+interface Props extends HTMLAttributes<"div"> {
+  closeOnBackdropClick?: boolean;
+  closeOnEsc?: boolean;
+  lockScroll?: boolean;
+}
+
+const {
+  class: className,
+  closeOnBackdropClick = true,
+  closeOnEsc = true,
+  lockScroll = true,
+  ...rest
+} = Astro.props as Props;
+---
+
+<div
+  class={cn("relative", className)}
+  data-dialog-root
+  data-close-on-backdrop-click={closeOnBackdropClick ? "true" : "false"}
+  data-close-on-esc={closeOnEsc ? "true" : "false"}
+  data-lock-scroll={lockScroll ? "true" : "false"}
+  {...rest}
+>
+  <slot />
+</div>
+
+<script>
+  import { initDialogs } from "./dialog.controller";
+
+  const setup = () => initDialogs();
+
+  document.addEventListener("DOMContentLoaded", setup);
+  document.addEventListener("astro:after-swap", setup);
+</script>

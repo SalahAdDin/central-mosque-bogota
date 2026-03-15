@@ -1,0 +1,61 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component DialogClose
+ * @title Dialog Close
+ * @description Control that closes the nearest dialog when clicked. Use inside `DialogContent`.
+ *
+ * @preview
+ *
+ * <Dialog>
+ *   <DialogTrigger class="rounded-md border px-3 py-2">Open</DialogTrigger>
+ *   <DialogContent>
+ *     <DialogFooter>
+ *       <DialogClose class="rounded-md border px-3 py-2">Close</DialogClose>
+ *     </DialogFooter>
+ *   </DialogContent>
+ * </Dialog>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import Button from "@components/actions/Button.astro";
+ * import { DialogClose } from "@components/actions/Dialog";
+ * ---
+ *
+ * <DialogClose asChild>
+ *   <Button variant="outline">Cancel</Button>
+ * </DialogClose>
+ * ```
+ */
+
+interface Props extends Omit<HTMLAttributes<"button">, "type" | "role"> {
+  /**
+   * When true, the component will render its child element instead of a button
+   */
+  asChild?: boolean;
+}
+
+const { class: className, asChild = false, ...rest } = Astro.props as Props;
+
+// Get the first child element if asChild is true
+let hasChildren = false;
+
+if (Astro.slots.has("default")) {
+  hasChildren = true;
+}
+---
+
+{
+  asChild && hasChildren ? (
+    <div data-dialog-close data-dialog-as-child>
+      <slot />
+    </div>
+  ) : (
+    <button type="button" class={className} data-dialog-close {...rest}>
+      <slot />
+    </button>
+  )
+}

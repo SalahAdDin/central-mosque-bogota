@@ -1,0 +1,38 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component DialogDescription
+ * @title Dialog Description
+ * @description Supporting text for the dialog. Intended to be used inside `DialogHeader`.
+ *
+ * @preview
+ *
+ * <DialogHeader>
+ *   <DialogDescription>Short supporting text.</DialogDescription>
+ * </DialogHeader>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DialogDescription } from "@components/actions/Dialog";
+ * ---
+ *
+ * <DialogDescription>Short supporting text.</DialogDescription>
+ * ```
+ */
+
+interface Props extends HTMLAttributes<"p"> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<p
+  class={cn("text-muted-foreground", className)}
+  {...rest}
+  data-slot="dialog-description"
+>
+  <slot />
+</p>

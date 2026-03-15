@@ -1,0 +1,141 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import { cn } from "@utils/styles.utils";
+
+import {
+  dialogBackdropVariants,
+  dialogContentVariants,
+  dialogCloseButtonVariants,
+  type DialogContentVariants,
+} from "./variants";
+import Icon from "@components/data/display/Icon.astro";
+
+/**
+ * @component DialogContent
+ * @title Dialog Content
+ * @description Native `<dialog>` element styled and wired for open/close state, with an optional backdrop slot and a built-in close button.
+ *
+ * @preview
+ *
+ * <Dialog>
+ *   <DialogTrigger class="rounded-md border px-3 py-2">Open</DialogTrigger>
+ *   <DialogContent size="md" position="center">
+ *     <DialogHeader>
+ *       <DialogTitle>Example</DialogTitle>
+ *       <DialogDescription>Short description</DialogDescription>
+ *     </DialogHeader>
+ *     <div class="py-4">Content</div>
+ *     <DialogFooter>
+ *       <DialogClose class="rounded-md border px-3 py-2">Close</DialogClose>
+ *     </DialogFooter>
+ *   </DialogContent>
+ * </Dialog>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import {
+ *   Dialog,
+ *   DialogClose,
+ *   DialogContent,
+ *   DialogDescription,
+ *   DialogFooter,
+ *   DialogHeader,
+ *   DialogTitle,
+ *   DialogTrigger,
+ * } from "@components/actions/Dialog";
+ * ---
+ *
+ * <Dialog>
+ *   <DialogTrigger class="rounded-md border px-3 py-2">Open</DialogTrigger>
+ *   <DialogContent size="lg" position="center" animationDuration={200}>
+ *     <DialogHeader>
+ *       <DialogTitle>Title</DialogTitle>
+ *       <DialogDescription>Description</DialogDescription>
+ *     </DialogHeader>
+ *     <div class="py-4">Your dialog content goes here.</div>
+ *     <DialogFooter>
+ *       <DialogClose class="rounded-md border px-3 py-2">Close</DialogClose>
+ *     </DialogFooter>
+ *   </DialogContent>
+ * </Dialog>
+ * ```
+ *
+ * Notes:
+ * - The `id` attribute can be used with `DialogTrigger target="..."` to open a specific dialog.
+ * - The default close button can be hidden with CSS by targeting `[data-dialog-close]` inside this component.
+ */
+
+type Position = NonNullable<DialogContentVariants["position"]>;
+type Size = NonNullable<DialogContentVariants["size"]>;
+
+interface Props extends HTMLAttributes<"dialog">, DialogContentVariants {
+  /**
+   * Open and close animation duration in milliseconds
+   */
+  animationDuration?: number;
+}
+
+const {
+  class: className,
+  size = "md",
+  position = "center",
+  animationDuration = 200,
+  ...rest
+} = Astro.props as Props;
+---
+
+<!-- TODO: backdrop is not working
+TODO: check the animations -->
+<slot name="backdrop">
+  <div
+    class={dialogBackdropVariants()}
+    data-state="closed"
+    data-slot="dialog-backdrop"
+    style={{ animationDuration: `${animationDuration}ms` }}
+  >
+  </div>
+</slot>
+
+<dialog
+  class={cn(dialogContentVariants({ size, position }), className)}
+  style={{ animationDuration: `${animationDuration}ms` }}
+  data-dialog-content
+  data-state="closed"
+  {...rest}
+>
+  <slot />
+  <button
+    type="button"
+    class={dialogCloseButtonVariants()}
+    data-dialog-close
+    aria-label="Close dialog"
+  >
+    <slot name="icon">
+      <Icon icon="close" class="size-5 transition-opacity" />
+    </slot>
+    <span class="sr-only">Close</span>
+  </button>
+</dialog>
+
+<!--
+<style>
+  :global(dialog[data-dialog-content]) {
+    border: none;
+    padding: 0;
+  }
+
+  :global(dialog[data-dialog-content]::backdrop) {
+    background: rgb(15 23 42 / 0.55);
+  }
+</style>
+-->
+
+<style>
+  .dialog-content {
+    --nested-offset: 1rem;
+    --nested-scale: 0.05;
+  }
+</style>

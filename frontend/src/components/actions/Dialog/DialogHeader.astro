@@ -1,0 +1,43 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component DialogHeader
+ * @title Dialog Header
+ * @description Header container for dialog title/description. Intended to be placed at the top of `DialogContent`.
+ *
+ * @preview
+ *
+ * <DialogContent>
+ *   <DialogHeader>
+ *     <DialogTitle>Title</DialogTitle>
+ *     <DialogDescription>Description</DialogDescription>
+ *   </DialogHeader>
+ * </DialogContent>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DialogHeader, DialogTitle, DialogDescription } from "@components/actions/Dialog";
+ * ---
+ *
+ * <DialogHeader>
+ *   <DialogTitle>Title</DialogTitle>
+ *   <DialogDescription>Description</DialogDescription>
+ * </DialogHeader>
+ * ```
+ */
+
+interface Props extends HTMLAttributes<"header"> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<header
+  class={cn("flex flex-col space-y-2 text-center sm:text-left", className)}
+  {...rest}
+>
+  <slot />
+</header>

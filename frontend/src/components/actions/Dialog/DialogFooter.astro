@@ -1,0 +1,47 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component DialogFooter
+ * @title Dialog Footer
+ * @description Footer container for dialog actions (e.g. Cancel/Confirm). Intended to be placed at the bottom of `DialogContent`.
+ *
+ * @preview
+ *
+ * <DialogFooter>
+ *   <DialogClose class="rounded-md border px-3 py-2">Cancel</DialogClose>
+ *   <button class="rounded-md border px-3 py-2">Confirm</button>
+ * </DialogFooter>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import Button from "@components/actions/Button.astro";
+ * import { DialogFooter, DialogClose } from "@components/actions/Dialog";
+ * ---
+ *
+ * <DialogFooter>
+ *   <DialogClose asChild>
+ *     <Button variant="outline">Cancel</Button>
+ *   </DialogClose>
+ *   <Button>Confirm</Button>
+ * </DialogFooter>
+ * ```
+ */
+
+interface Props extends HTMLAttributes<"footer"> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<footer
+  class={cn(
+    "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+    className,
+  )}
+  {...rest}
+>
+  <slot />
+</footer>
