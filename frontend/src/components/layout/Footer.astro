@@ -1,29 +1,29 @@
 ---
-import Icon from "@components/data/display/Icon.astro";
-import Link from "@components/actions/Link/Link.astro";
-import Button from "@components/actions/Button.astro";
-import SvgIcon from "@components/data/display/SvgIcon.astro";
-import { getLangFromUrl, useTranslations } from "@i18n/utils";
-import type { TSVGIcon, TNavLink } from "@utils/types";
+import Icon from '@components/data/display/Icon.astro'
+import Link from '@components/actions/Link/Link.astro'
+import Button from '@components/actions/Button.astro'
+import SvgIcon from '@components/data/display/SvgIcon.astro'
+import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import type { TSVGIcon, TNavLink } from '@utils/types'
 
 type ContactInfo = {
-  address: string;
-  phone: string;
-  email: string;
-};
+  address: string
+  phone: string
+  email: string
+}
 
 type RightsTexts = {
-  copyRight: string;
-  privacyPolicy: TNavLink;
-  termsAndConditions: TNavLink;
-};
+  copyRight: string
+  privacyPolicy: TNavLink
+  termsAndConditions: TNavLink
+}
 
 interface Props {
-  lemma?: string;
-  socialNetworkLinks?: Array<TNavLink & { icon: TSVGIcon }>;
-  fastLinks?: Array<TNavLink>;
-  contactInfo: ContactInfo;
-  rightsText: RightsTexts;
+  lemma?: string
+  socialNetworkLinks?: Array<TNavLink & { icon: TSVGIcon }>
+  fastLinks?: Array<TNavLink>
+  contactInfo: ContactInfo
+  rightsText: RightsTexts
 }
 
 const {
@@ -32,54 +32,68 @@ const {
   fastLinks = [],
   contactInfo,
   rightsText,
-} = Astro.props as Props;
+} = Astro.props as Props
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 const hasContent = Boolean(
   lemma || socialNetworkLinks.length > 0 || fastLinks.length > 0 || rightsText,
-);
+)
 
 if (!hasContent) {
   throw new Error(
-    "Footer requires at least one of lemma, socialNetworkLinks, fastLinks or rightsText.",
-  );
+    'Footer requires at least one of lemma, socialNetworkLinks, fastLinks or rightsText.',
+  )
 }
 ---
 
-<footer class="bg-secondary text-white pt-20 pb-10">
+<footer class="bg-secondary pt-20 pb-10 text-white">
   <section
-    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-16"
+    class="
+      mx-auto grid max-w-7xl grid-cols-1 gap-12 border-b border-white/10 px-4
+      pb-16
+      sm:px-6
+      md:grid-cols-4
+      lg:px-8
+    "
   >
-    <div class="col-span-1 md:col-span-1">
+    <div class="
+      col-span-1
+      md:col-span-1
+    "
+    >
       <!-- Mosque branding -->
-      <div class="flex items-center gap-3 mb-6">
-        <div class="bg-white px-3 py-1.5 rounded-full">
-          <Icon icon="mosque" class="text-secondary text-3xl" />
+      <div class="mb-6 flex items-center gap-3">
+        <div class="rounded-full bg-white px-3 py-1.5">
+          <Icon icon="mosque" class="text-3xl text-secondary" />
         </div>
         <div>
-          <span class="text-xl font-bold tracking-tight block leading-tight">
+          <span class="block text-xl/tight font-bold tracking-tight">
             Mezquita Central
           </span>
-          <span class="text-xs opacity-80 uppercase tracking-widest">
+          <span class="text-xs tracking-widest uppercase opacity-80">
             de Bogotá
           </span>
         </div>
       </div>
       <!-- Mosque lemma -->
-      {lemma && <p class="text-blue-100/70 leading-relaxed mb-6">{lemma}</p>}
+      {lemma && <p class="mb-6 leading-relaxed text-blue-100/70">{lemma}</p>}
       <!-- Mosque social networks -->
       <ul class="flex gap-4">
         {
           socialNetworkLinks.map(({ label, href, icon }) => (
             <li>
               <Link
-                class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary"
+                class="
+                  flex size-10 items-center justify-center rounded-full
+                  bg-white/10
+                  hover:bg-primary
+                "
                 href={href}
                 aria-label={label}
               >
-                <SvgIcon icon={icon} class="w-5 h-5 fill-current" />
+                <SvgIcon icon={icon} class="size-5 fill-current" />
               </Link>
             </li>
           ))
@@ -87,7 +101,7 @@ if (!hasContent) {
       </ul>
     </div>
     <div class="col-span-1">
-      <h4 class="text-lg font-bold mb-6">{t("footer.quick-links")}</h4>
+      <h4 class="mb-6 text-lg font-bold">{t('footer.quick-links')}</h4>
       <ul class="space-y-4 text-blue-100/70">
         {
           fastLinks.map(({ label, href }) => (
@@ -101,47 +115,63 @@ if (!hasContent) {
       </ul>
     </div>
     <div class="col-span-1">
-      <h4 class="text-lg font-bold mb-6">{t("footer.contact")}</h4>
+      <h4 class="mb-6 text-lg font-bold">{t('footer.contact')}</h4>
       <ul class="space-y-4 text-blue-100/70">
         <li class="flex gap-3">
           <Icon
             icon="location_on"
-            class="text-blue-400 text-sm items-baseline"
+            class="items-baseline text-sm text-blue-400"
           />
           <address class="not-italic">{contactInfo.address}</address>
         </li>
         <li class="flex gap-3">
-          <Icon icon="phone" class="text-blue-400 text-sm" />
+          <Icon icon="phone" class="text-sm text-blue-400" />
           <phone>{contactInfo.phone}</phone>
         </li>
         <li class="flex gap-3">
-          <Icon icon="email" class="text-blue-400 text-sm" />
+          <Icon icon="email" class="text-sm text-blue-400" />
           <email>{contactInfo.email}</email>
         </li>
       </ul>
     </div>
     <div class="col-span-1">
-      <h4 class="text-lg font-bold mb-6">{t("footer.newsletter")}</h4>
-      <p class="text-sm text-blue-100/70 mb-4">
-        {t("footer.newsletter-description")}
+      <h4 class="mb-6 text-lg font-bold">{t('footer.newsletter')}</h4>
+      <p class="mb-4 text-sm text-blue-100/70">
+        {t('footer.newsletter-description')}
       </p>
       <form class="flex flex-col gap-2">
         <input
-          class="bg-white/10 border-white/20 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-secondary text-white placeholder-blue-100/30"
-          placeholder={t("footer.email-placeholder")}
+          class="
+            rounded-lg border-white/20 bg-white/10 px-4 py-2 text-sm text-white
+            placeholder-blue-100/30
+            focus:ring-2 focus:ring-secondary focus:outline-none
+          "
+          placeholder={t('footer.email-placeholder')}
           type="email"
         />
         <Button color="primary" type="submit" variant="solid">
-          {t("footer.subscribe")}
+          {t('footer.subscribe')}
         </Button>
       </form>
     </div>
   </section>
   <section
-    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 flex flex-col md:flex-row justify-between items-center text-sm text-blue-100/40"
+    class="
+      mx-auto mt-10 flex max-w-7xl flex-col justify-between px-4 text-sm
+      text-blue-100/40
+      sm:px-6
+      md:flex-row md:items-center
+      lg:px-8
+    "
   >
     <p>{rightsText?.copyRight}</p>
-    <div class="flex gap-6 mt-4 md:mt-0">
+    <div
+      class="
+        mt-4 flex flex-col justify-between gap-4
+        sm:flex-row
+        md:mt-0 md:gap-6
+      "
+    >
       <Link color="navbar" href={rightsText?.privacyPolicy.href}>
         {rightsText?.privacyPolicy.label}
       </Link>

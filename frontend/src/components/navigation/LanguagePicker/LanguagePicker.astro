@@ -4,40 +4,49 @@ import {
   DropdownContent,
   DropdownItem,
   DropdownTrigger,
-} from "@components/actions/Dropdown";
-import Icon from "@components/data/display/Icon.astro";
-import { languages, localeFlags } from "@i18n/ui";
-import { getLangFromUrl, useTranslations } from "@i18n/utils";
+} from '@components/actions/Dropdown'
+import Icon from '@components/data/display/Icon.astro'
+import { languages, localeFlags } from '@i18n/ui'
+import { getLangFromUrl, useTranslations } from '@i18n/utils'
 
-const currentLang = getLangFromUrl(Astro.url);
+const currentLang = getLangFromUrl(Astro.url)
 const t = useTranslations(currentLang);
 ---
 
-<Dropdown class="hidden sm:block">
+<Dropdown>
   <DropdownTrigger
-    aria-label={t("language-picker.label")}
-    class="flex items-center gap-1.5 px-3 py-2 rounded-lg
-      bg-white/10 text-white hover:bg-white/20 transition-all text-sm font-bold
+    aria-label={t('language-picker.label')}
+    class="
+      flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-2 text-sm
+      font-bold text-white transition-all
+      hover:bg-white/20
+      focus-visible:ring-2 focus-visible:ring-slate-500
+      focus-visible:ring-offset-2 focus-visible:outline-none
+      dark:bg-slate-900 dark:text-slate-50
       [&[aria-expanded='true']_[data-language-chevron]]:rotate-180
-      focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 focus-visible:outline-none
-      dark:bg-slate-900 dark:text-slate-50"
+    "
   >
     <Icon icon="language" class="text-[18px]" />
     <span>{currentLang.toUpperCase()}</span>
     <Icon
       icon="expand_more"
-      class="text-[16px] opacity-60 transition-transform duration-150 motion-reduce:transition-none"
+      class="
+        text-[16px] opacity-60 transition-transform duration-150
+        motion-reduce:transition-none
+      "
       data-language-chevron
     />
   </DropdownTrigger>
-
+  <!-- TODO: calculate align and side based on the picker position -->
   <DropdownContent
     align="end"
     side="bottom"
     sideOffset={8}
-    class="w-44 rounded-xl shadow-xl border py-2 overflow-hidden
-      bg-white text-slate-900 border-slate-100
-      dark:bg-slate-900 dark:text-slate-50 dark:border-slate-700"
+    class="
+      w-44 overflow-hidden rounded-xl border border-slate-100 bg-white py-2
+      text-slate-900 shadow-xl
+      dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50
+    "
   >
     {
       localeFlags.map(({ code, flag }) => (
@@ -45,13 +54,22 @@ const t = useTranslations(currentLang);
           as="a"
           href={`/${code}/`}
           class="
-            flex items-center gap-3 px-4 py-2 text-sm font-semibold transition-colors
-            text-slate-700 hover:bg-slate-200 focus-visible:bg-slate-50
-            dark:text-slate-200 dark:hover:bg-white/20 dark:focus-visible:bg-slate-800
+            flex items-center gap-3 px-4 py-2 text-sm font-semibold
+            text-slate-700 transition-colors
+            hover:bg-slate-200
+            focus-visible:bg-slate-50
+            dark:text-slate-200
+            dark:hover:bg-white/20
+            dark:focus-visible:bg-slate-800
           "
-          aria-current={code === currentLang ? "page" : undefined}
+          aria-current={code === currentLang ? 'page' : undefined}
         >
-          <span class="w-5 h-4 bg-slate-200 dark:bg-slate-700 rounded-sm flex-shrink-0 flex items-center justify-center text-[10px]">
+          <span class="
+            flex h-4 w-5 shrink-0 items-center justify-center rounded-sm
+            bg-slate-200 text-[10px]
+            dark:bg-slate-700
+          "
+          >
             {flag}
           </span>
           <span>{languages[code]}</span>

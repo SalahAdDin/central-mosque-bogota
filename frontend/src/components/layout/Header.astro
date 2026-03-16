@@ -1,40 +1,50 @@
 ---
-import ThemeSwitcher from "@components/navigation/ThemeSwitcher/ThemeSwitcher.astro";
-import Icon from "@components/data/display/Icon.astro";
-import Button from "@components/actions/Button.astro";
-import { getLangFromUrl, useTranslations } from "@i18n/utils";
-import LanguagePicker from "@components/navigation/LanguagePicker/LanguagePicker.astro";
-import Link from "@components/actions/Link/Link.astro";
-import type { TNavLink } from "@utils/types";
-import { Sheet, SheetContent, SheetFooter, SheetTrigger } from "./Sheet";
+import ThemeSwitcher from '@components/navigation/ThemeSwitcher/ThemeSwitcher.astro'
+import Icon from '@components/data/display/Icon.astro'
+import Button from '@components/actions/Button.astro'
+import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import LanguagePicker from '@components/navigation/LanguagePicker/LanguagePicker.astro'
+import Link from '@components/actions/Link/Link.astro'
+import type { TNavLink } from '@utils/types'
+import { Sheet, SheetContent, SheetFooter, SheetTrigger } from './Sheet'
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 interface Props {
-  navLinks: Array<TNavLink>;
+  navLinks: Array<TNavLink>
 }
 
 const { navLinks } = Astro.props as Props;
 ---
 
-<header class="fixed top-0 left-0 right-0 z-50 bg-secondary shadow-lg">
+<header class="fixed inset-x-0 top-0 z-50 bg-secondary shadow-lg">
   <div
-    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20"
+    class="
+      mx-auto flex h-20 max-w-7xl items-center justify-between px-4
+      sm:px-6
+      lg:px-8
+    "
   >
     <!-- Mosque branding -->
     <section class="flex items-center gap-3">
-      <div class="bg-white px-3 py-1.5 rounded-full">
-        <Icon icon="mosque" class="text-secondary text-3xl" />
+      <div class="rounded-full bg-white px-3 py-1.5">
+        <Icon icon="mosque" class="text-3xl text-secondary" />
       </div>
       <div>
         <span
-          class="text-xl font-bold tracking-tight block leading-tight dark:text-white"
+          class="
+            block text-xl/tight font-bold tracking-tight
+            dark:text-white
+          "
         >
           Mezquita Central
         </span>
         <span
-          class="text-xs opacity-80 uppercase tracking-widest dark:text-white"
+          class="
+            text-xs tracking-widest uppercase opacity-80
+            dark:text-white
+          "
         >
           de Bogotá
         </span>
@@ -42,7 +52,11 @@ const { navLinks } = Astro.props as Props;
     </section>
     <!-- Main links -->
     <nav
-      class="hidden lg:flex items-center gap-5 xl:gap-8 text-[13px] xl:text-sm font-semibold text-white/90"
+      class="
+        hidden items-center gap-5 text-[13px] font-semibold text-white/90
+        lg:flex
+        xl:gap-8 xl:text-sm
+      "
     >
       {
         navLinks.map(({ label, href }) => (
@@ -53,28 +67,44 @@ const { navLinks } = Astro.props as Props;
       }
     </nav>
     <!-- Quick links -->
-    <section class="hidden lg:flex items-center gap-2 xl:gap-4">
+    <section class="
+      hidden items-center gap-2
+      lg:flex
+      xl:gap-4
+    "
+    >
       <LanguagePicker />
       <ThemeSwitcher />
       <Button
         as="a"
-        class="rounded-full transition-all transform hover:scale-105 shadow-md"
+        class="
+          transform rounded-full shadow-md transition-all
+          hover:scale-105
+        "
         href="/donate"
       >
-        {t("header.donate-now")}
+        {t('header.donate-now')}
       </Button>
     </section>
     <!-- Mobile menu -->
-    <Sheet>
-      <SheetTrigger class="lg:hidden">
+    <Sheet class="lg:hidden">
+      <SheetTrigger>
         <Icon icon="menu" />
       </SheetTrigger>
       <SheetContent
-        class="[&_[data-dialog-close]]:top-7 [&_[data-dialog-close]]:right-4 [&_[data-dialog-close]]:sm:right-6 [&_[data-dialog-close]]:lg:right-8"
+        class="
+          **:data-dialog-close:top-7 **:data-dialog-close:right-4
+          **:data-dialog-close:sm:right-6
+          **:data-dialog-close:lg:right-8
+        "
       >
         <!-- Main links -->
         <nav
-          class="flex flex-col gap-5 xl:gap-8 text-[13px] xl:text-sm font-semibold p-4 text-white/90 mt-20"
+          class="
+            mt-20 flex flex-col gap-5 p-4 text-[13px] font-semibold
+            text-white/90
+            xl:gap-8 xl:text-sm
+          "
         >
           {
             navLinks.map(({ label, href }) => (
@@ -85,16 +115,23 @@ const { navLinks } = Astro.props as Props;
           }
         </nav>
         <!-- Quick links -->
-        <SheetFooter class="flex-row flex-wrap items-center gap-2 xl:gap-4">
+        <SheetFooter class="
+          flex-row flex-wrap items-center gap-2
+          xl:gap-4
+        "
+        >
           <!-- TODO: picker and switcher invisible in light theme -->
           <LanguagePicker />
           <ThemeSwitcher />
           <Button
             as="a"
-            class="rounded-full transition-all transform hover:scale-105 shadow-md"
+            class="
+              transform rounded-full shadow-md transition-all
+              hover:scale-105
+            "
             href="/donate"
           >
-            {t("header.donate-now")}
+            {t('header.donate-now')}
           </Button>
         </SheetFooter>
       </SheetContent>
