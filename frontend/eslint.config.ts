@@ -136,7 +136,7 @@ export default defineConfig([
     // TODO: bug https://github.com/eslint-stylistic/eslint-stylistic/issues/259
     rules: {
       "@stylistic/arrow-parens": "warn",
-      "@stylistic/jsx-one-expression-per-line": "warn",
+      "@stylistic/jsx-one-expression-per-line": "off",
       "@stylistic/member-delimiter-style": "warn",
       "@stylistic/multiline-ternary": "warn",
       "@stylistic/quotes": "warn",

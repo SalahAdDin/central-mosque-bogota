@@ -1,15 +1,16 @@
 ---
-import type { HTMLAttributes } from "astro/types";
+import type { HTMLAttributes } from 'astro/types'
 
-import { cn } from "@utils/styles.utils";
+import { cn } from '@utils/styles.utils'
 
 import {
   dialogBackdropVariants,
   dialogContentVariants,
   dialogCloseButtonVariants,
   type DialogContentVariants,
-} from "./variants";
-import Icon from "@components/data/display/Icon.astro";
+} from './variants'
+import Icon from '@components/data/display/Icon.astro'
+import { getLangFromUrl, useTranslations } from '@i18n/utils'
 
 /**
  * @component DialogContent
@@ -20,7 +21,7 @@ import Icon from "@components/data/display/Icon.astro";
  *
  * <Dialog>
  *   <DialogTrigger class="rounded-md border px-3 py-2">Open</DialogTrigger>
- *   <DialogContent size="md" position="center">
+ *   <DialogContent>
  *     <DialogHeader>
  *       <DialogTitle>Example</DialogTitle>
  *       <DialogDescription>Short description</DialogDescription>
@@ -50,7 +51,7 @@ import Icon from "@components/data/display/Icon.astro";
  *
  * <Dialog>
  *   <DialogTrigger class="rounded-md border px-3 py-2">Open</DialogTrigger>
- *   <DialogContent size="lg" position="center" animationDuration={200}>
+ *   <DialogContent animationDuration={200}>
  *     <DialogHeader>
  *       <DialogTitle>Title</DialogTitle>
  *       <DialogDescription>Description</DialogDescription>
@@ -68,30 +69,27 @@ import Icon from "@components/data/display/Icon.astro";
  * - The default close button can be hidden with CSS by targeting `[data-dialog-close]` inside this component.
  */
 
-type Position = NonNullable<DialogContentVariants["position"]>;
-type Size = NonNullable<DialogContentVariants["size"]>;
-
-interface Props extends HTMLAttributes<"dialog">, DialogContentVariants {
+interface Props extends HTMLAttributes<'dialog'>, DialogContentVariants {
   /**
    * Open and close animation duration in milliseconds
    */
-  animationDuration?: number;
+  animationDuration?: number
 }
 
 const {
   class: className,
-  size = "md",
-  position = "center",
   animationDuration = 200,
   ...rest
-} = Astro.props as Props;
----
+} = Astro.props as Props
 
-<!-- TODO: backdrop is not working
-TODO: check the animations -->
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang);
+---
+<!-- dialog overlay -->
 <slot name="backdrop">
   <div
     class={dialogBackdropVariants()}
+    data-dialog-backdrop
     data-state="closed"
     data-slot="dialog-backdrop"
     style={{ animationDuration: `${animationDuration}ms` }}
@@ -100,38 +98,26 @@ TODO: check the animations -->
 </slot>
 
 <dialog
-  class={cn(dialogContentVariants({ size, position }), className)}
+  class={cn(dialogContentVariants(), className)}
   style={{ animationDuration: `${animationDuration}ms` }}
+  {...rest}
   data-dialog-content
   data-state="closed"
-  {...rest}
+  data-slot="dialog-content"
 >
   <slot />
   <button
     type="button"
     class={dialogCloseButtonVariants()}
     data-dialog-close
-    aria-label="Close dialog"
+    aria-label={t('dialog.close')}
   >
     <slot name="icon">
       <Icon icon="close" class="size-5 transition-opacity" />
     </slot>
-    <span class="sr-only">Close</span>
+    <span class="sr-only">{t('sheet.close')}</span>
   </button>
 </dialog>
-
-<!--
-<style>
-  :global(dialog[data-dialog-content]) {
-    border: none;
-    padding: 0;
-  }
-
-  :global(dialog[data-dialog-content]::backdrop) {
-    background: rgb(15 23 42 / 0.55);
-  }
-</style>
--->
 
 <style>
   .dialog-content {

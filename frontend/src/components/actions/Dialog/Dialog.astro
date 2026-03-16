@@ -1,6 +1,6 @@
 ---
-import { cn } from "@utils/styles.utils";
-import type { HTMLAttributes } from "astro/types";
+import { cn } from '@utils/styles.utils'
+import type { HTMLAttributes } from 'astro/types'
 
 /**
  * @component Dialog
@@ -49,10 +49,10 @@ import type { HTMLAttributes } from "astro/types";
  * ```
  */
 
-interface Props extends HTMLAttributes<"div"> {
-  closeOnBackdropClick?: boolean;
-  closeOnEsc?: boolean;
-  lockScroll?: boolean;
+interface Props extends HTMLAttributes<'div'> {
+  closeOnBackdropClick?: boolean
+  closeOnEsc?: boolean
+  lockScroll?: boolean
 }
 
 const {
@@ -65,11 +65,11 @@ const {
 ---
 
 <div
-  class={cn("relative", className)}
+  class={cn('relative', className)}
   data-dialog-root
-  data-close-on-backdrop-click={closeOnBackdropClick ? "true" : "false"}
-  data-close-on-esc={closeOnEsc ? "true" : "false"}
-  data-lock-scroll={lockScroll ? "true" : "false"}
+  data-close-on-backdrop-click={closeOnBackdropClick ? 'true' : 'false'}
+  data-close-on-esc={closeOnEsc ? 'true' : 'false'}
+  data-lock-scroll={lockScroll ? 'true' : 'false'}
   {...rest}
 >
   <slot />
@@ -83,3 +83,9 @@ const {
   document.addEventListener("DOMContentLoaded", setup);
   document.addEventListener("astro:after-swap", setup);
 </script>
+
+<style>
+  .overflow-hidden {
+    overflow: hidden;
+  }
+</style>

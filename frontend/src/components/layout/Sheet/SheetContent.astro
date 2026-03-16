@@ -1,14 +1,14 @@
 ---
-import Icon from "@components/data/display/Icon.astro";
-import type { HTMLAttributes } from "astro/types";
+import Icon from '@components/data/display/Icon.astro'
+import type { HTMLAttributes } from 'astro/types'
 import {
   dialogBackdropVariants,
   sheetContentVariants,
   sheetCloseButtonVariants,
   type SheetContentVariants,
-} from "./variants";
-import { cn } from "@utils/styles.utils";
-import { getLangFromUrl, useTranslations } from "@i18n/utils";
+} from './variants'
+import { cn } from '@utils/styles.utils'
+import { getLangFromUrl, useTranslations } from '@i18n/utils'
 
 /**
  * @component SheetContent
@@ -93,15 +93,15 @@ import { getLangFromUrl, useTranslations } from "@i18n/utils";
  */
 
 interface SheetContentProps
-  extends HTMLAttributes<"dialog">, SheetContentVariants {}
+  extends HTMLAttributes<'dialog'>, SheetContentVariants {}
 
 const {
-  side = "right",
+  side = 'right',
   class: className,
   ...rest
-} = Astro.props as SheetContentProps;
+} = Astro.props as SheetContentProps
 
-const lang = getLangFromUrl(Astro.url);
+const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang);
 ---
 
@@ -109,6 +109,7 @@ const t = useTranslations(lang);
 <slot name="backdrop">
   <div
     class={dialogBackdropVariants()}
+    data-dialog-backdrop
     data-state="closed"
     data-slot="dialog-backdrop"
   >
@@ -129,11 +130,11 @@ const t = useTranslations(lang);
     class={sheetCloseButtonVariants()}
     data-dialog-close
     data-slot="sheet-close"
-    aria-label={t("dialog.close")}
+    aria-label={t('dialog.close')}
   >
     <slot name="icon">
       <Icon icon="close" class="transition-opacity" />
     </slot>
-    <span class="sr-only">{t("sheet.close")}</span>
+    <span class="sr-only">{t('sheet.close')}</span>
   </button>
 </dialog>
