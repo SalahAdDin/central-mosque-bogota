@@ -1,9 +1,9 @@
 ---
-import { cva, type VariantProps } from "class-variance-authority";
-import type { HTMLTag, Polymorphic } from "astro/types";
+import { cva, type VariantProps } from 'class-variance-authority'
+import type { HTMLTag, Polymorphic } from 'astro/types'
 
-import { cn } from "@utils/styles.utils";
-import type { TIconPosition } from "@utils/types";
+import { cn } from '@utils/styles.utils'
+import type { TIconPosition } from '@utils/types'
 
 /**
  * @component Button
@@ -11,7 +11,6 @@ import type { TIconPosition } from "@utils/types";
  * @description Semantic button component for actions and navigation.
  * Renders either a `<button>` or an `<a>` depending on the `href` prop and
  * exposes size, color and variant controls via class-variance-authority.
- * Supports icon-only and icon-with-label layouts with flexible icon placement.
  * @figmaUrl
  *
  * @preview
@@ -20,9 +19,7 @@ import type { TIconPosition } from "@utils/types";
  *   <Button>Button</Button>
  *   <Button
  *     variant="outline"
- *     onlyIcon={true}
  *     ariaLabel="Submit"
- *     Icon={ArrowUpIcon}
  *   />
  * </div>
  *
@@ -110,35 +107,6 @@ import type { TIconPosition } from "@utils/types";
  *   </div>
  * </div>
  *
- * ### Icon positions
- *
- * <div class="flex flex-col items-start gap-4 sm:flex-row">
- *   <Button Icon={ArrowUpRightIcon} iconPosition="leading">
- *     Leading icon
- *   </Button>
- *   <Button Icon={ArrowUpRightIcon} iconPosition="trailing">
- *     Trailing icon
- *   </Button>
- * </div>
- *
- * ### Icon only
- *
- * <div class="flex items-start gap-2">
- *   <Button
- *     onlyIcon={true}
- *     size="md"
- *     ariaLabel="Play"
- *     Icon={PlayIcon}
- *   />
- *   <Button
- *     onlyIcon={true}
- *     size="lg"
- *     color="secondary"
- *     ariaLabel="Search"
- *     Icon={SearchIcon}
- *   />
- * </div>
- *
  * ### Full width
  *
  * <Button fullWidth={true}>
@@ -146,221 +114,323 @@ import type { TIconPosition } from "@utils/types";
  * </Button>
  */
 
-type AstroIconComponent = (props: Record<string, unknown>) => unknown;
-
-/**
- * Tailwind-based visual variants for the Button component.
- *
- * Variants:
- * - `variant`: surface style (`normal`, `soft`, `outline`)
- * - `size`: typography and padding scale
- * - `iconSize`: square size when `onlyIcon` is enabled
- * - `color`: solid color style for the `normal` variant
- * - `softColor`: tinted background style for the `soft` variant
- * - `outlineColor`: bordered style for the `outline` variant
- * - `fullWidth`: optional `w-full` layout
- * - `onlyIcon`: removes horizontal padding for icon-only buttons
- */
 const buttonVariants = cva(
   `
-  inline-flex items-center justify-center gap-2 rounded-lg font-bold
-  transition-colors
-  focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none
-  disabled:cursor-not-allowed disabled:opacity-50
+    inline-flex items-center justify-center gap-2 rounded-lg font-bold
+    transition-colors
+    focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none
+    disabled:cursor-not-allowed disabled:opacity-50
   `,
   {
     variants: {
       variant: {
-        solid: "",
-        soft: "",
-        outline: "border bg-transparent",
+        solid: '',
+        soft: '',
+        outline: 'border bg-transparent',
       },
       size: {
-        xs: "px-3 py-1.5 text-xs",
-        sm: "px-3 py-2 text-sm",
-        md: "px-4 py-2.5 text-base",
-        lg: "px-5 py-3 text-lg",
-        xl: "px-6 py-3.5 text-xl",
+        xs: 'px-3 py-1.5 text-xs',
+        sm: 'px-3 py-2 text-sm',
+        md: 'px-4 py-2.5 text-base',
+        lg: 'px-5 py-3 text-lg',
+        xl: 'px-6 py-3.5 text-xl',
       },
       iconSize: {
-        xs: "size-8",
-        sm: "size-9",
-        md: "size-10",
-        lg: "size-11",
-        xl: "size-12",
+        xs: 'size-8',
+        sm: 'size-9',
+        md: 'size-10',
+        lg: 'size-11',
+        xl: 'size-12',
       },
       color: {
-        neutral: "",
-        primary: "",
-        secondary: "",
-        accent: "",
-        info: "",
-        success: "",
-        warning: "",
-        error: "",
+        neutral: '',
+        primary: '',
+        secondary: '',
+        accent: '',
+        info: '',
+        success: '',
+        warning: '',
+        error: '',
       },
       fullWidth: {
-        true: "w-full",
-      },
-      onlyIcon: {
-        true: "p-0",
+        true: 'w-full',
       },
     },
     compoundVariants: [
       {
-        variant: "solid",
-        color: "primary",
+        variant: 'solid',
+        color: 'primary',
         class:
-          "bg-primary text-white hover:bg-primary/90 active:bg-primary focus-visible:ring-primary",
+          `
+            bg-primary text-white
+            hover:bg-primary/90
+            focus-visible:ring-primary
+            active:bg-primary
+          `,
       },
       {
-        variant: "solid",
-        color: "secondary",
+        variant: 'solid',
+        color: 'secondary',
         class:
-          "bg-secondary text-white hover:bg-secondary/90 active:bg-secondary focus-visible:ring-secondary",
+          `
+            bg-secondary text-white
+            hover:bg-secondary/90
+            focus-visible:ring-secondary
+            active:bg-secondary
+          `,
       },
       {
-        variant: "solid",
-        color: "neutral",
+        variant: 'solid',
+        color: 'neutral',
         class:
-          "bg-slate-900 text-white hover:bg-slate-800 active:bg-slate-950 focus-visible:ring-slate-900",
+          `
+            bg-slate-900 text-white
+            hover:bg-slate-800
+            focus-visible:ring-slate-900
+            active:bg-slate-950
+          `,
       },
       {
-        variant: "solid",
-        color: "accent",
+        variant: 'solid',
+        color: 'accent',
         class:
-          "bg-amber-600 text-white hover:bg-amber-700 active:bg-amber-800 focus-visible:ring-amber-600",
+          `
+            bg-amber-600 text-white
+            hover:bg-amber-700
+            focus-visible:ring-amber-600
+            active:bg-amber-800
+          `,
       },
       {
-        variant: "solid",
-        color: "info",
+        variant: 'solid',
+        color: 'info',
         class:
-          "bg-sky-600 text-white hover:bg-sky-700 active:bg-sky-800 focus-visible:ring-sky-600",
+          `
+            bg-sky-600 text-white
+            hover:bg-sky-700
+            focus-visible:ring-sky-600
+            active:bg-sky-800
+          `,
       },
       {
-        variant: "solid",
-        color: "success",
+        variant: 'solid',
+        color: 'success',
         class:
-          "bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 focus-visible:ring-emerald-600",
+          `
+            bg-emerald-600 text-white
+            hover:bg-emerald-700
+            focus-visible:ring-emerald-600
+            active:bg-emerald-800
+          `,
       },
       {
-        variant: "solid",
-        color: "warning",
+        variant: 'solid',
+        color: 'warning',
         class:
-          "bg-amber-500 text-slate-900 hover:bg-amber-600 active:bg-amber-700 focus-visible:ring-amber-500",
+          `
+            bg-amber-500 text-slate-900
+            hover:bg-amber-600
+            focus-visible:ring-amber-500
+            active:bg-amber-700
+          `,
       },
       {
-        variant: "solid",
-        color: "error",
+        variant: 'solid',
+        color: 'error',
         class:
-          "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus-visible:ring-red-600",
+          `
+            bg-red-600 text-white
+            hover:bg-red-700
+            focus-visible:ring-red-600
+            active:bg-red-800
+          `,
       },
       {
-        variant: "soft",
-        color: "primary",
+        variant: 'soft',
+        color: 'primary',
         class:
-          "bg-primary/10 text-primary hover:bg-primary/15 active:bg-primary/20 focus-visible:ring-primary/40",
+          `
+            bg-primary/10 text-primary
+            hover:bg-primary/15
+            focus-visible:ring-primary/40
+            active:bg-primary/20
+          `,
       },
       {
-        variant: "soft",
-        color: "secondary",
+        variant: 'soft',
+        color: 'secondary',
         class:
-          "bg-secondary/10 text-secondary hover:bg-secondary/15 active:bg-secondary/20 focus-visible:ring-secondary/40",
+          `
+            bg-secondary/10 text-secondary
+            hover:bg-secondary/15
+            focus-visible:ring-secondary/40
+            active:bg-secondary/20
+          `,
       },
       {
-        variant: "soft",
-        color: "neutral",
+        variant: 'soft',
+        color: 'neutral',
         class:
-          "bg-slate-100 text-slate-800 hover:bg-slate-200 active:bg-slate-300 focus-visible:ring-slate-300",
+          `
+            bg-slate-100 text-slate-800
+            hover:bg-slate-200
+            focus-visible:ring-slate-300
+            active:bg-slate-300
+          `,
       },
       {
-        variant: "soft",
-        color: "accent",
+        variant: 'soft',
+        color: 'accent',
         class:
-          "bg-amber-100 text-amber-800 hover:bg-amber-200 active:bg-amber-300 focus-visible:ring-amber-300",
+          `
+            bg-amber-100 text-amber-800
+            hover:bg-amber-200
+            focus-visible:ring-amber-300
+            active:bg-amber-300
+          `,
       },
       {
-        variant: "soft",
-        color: "info",
+        variant: 'soft',
+        color: 'info',
         class:
-          "bg-sky-100 text-sky-800 hover:bg-sky-200 active:bg-sky-300 focus-visible:ring-sky-300",
+          `
+            bg-sky-100 text-sky-800
+            hover:bg-sky-200
+            focus-visible:ring-sky-300
+            active:bg-sky-300
+          `,
       },
       {
-        variant: "soft",
-        color: "success",
+        variant: 'soft',
+        color: 'success',
         class:
-          "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 active:bg-emerald-300 focus-visible:ring-emerald-300",
+          `
+            bg-emerald-100 text-emerald-800
+            hover:bg-emerald-200
+            focus-visible:ring-emerald-300
+            active:bg-emerald-300
+          `,
       },
       {
-        variant: "soft",
-        color: "warning",
+        variant: 'soft',
+        color: 'warning',
         class:
-          "bg-amber-100 text-amber-800 hover:bg-amber-200 active:bg-amber-300 focus-visible:ring-amber-300",
+          `
+            bg-amber-100 text-amber-800
+            hover:bg-amber-200
+            focus-visible:ring-amber-300
+            active:bg-amber-300
+          `,
       },
       {
-        variant: "soft",
-        color: "error",
+        variant: 'soft',
+        color: 'error',
         class:
-          "bg-red-100 text-red-800 hover:bg-red-200 active:bg-red-300 focus-visible:ring-red-300",
+          `
+            bg-red-100 text-red-800
+            hover:bg-red-200
+            focus-visible:ring-red-300
+            active:bg-red-300
+          `,
       },
       {
-        variant: "outline",
-        color: "primary",
+        variant: 'outline',
+        color: 'primary',
         class:
-          "border-primary text-primary hover:bg-primary/5 active:bg-primary/10 focus-visible:ring-primary",
+          `
+            border-primary text-primary
+            hover:bg-primary/5
+            focus-visible:ring-primary
+            active:bg-primary/10
+          `,
       },
       {
-        variant: "outline",
-        color: "secondary",
+        variant: 'outline',
+        color: 'secondary',
         class:
-          "border-secondary text-secondary hover:bg-secondary/5 active:bg-secondary/10 focus-visible:ring-secondary",
+          `
+            border-secondary text-secondary
+            hover:bg-secondary/5
+            focus-visible:ring-secondary
+            active:bg-secondary/10
+          `,
       },
       {
-        variant: "outline",
-        color: "neutral",
+        variant: 'outline',
+        color: 'neutral',
         class:
-          "border-slate-300 text-slate-800 hover:bg-slate-50 active:bg-slate-100 focus-visible:ring-slate-300",
+          `
+            border-slate-300 text-slate-800
+            hover:bg-slate-50
+            focus-visible:ring-slate-300
+            active:bg-slate-100
+          `,
       },
       {
-        variant: "outline",
-        color: "accent",
+        variant: 'outline',
+        color: 'accent',
         class:
-          "border-amber-300 text-amber-700 hover:bg-amber-50 active:bg-amber-100 focus-visible:ring-amber-300",
+          `
+            border-amber-300 text-amber-700
+            hover:bg-amber-50
+            focus-visible:ring-amber-300
+            active:bg-amber-100
+          `,
       },
       {
-        variant: "outline",
-        color: "info",
+        variant: 'outline',
+        color: 'info',
         class:
-          "border-sky-300 text-sky-700 hover:bg-sky-50 active:bg-sky-100 focus-visible:ring-sky-300",
+          `
+            border-sky-300 text-sky-700
+            hover:bg-sky-50
+            focus-visible:ring-sky-300
+            active:bg-sky-100
+          `,
       },
       {
-        variant: "outline",
-        color: "success",
+        variant: 'outline',
+        color: 'success',
         class:
-          "border-emerald-300 text-emerald-700 hover:bg-emerald-50 active:bg-emerald-100 focus-visible:ring-emerald-300",
+          `
+            border-emerald-300 text-emerald-700
+            hover:bg-emerald-50
+            focus-visible:ring-emerald-300
+            active:bg-emerald-100
+          `,
       },
       {
-        variant: "outline",
-        color: "warning",
+        variant: 'outline',
+        color: 'warning',
         class:
-          "border-amber-300 text-amber-700 hover:bg-amber-50 active:bg-amber-100 focus-visible:ring-amber-300",
+          `
+            border-amber-300 text-amber-700
+            hover:bg-amber-50
+            focus-visible:ring-amber-300
+            active:bg-amber-100
+          `,
       },
       {
-        variant: "outline",
-        color: "error",
+        variant: 'outline',
+        color: 'error',
         class:
-          "border-red-300 text-red-700 hover:bg-red-50 active:bg-red-100 focus-visible:ring-red-300",
+          `
+            border-red-300 text-red-700
+            hover:bg-red-50
+            focus-visible:ring-red-300
+            active:bg-red-100
+          `,
       },
     ],
     defaultVariants: {
-      variant: "solid",
-      size: "md",
-      color: "primary",
+      variant: 'solid',
+      size: 'md',
+      color: 'primary',
     },
   },
-);
+)
 
-type ButtonVariants = VariantProps<typeof buttonVariants>;
+type ButtonVariants = VariantProps<typeof buttonVariants>
 
 /**
  * Public props for the Button component.
@@ -368,77 +438,45 @@ type ButtonVariants = VariantProps<typeof buttonVariants>;
  * Extends visual variants from `buttonVariants` and adds behavior and
  * accessibility-focused options like `href`, `type`, and `ariaLabel`.
  */
-interface Props<Tag extends HTMLTag = "button" | "a"> extends Polymorphic<
+interface Props<Tag extends HTMLTag = 'button' | 'a'> extends Polymorphic<
   { as: Tag } & ButtonVariants
 > {
   /**
    * Disables interaction and applies disabled visual styles.
    */
-  disabled?: boolean;
-  /**
-   * Optional icon component rendered inside the button.
-   */
-  Icon?: AstroIconComponent;
-  /**
-   * Icon placement relative to the text when `onlyIcon` is false.
-   * - `leading`: icon before the label
-   * - `trailing`: icon after the label
-   */
-  iconPosition?: TIconPosition;
-  /**
-   * Renders the button as an icon-only control.
-   * The `size` variant maps to `iconSize` for square dimensions.
-   */
-  onlyIcon?: boolean;
+  disabled?: boolean
   /**
    * When true, stretches the button to the full available width (`w-full`).
    */
-  fullWidth?: boolean;
+  fullWidth?: boolean
   /**
    * Accessible label used as the rendered element's `aria-label`.
    * Required when `onlyIcon` is `true` (because there is no visible text label).
    */
-  ariaLabel?: string;
+  ariaLabel?: string
 }
 
 const {
-  as: Tag = "button",
-  variant = "solid",
-  size = "md",
-  color = "primary",
-  onlyIcon = false,
+  as: Tag = 'button',
+  variant = 'solid',
+  size = 'md',
+  color = 'primary',
   fullWidth = false,
   disabled = false,
-  iconPosition = "leading",
   class: className,
-  Icon,
   ...rest
-} = Astro.props as Props<typeof Tag>;
+} = Astro.props as Props<typeof Tag>
 
 const classes = cn(
   buttonVariants({
     variant,
-    size: onlyIcon ? undefined : size,
-    iconSize: onlyIcon ? size : undefined,
+    size,
     color,
     fullWidth,
-    onlyIcon,
   }),
-  disabled && "pointer-events-none",
+  disabled && 'pointer-events-none',
   className,
 );
 ---
 
-<Tag {...rest} class={classes}>
-  {
-    onlyIcon && Icon ? (
-      <Icon />
-    ) : (
-      <>
-        {iconPosition === "leading" && Icon && <Icon />}
-        <slot />
-        {iconPosition === "trailing" && Icon && <Icon />}
-      </>
-    )
-  }
-</Tag>
+<Tag {...rest} class={classes}><slot /></Tag>

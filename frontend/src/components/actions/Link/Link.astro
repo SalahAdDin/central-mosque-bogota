@@ -1,8 +1,8 @@
 ---
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@utils/styles.utils";
-import type { TIconPosition } from "@utils/types";
-import type { HTMLAttributes } from "astro/types";
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '@utils/styles.utils'
+import type { TIconPosition } from '@utils/types'
+import type { HTMLAttributes } from 'astro/types'
 
 /**
  * @component Link
@@ -66,35 +66,6 @@ import type { HTMLAttributes } from "astro/types";
  *   <Link href="/" color="error">Error</Link>
  * </div>
  *
- * ### Icon positions
- *
- * <div class="flex flex-col items-start gap-4 sm:flex-row">
- *   <Link href="/" Icon={ArrowUpRightIcon} iconPosition="leading">
- *     Leading icon
- *   </Link>
- *   <Link href="/" Icon={ArrowUpRightIcon} iconPosition="trailing">
- *     Trailing icon
- *   </Link>
- * </div>
- *
- * ### Icon only
- *
- * <div class="flex items-start gap-3">
- *   <Link
- *     href="/"
- *     onlyIcon={true}
- *     ariaLabel="Open"
- *     Icon={ArrowUpRightIcon}
- *   />
- *   <Link
- *     href="/"
- *     onlyIcon={true}
- *     color="secondary"
- *     ariaLabel="Go to docs"
- *     Icon={BookIcon}
- *   />
- * </div>
- *
  * ### Disabled
  *
  * <Link href="/" disabled={true}>
@@ -102,22 +73,19 @@ import type { HTMLAttributes } from "astro/types";
  * </Link>
  */
 
-type AstroIconComponent = (props: Record<string, unknown>) => unknown;
-
 const linkVariants = cva(
   `
-    inline-flex items-center gap-1 font-medium
-    transition-colors
+    inline-flex items-center gap-1 font-medium transition-colors
     focus-visible:outline-2 focus-visible:outline-offset-4
   `,
   {
     variants: {
       size: {
-        xs: "text-xs",
-        sm: "text-sm",
-        md: "text-base",
-        lg: "text-base",
-        xl: "text-lg",
+        xs: 'text-xs',
+        sm: 'text-sm',
+        md: 'text-base',
+        lg: 'text-base',
+        xl: 'text-lg',
       },
       color: {
         navbar: `
@@ -174,54 +142,36 @@ const linkVariants = cva(
       },
     },
     defaultVariants: {
-      size: "md",
-      color: "primary",
+      size: 'md',
+      color: 'primary',
     },
   },
-);
+)
 
-type LinkVariants = VariantProps<typeof linkVariants>;
+type LinkVariants = VariantProps<typeof linkVariants>
 
-interface Props extends LinkVariants, Omit<HTMLAttributes<"a">, "color"> {
+interface Props extends LinkVariants, Omit<HTMLAttributes<'a'>, 'color'> {
   /**
    * Accessible label for assistive technologies.
    * Recommended when `onlyIcon` is true and there is no visible text.
    */
-  ariaLabel?: string;
-  /**
-   * Optional icon component rendered inside the link.
-   */
-  Icon?: AstroIconComponent;
-  /**
-   * Icon placement relative to the link content when `onlyIcon` is false.
-   * - `leading`: icon before the text
-   * - `trailing`: icon after the text
-   */
-  iconPosition?: TIconPosition;
-  /**
-   * When true, renders the link as an icon-only control.
-   * The icon is centered and the underline is removed.
-   */
-  onlyIcon?: boolean;
+  ariaLabel?: string
   /**
    * When true, visually and functionally disables the link.
    * Applies a strike-through style, disables pointer events and sets aria-disabled.
    */
-  disabled?: boolean;
+  disabled?: boolean
 }
 
 const {
-  size = "md",
-  color = "primary",
-  onlyIcon = false,
+  size = 'md',
+  color = 'primary',
   disabled = false,
   href,
   ariaLabel,
   class: className,
-  Icon,
-  iconPosition = "leading",
   ...rest
-} = Astro.props as Props;
+} = Astro.props as Props
 
 const classesMerged = cn(
   linkVariants({
@@ -229,7 +179,7 @@ const classesMerged = cn(
     color,
     disabledStyle: disabled,
   }),
-  disabled && "pointer-events-none",
+  disabled && 'pointer-events-none',
   className,
 );
 ---
@@ -241,15 +191,5 @@ const classesMerged = cn(
   aria-label={ariaLabel}
   {...rest}
 >
-  {
-    onlyIcon && Icon ? (
-      <Icon />
-    ) : (
-      <>
-        {iconPosition === "leading" && Icon && <Icon />}
-        <slot />
-        {iconPosition === "trailing" && Icon && <Icon />}
-      </>
-    )
-  }
+  <slot />
 </a>
