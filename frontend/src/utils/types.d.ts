@@ -4,6 +4,8 @@ import type {
   SVG_ICONS,
   SIZES,
   VARIANTS,
+  DROPDOWN_POSITIONS,
+  DROPDOWN_ALIGNS,
 } from "./ui.constants";
 
 /**
@@ -35,3 +37,13 @@ export type TNavLink = {
   label: string;
   href: string;
 };
+
+/**
+ * Type representing a valid position for a dropdown menu.
+ */
+export type TDropdownPosition = (typeof DROPDOWN_POSITIONS)[number];
+
+/**
+ * Type representing a valid align for a dropdown menu.
+ */
+export type TDropdownAlign = (typeof DROPDOWN_ALIGNS)[number];

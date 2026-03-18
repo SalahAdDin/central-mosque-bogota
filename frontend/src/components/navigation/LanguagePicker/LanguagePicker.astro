@@ -8,6 +8,23 @@ import {
 import Icon from '@components/data/display/Icon.astro'
 import { languages, localeFlags } from '@i18n/ui'
 import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import type { TDropdownAlign, TDropdownPosition } from '@utils/types'
+
+// TODO: https://github.com/starwind-ui/starwind-ui/issues/135
+interface Props {
+  /**
+   * Position of the dropdown menu relative to its trigger element.
+   * @default bottom
+   */
+  side?: TDropdownPosition
+  /**
+   * Alignment of the dropdown menu relative to its trigger element.
+   * @default end
+   */
+  align?: TDropdownAlign
+}
+
+const { side = 'bottom', align = 'end' } = Astro.props as Props
 
 const currentLang = getLangFromUrl(Astro.url)
 const t = useTranslations(currentLang);
@@ -39,8 +56,8 @@ const t = useTranslations(currentLang);
   </DropdownTrigger>
   <!-- TODO: calculate align and side based on the picker position -->
   <DropdownContent
-    align="end"
-    side="bottom"
+    align={align}
+    side={side}
     sideOffset={8}
     class="
       w-44 overflow-hidden rounded-xl border border-slate-100 bg-white py-2
@@ -64,11 +81,12 @@ const t = useTranslations(currentLang);
           "
           aria-current={code === currentLang ? 'page' : undefined}
         >
-          <span class="
-            flex h-4 w-5 shrink-0 items-center justify-center rounded-sm
-            bg-slate-200 text-[10px]
-            dark:bg-slate-700
-          "
+          <span
+            class="
+              flex h-4 w-5 shrink-0 items-center justify-center rounded-sm
+              bg-slate-200 text-[10px]
+              dark:bg-slate-700
+            "
           >
             {flag}
           </span>

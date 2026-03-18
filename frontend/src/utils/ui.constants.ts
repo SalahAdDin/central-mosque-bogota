@@ -36,3 +36,13 @@ export const SIZES = ["xs", "sm", "md", "lg", "xl"] as const;
  * - outline: Transparent background with colored border and text
  */
 export const VARIANTS = ["solid", "soft", "outline"] as const;
+
+/**
+ * Valid positions for a dropdown menu relative to its trigger element.
+ */
+export const DROPDOWN_POSITIONS = ["top", "bottom", "left", "right"] as const;
+
+/**
+ * Valid alignments for a dropdown menu relative to its trigger element.
+ */
+export const DROPDOWN_ALIGNS = ["start", "center", "end"] as const;
