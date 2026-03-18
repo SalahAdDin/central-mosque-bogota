@@ -1,8 +1,8 @@
 ---
-import type { HTMLAttributes } from "astro/types";
-import { cva, type VariantProps } from "class-variance-authority";
+import type { HTMLAttributes } from 'astro/types'
+import { cva, type VariantProps } from 'class-variance-authority'
 
-import { cn } from "@utils/styles.utils";
+import { cn } from '@utils/styles.utils'
 
 /**
  * @component Icon
@@ -13,9 +13,9 @@ import { cn } from "@utils/styles.utils";
  * @preview
  *
  * <div class="flex flex-wrap items-center gap-3">
- *   <Icon icon="menu" />
- *   <Icon icon="search" />
- *   <Icon icon="chevron_right" />
+ *   <Icon name="menu" />
+ *   <Icon name="search" />
+ *   <Icon name="chevron_right" />
  * </div>
  *
  * @usage
@@ -25,7 +25,7 @@ import { cn } from "@utils/styles.utils";
  * import Icon from "@components/data/display/Icon.astro";
  * ---
  *
- * <Icon icon="menu" ariaLabel="Open navigation" />
+ * <Icon name="menu" ariaLabel="Open navigation" />
  * ```
  *
  * @examples
@@ -33,68 +33,68 @@ import { cn } from "@utils/styles.utils";
  * ### Sizes
  *
  * <div class="flex items-center gap-3">
- *   <Icon icon="call" size="xs" />
- *   <Icon icon="call" size="sm" />
- *   <Icon icon="call" size="md" />
- *   <Icon icon="call" size="lg" />
- *   <Icon icon="call" size="xl" />
+ *   <Icon name="call" size="xs" />
+ *   <Icon name="call" size="sm" />
+ *   <Icon name="call" size="md" />
+ *   <Icon name="call" size="lg" />
+ *   <Icon name="call" size="xl" />
  * </div>
  *
  * ### Variants
  *
  * <div class="flex items-center gap-3">
- *   <Icon icon="star" variant="outlined" />
- *   <Icon icon="star" variant="rounded" />
- *   <Icon icon="star" variant="sharp" />
+ *   <Icon name="star" variant="outlined" />
+ *   <Icon name="star" variant="rounded" />
+ *   <Icon name="star" variant="sharp" />
  * </div>
  *
  * ### Decorative vs. labelled
  *
  * <div class="flex flex-col gap-2">
- *   <Icon icon="arrow_forward" />
- *   <Icon icon="arrow_forward" ariaLabel="Continue to next step" />
+ *   <Icon name="arrow_forward" />
+ *   <Icon name="arrow_forward" ariaLabel="Continue to next step" />
  * </div>
  */
-const iconVariants = cva("items-center justify-center", {
+const iconVariants = cva('items-center justify-center', {
   variants: {
     size: {
-      xs: "text-xs",
-      sm: "text-sm",
-      md: "text-base",
-      lg: "text-lg",
-      xl: "text-xl",
+      xs: 'text-xs',
+      sm: 'text-sm',
+      md: 'text-base',
+      lg: 'text-lg',
+      xl: 'text-xl',
     },
     variant: {
-      outlined: "material-symbols-outlined",
-      rounded: "material-symbols-rounded",
-      sharp: "material-symbols-sharp",
+      outlined: 'material-symbols-outlined',
+      rounded: 'material-symbols-rounded',
+      sharp: 'material-symbols-sharp',
     },
   },
   defaultVariants: {
-    size: "md",
-    variant: "outlined",
+    size: 'md',
+    variant: 'outlined',
   },
-});
+})
 
-interface Props extends VariantProps<typeof iconVariants>, HTMLAttributes<"span"> {
+interface Props extends VariantProps<typeof iconVariants>, HTMLAttributes<'span'> {
   /**
    * Name of the Material Symbols glyph to render, e.g. "menu" or "search".
    */
-  icon: string;
+  name: string
   /**
    * Accessible label for the icon. When omitted, the icon is treated as decorative.
    */
-  ariaLabel?: string;
+  ariaLabel?: string
 }
 
 const {
-  icon,
+  name,
   size,
   variant,
   class: className,
   ariaLabel,
   ...rest
-} = Astro.props as Props;
+} = Astro.props as Props
 
 const isDecorative = !ariaLabel;
 ---
@@ -105,5 +105,5 @@ const isDecorative = !ariaLabel;
   aria-label={ariaLabel}
   {...rest}
 >
-  {icon}
+  {name}
 </span>

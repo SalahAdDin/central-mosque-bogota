@@ -1,8 +1,8 @@
 ---
-import { cn } from "@utils/styles.utils";
-import type { HTMLAttributes } from "astro/types";
-import Icon from "@components/data/display/Icon.astro";
-import { dropdownItemVariants, type DropdownItemVariants } from "./variants";
+import { cn } from '@utils/styles.utils'
+import type { HTMLAttributes } from 'astro/types'
+import Icon from '@components/data/display/Icon.astro'
+import { dropdownItemVariants, type DropdownItemVariants } from './variants'
 
 /**
  * @component DropdownSubTrigger
@@ -38,18 +38,18 @@ import { dropdownItemVariants, type DropdownItemVariants } from "./variants";
 
 interface Props
   extends
-    DropdownItemVariants,
-    Omit<HTMLAttributes<"button">, "role" | "type"> {
+  DropdownItemVariants,
+  Omit<HTMLAttributes<'button'>, 'role' | 'type'> {
   /**
    * When true, makes the submenu trigger non-interactive.
    * Sets `aria-disabled`, removes it from roving tab focus, and prevents selection via keyboard navigation.
    */
-  disabled?: boolean;
+  disabled?: boolean
   /**
    * When true, renders the right chevron indicator to hint there is a submenu.
    * @default true
    */
-  showIndicator?: boolean;
+  showIndicator?: boolean
 }
 
 const {
@@ -64,13 +64,13 @@ const {
   type="button"
   class={cn(
     dropdownItemVariants(),
-    "[&[aria-expanded='true']_[data-dropdown-chevron]]:rotate-90",
+    '[&[aria-expanded=\'true\']_[data-dropdown-chevron]]:rotate-90',
     className,
   )}
   role="menuitem"
   aria-haspopup="true"
   aria-expanded="false"
-  tabindex={disabled ? "-1" : "0"}
+  tabindex={disabled ? '-1' : '0'}
   data-dropdown-item
   data-dropdown-sub-trigger
   disabled={disabled}
@@ -81,12 +81,17 @@ const {
     <slot />
   </span>
   {
-    showIndicator ? (
-      <Icon
-        icon="chevron_right"
-        class="text-[18px] opacity-60 transition-transform duration-150 motion-reduce:transition-none"
-        data-dropdown-chevron
-      />
-    ) : null
+    showIndicator
+      ? (
+          <Icon
+            name="chevron_right"
+            class="
+              text-[18px] opacity-60 transition-transform duration-150
+              motion-reduce:transition-none
+            "
+            data-dropdown-chevron
+          />
+        )
+      : null
   }
 </button>

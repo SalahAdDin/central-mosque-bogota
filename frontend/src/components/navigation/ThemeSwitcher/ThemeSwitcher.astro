@@ -1,10 +1,10 @@
 ---
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from 'class-variance-authority'
 
-import Icon from "@components/data/display/Icon.astro";
-import { getLangFromUrl, useTranslations } from "@i18n/utils";
-import { cn } from "@utils/styles.utils";
-import type { ThemeSetting } from "@utils/theme.utils";
+import Icon from '@components/data/display/Icon.astro'
+import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import { cn } from '@utils/styles.utils'
+import type { ThemeSetting } from '@utils/theme.utils'
 
 /**
  * @component ThemeSwitch
@@ -30,7 +30,9 @@ import type { ThemeSetting } from "@utils/theme.utils";
 
 const themeSwitchVariants = cva(
   `
-    inline-flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all
+    inline-flex items-center justify-center rounded-full bg-white/10 text-white
+    transition-all
+    hover:bg-white/20
     focus-visible:ring-2 focus-visible:ring-slate-500
     focus-visible:ring-offset-2 focus-visible:outline-none
     dark:bg-slate-900 dark:text-slate-50
@@ -38,40 +40,40 @@ const themeSwitchVariants = cva(
   {
     variants: {
       size: {
-        sm: "h-8 w-8 text-sm",
-        md: "h-10 w-10 text-base",
-        lg: "h-11 w-11 text-base",
+        sm: 'size-8 text-sm',
+        md: 'size-10 text-base',
+        lg: 'size-11 text-base',
       },
     },
     defaultVariants: {
-      size: "md",
+      size: 'md',
     },
   },
-);
+)
 
-type ThemeSwitchVariants = VariantProps<typeof themeSwitchVariants>;
+type ThemeSwitchVariants = VariantProps<typeof themeSwitchVariants>
 
 interface Props extends ThemeSwitchVariants {
   /**
    * Extra Tailwind classes applied to the toggle button.
    */
-  class?: string;
+  class?: string
   /**
    * Any additional attributes are forwarded to the underlying <button>.
    */
-  [key: string]: unknown;
+  [key: string]: unknown
 }
 
-const { size = "md", class: className, ...rest } = Astro.props as Props;
+const { size = 'md', class: className, ...rest } = Astro.props as Props
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 
 const LABEL_TEXT: Record<ThemeSetting, string> = {
-  light: t("theme-switcher.light-label"),
-  system: t("theme-switcher.system-label"),
-  dark: t("theme-switcher.dark-label"),
-};
+  light: t('theme-switcher.light-label'),
+  system: t('theme-switcher.system-label'),
+  dark: t('theme-switcher.dark-label'),
+}
 
 const buttonClass = cn(themeSwitchVariants({ size }), className);
 
@@ -109,9 +111,9 @@ const buttonClass = cn(themeSwitchVariants({ size }), className);
   aria-label={LABEL_TEXT.system}
   {...rest}
 >
-  <Icon icon="light_mode" size="md" data-theme-icon="light" />
-  <Icon icon="dark_mode" size="md" data-theme-icon="dark" />
-  <Icon icon="computer" size="md" data-theme-icon="system" />
+  <Icon name="light_mode" size="md" data-theme-icon="light" />
+  <Icon name="dark_mode" size="md" data-theme-icon="dark" />
+  <Icon name="computer" size="md" data-theme-icon="system" />
 </button>
 
 <script>
