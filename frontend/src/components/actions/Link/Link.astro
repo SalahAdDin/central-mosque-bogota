@@ -1,7 +1,6 @@
 ---
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@utils/styles.utils'
-import type { TIconPosition } from '@utils/types'
 import type { HTMLAttributes } from 'astro/types'
 
 /**
@@ -102,11 +101,17 @@ const linkVariants = cva(
           text-primary
           hover:text-primary/90
           focus-visible:outline-primary/40
+          dark:text-secondary
+          dark:hover:text-secondary/90
+          dark:focus-visible:outline-secondary/40
         `,
         secondary: `
           text-secondary
           hover:text-secondary/90
           focus-visible:outline-secondary/40
+          dark:text-primary
+          dark:hover:text-primary/90
+          dark:focus-visible:outline-primary/40
         `,
         accent: `
           text-amber-700
