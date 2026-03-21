@@ -27,7 +27,7 @@ import type { TIconPosition } from '@utils/types'
  *
  * ```astro nocollapse
  * ---
- * import Button from "@components/actions/Button.astro";
+ * import Button from "@components/actions/Button/Button.astro";
  * ---
  *
  * <Button>Click me</Button>
@@ -39,7 +39,7 @@ import type { TIconPosition } from '@utils/types'
  *
  * ```astro nocollapse
  * ---
- * import Button from "@components/actions/Button.astro";
+ * import Button from "@components/actions/Button/Button.astro";
  * ---
  *
  * <Button href="https://centralmosque.co">Visit site</Button>
@@ -160,266 +160,242 @@ const buttonVariants = cva(
       {
         variant: 'solid',
         color: 'primary',
-        class:
-          `
-            bg-primary text-white
-            hover:bg-primary/90
-            focus-visible:ring-primary
-            active:bg-primary
-          `,
+        class: `
+          bg-primary text-white
+          hover:bg-primary/90
+          focus-visible:ring-primary
+          active:bg-primary
+        `,
       },
       {
         variant: 'solid',
         color: 'secondary',
-        class:
-          `
-            bg-secondary text-white
-            hover:bg-secondary/90
-            focus-visible:ring-secondary
-            active:bg-secondary
-          `,
+        class: `
+          bg-secondary text-white
+          hover:bg-secondary/90
+          focus-visible:ring-secondary
+          active:bg-secondary
+        `,
       },
       {
         variant: 'solid',
         color: 'neutral',
-        class:
-          `
-            bg-slate-900 text-white
-            hover:bg-slate-800
-            focus-visible:ring-slate-900
-            active:bg-slate-950
-          `,
+        class: `
+          bg-slate-900 text-white
+          hover:bg-slate-800
+          focus-visible:ring-slate-900
+          active:bg-slate-950
+        `,
       },
       {
         variant: 'solid',
         color: 'accent',
-        class:
-          `
-            bg-amber-600 text-white
-            hover:bg-amber-700
-            focus-visible:ring-amber-600
-            active:bg-amber-800
-          `,
+        class: `
+          bg-amber-600 text-white
+          hover:bg-amber-700
+          focus-visible:ring-amber-600
+          active:bg-amber-800
+        `,
       },
       {
         variant: 'solid',
         color: 'info',
-        class:
-          `
-            bg-sky-600 text-white
-            hover:bg-sky-700
-            focus-visible:ring-sky-600
-            active:bg-sky-800
-          `,
+        class: `
+          bg-sky-600 text-white
+          hover:bg-sky-700
+          focus-visible:ring-sky-600
+          active:bg-sky-800
+        `,
       },
       {
         variant: 'solid',
         color: 'success',
-        class:
-          `
-            bg-emerald-600 text-white
-            hover:bg-emerald-700
-            focus-visible:ring-emerald-600
-            active:bg-emerald-800
-          `,
+        class: `
+          bg-emerald-600 text-white
+          hover:bg-emerald-700
+          focus-visible:ring-emerald-600
+          active:bg-emerald-800
+        `,
       },
       {
         variant: 'solid',
         color: 'warning',
-        class:
-          `
-            bg-amber-500 text-slate-900
-            hover:bg-amber-600
-            focus-visible:ring-amber-500
-            active:bg-amber-700
-          `,
+        class: `
+          bg-amber-500 text-slate-900
+          hover:bg-amber-600
+          focus-visible:ring-amber-500
+          active:bg-amber-700
+        `,
       },
       {
         variant: 'solid',
         color: 'error',
-        class:
-          `
-            bg-red-600 text-white
-            hover:bg-red-700
-            focus-visible:ring-red-600
-            active:bg-red-800
-          `,
+        class: `
+          bg-red-600 text-white
+          hover:bg-red-700
+          focus-visible:ring-red-600
+          active:bg-red-800
+        `,
       },
       {
         variant: 'soft',
         color: 'primary',
-        class:
-          `
-            bg-primary/10 text-primary
-            hover:bg-primary/15
-            focus-visible:ring-primary/40
-            active:bg-primary/20
-          `,
+        class: `
+          bg-primary/10 text-primary
+          hover:bg-primary/15
+          focus-visible:ring-primary/40
+          active:bg-primary/20
+        `,
       },
       {
         variant: 'soft',
         color: 'secondary',
-        class:
-          `
-            bg-secondary/10 text-secondary
-            hover:bg-secondary/15
-            focus-visible:ring-secondary/40
-            active:bg-secondary/20
-          `,
+        class: `
+          bg-secondary/10 text-secondary
+          hover:bg-secondary/15
+          focus-visible:ring-secondary/40
+          active:bg-secondary/20
+        `,
       },
       {
         variant: 'soft',
         color: 'neutral',
-        class:
-          `
-            bg-slate-100 text-slate-800
-            hover:bg-slate-200
-            focus-visible:ring-slate-300
-            active:bg-slate-300
-          `,
+        class: `
+          bg-slate-100 text-slate-800
+          hover:bg-slate-200
+          focus-visible:ring-slate-300
+          active:bg-slate-300
+        `,
       },
       {
         variant: 'soft',
         color: 'accent',
-        class:
-          `
-            bg-amber-100 text-amber-800
-            hover:bg-amber-200
-            focus-visible:ring-amber-300
-            active:bg-amber-300
-          `,
+        class: `
+          bg-amber-100 text-amber-800
+          hover:bg-amber-200
+          focus-visible:ring-amber-300
+          active:bg-amber-300
+        `,
       },
       {
         variant: 'soft',
         color: 'info',
-        class:
-          `
-            bg-sky-100 text-sky-800
-            hover:bg-sky-200
-            focus-visible:ring-sky-300
-            active:bg-sky-300
-          `,
+        class: `
+          bg-sky-100 text-sky-800
+          hover:bg-sky-200
+          focus-visible:ring-sky-300
+          active:bg-sky-300
+        `,
       },
       {
         variant: 'soft',
         color: 'success',
-        class:
-          `
-            bg-emerald-100 text-emerald-800
-            hover:bg-emerald-200
-            focus-visible:ring-emerald-300
-            active:bg-emerald-300
-          `,
+        class: `
+          bg-emerald-100 text-emerald-800
+          hover:bg-emerald-200
+          focus-visible:ring-emerald-300
+          active:bg-emerald-300
+        `,
       },
       {
         variant: 'soft',
         color: 'warning',
-        class:
-          `
-            bg-amber-100 text-amber-800
-            hover:bg-amber-200
-            focus-visible:ring-amber-300
-            active:bg-amber-300
-          `,
+        class: `
+          bg-amber-100 text-amber-800
+          hover:bg-amber-200
+          focus-visible:ring-amber-300
+          active:bg-amber-300
+        `,
       },
       {
         variant: 'soft',
         color: 'error',
-        class:
-          `
-            bg-red-100 text-red-800
-            hover:bg-red-200
-            focus-visible:ring-red-300
-            active:bg-red-300
-          `,
+        class: `
+          bg-red-100 text-red-800
+          hover:bg-red-200
+          focus-visible:ring-red-300
+          active:bg-red-300
+        `,
       },
       {
         variant: 'outline',
         color: 'primary',
-        class:
-          `
-            border-primary text-primary
-            hover:bg-primary/5
-            focus-visible:ring-primary
-            active:bg-primary/10
-          `,
+        class: `
+          border-primary text-primary
+          hover:bg-primary/5
+          focus-visible:ring-primary
+          active:bg-primary/10
+        `,
       },
       {
         variant: 'outline',
         color: 'secondary',
-        class:
-          `
-            border-secondary text-secondary
-            hover:bg-secondary/5
-            focus-visible:ring-secondary
-            active:bg-secondary/10
-          `,
+        class: `
+          border-secondary text-secondary
+          hover:bg-secondary/5
+          focus-visible:ring-secondary
+          active:bg-secondary/10
+        `,
       },
       {
         variant: 'outline',
         color: 'neutral',
-        class:
-          `
-            border-slate-300 text-slate-800
-            hover:bg-slate-50
-            focus-visible:ring-slate-300
-            active:bg-slate-100
-          `,
+        class: `
+          border-slate-300 text-slate-800
+          hover:bg-slate-50
+          focus-visible:ring-slate-300
+          active:bg-slate-100
+        `,
       },
       {
         variant: 'outline',
         color: 'accent',
-        class:
-          `
-            border-amber-300 text-amber-700
-            hover:bg-amber-50
-            focus-visible:ring-amber-300
-            active:bg-amber-100
-          `,
+        class: `
+          border-amber-300 text-amber-700
+          hover:bg-amber-50
+          focus-visible:ring-amber-300
+          active:bg-amber-100
+        `,
       },
       {
         variant: 'outline',
         color: 'info',
-        class:
-          `
-            border-sky-300 text-sky-700
-            hover:bg-sky-50
-            focus-visible:ring-sky-300
-            active:bg-sky-100
-          `,
+        class: `
+          border-sky-300 text-sky-700
+          hover:bg-sky-50
+          focus-visible:ring-sky-300
+          active:bg-sky-100
+        `,
       },
       {
         variant: 'outline',
         color: 'success',
-        class:
-          `
-            border-emerald-300 text-emerald-700
-            hover:bg-emerald-50
-            focus-visible:ring-emerald-300
-            active:bg-emerald-100
-          `,
+        class: `
+          border-emerald-300 text-emerald-700
+          hover:bg-emerald-50
+          focus-visible:ring-emerald-300
+          active:bg-emerald-100
+        `,
       },
       {
         variant: 'outline',
         color: 'warning',
-        class:
-          `
-            border-amber-300 text-amber-700
-            hover:bg-amber-50
-            focus-visible:ring-amber-300
-            active:bg-amber-100
-          `,
+        class: `
+          border-amber-300 text-amber-700
+          hover:bg-amber-50
+          focus-visible:ring-amber-300
+          active:bg-amber-100
+        `,
       },
       {
         variant: 'outline',
         color: 'error',
-        class:
-          `
-            border-red-300 text-red-700
-            hover:bg-red-50
-            focus-visible:ring-red-300
-            active:bg-red-100
-          `,
+        class: `
+          border-red-300 text-red-700
+          hover:bg-red-50
+          focus-visible:ring-red-300
+          active:bg-red-100
+        `,
       },
     ],
     defaultVariants: {
@@ -463,9 +439,11 @@ const {
   color = 'primary',
   fullWidth = false,
   disabled = false,
+  ariaLabel,
+  href,
   class: className,
   ...rest
-} = Astro.props as Props<typeof Tag>
+} = Astro.props as Props
 
 const classes = cn(
   buttonVariants({
@@ -479,4 +457,13 @@ const classes = cn(
 );
 ---
 
-<Tag {...rest} class={classes}><slot /></Tag>
+<Tag
+  {...rest}
+  href={Tag === 'a' ? (disabled ? undefined : href) : undefined}
+  disabled={Tag === 'button' ? disabled || undefined : undefined}
+  aria-disabled={Tag === 'a' ? disabled || undefined : undefined}
+  aria-label={ariaLabel}
+  class={classes}
+>
+  <slot />
+</Tag>

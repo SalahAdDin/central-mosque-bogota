@@ -1,10 +1,10 @@
 ---
-import { cn } from "@utils/styles.utils";
-import type { HTMLAttributes } from "astro/types";
+import { cn } from '@utils/styles.utils'
+import type { HTMLAttributes } from 'astro/types'
 import {
   dropdownTriggerVariants,
   type DropdownTriggerVariants,
-} from "./variants";
+} from './variants'
 
 /**
  * @component DropdownTrigger
@@ -41,7 +41,7 @@ import {
  *
  * ```astro nocollapse
  * ---
- * import Button from "@components/actions/Button.astro";
+ * import Button from "@components/actions/Button/Button.astro";
  * import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "@components/actions/Dropdown";
  * ---
  *
@@ -58,39 +58,41 @@ import {
 
 interface Props
   extends
-    DropdownTriggerVariants,
-    Omit<HTMLAttributes<"button">, "role" | "type"> {
+  DropdownTriggerVariants,
+  Omit<HTMLAttributes<'button'>, 'role' | 'type'> {
   /**
    * When true, the component will render its child element with a simple wrapper instead of a button component
    */
-  asChild?: boolean;
+  asChild?: boolean
 }
 
-const { class: className, asChild = false, ...rest } = Astro.props;
+const { class: className, asChild = false, ...rest } = Astro.props
 
 // Get the first child element if asChild is true
-let hasChildren = false;
+let hasChildren = false
 
-if (Astro.slots.has("default")) {
-  hasChildren = true;
+if (Astro.slots.has('default')) {
+  hasChildren = true
 }
 ---
 
 {
-  asChild && hasChildren ? (
-    <div class={className} data-dropdown-trigger data-dropdown-as-child>
-      <slot />
-    </div>
-  ) : (
-    <button
-      type="button"
-      class={cn(dropdownTriggerVariants(), className)}
-      data-dropdown-trigger
-      aria-haspopup="true"
-      aria-expanded="false"
-      {...rest}
-    >
-      <slot />
-    </button>
-  )
+  asChild && hasChildren
+    ? (
+        <div class={className} data-dropdown-trigger data-dropdown-as-child>
+          <slot />
+        </div>
+      )
+    : (
+        <button
+          type="button"
+          class={cn(dropdownTriggerVariants(), className)}
+          data-dropdown-trigger
+          aria-haspopup="true"
+          aria-expanded="false"
+          {...rest}
+        >
+          <slot />
+        </button>
+      )
 }

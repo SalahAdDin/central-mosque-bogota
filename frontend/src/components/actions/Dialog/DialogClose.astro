@@ -1,5 +1,5 @@
 ---
-import type { HTMLAttributes } from "astro/types";
+import type { HTMLAttributes } from 'astro/types'
 
 /**
  * @component DialogClose
@@ -21,7 +21,7 @@ import type { HTMLAttributes } from "astro/types";
  *
  * ```astro nocollapse
  * ---
- * import Button from "@components/actions/Button.astro";
+ * import Button from "@components/actions/Button/Button.astro";
  * import { DialogClose } from "@components/actions/Dialog";
  * ---
  *
@@ -31,31 +31,33 @@ import type { HTMLAttributes } from "astro/types";
  * ```
  */
 
-interface Props extends Omit<HTMLAttributes<"button">, "type" | "role"> {
+interface Props extends Omit<HTMLAttributes<'button'>, 'type' | 'role'> {
   /**
    * When true, the component will render its child element instead of a button
    */
-  asChild?: boolean;
+  asChild?: boolean
 }
 
-const { class: className, asChild = false, ...rest } = Astro.props as Props;
+const { class: className, asChild = false, ...rest } = Astro.props as Props
 
 // Get the first child element if asChild is true
-let hasChildren = false;
+let hasChildren = false
 
-if (Astro.slots.has("default")) {
-  hasChildren = true;
+if (Astro.slots.has('default')) {
+  hasChildren = true
 }
 ---
 
 {
-  asChild && hasChildren ? (
-    <div data-dialog-close data-dialog-as-child>
-      <slot />
-    </div>
-  ) : (
-    <button type="button" class={className} data-dialog-close {...rest}>
-      <slot />
-    </button>
-  )
+  asChild && hasChildren
+    ? (
+        <div data-dialog-close data-dialog-as-child>
+          <slot />
+        </div>
+      )
+    : (
+        <button type="button" class={className} data-dialog-close {...rest}>
+          <slot />
+        </button>
+      )
 }

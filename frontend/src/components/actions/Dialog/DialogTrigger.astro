@@ -1,5 +1,5 @@
 ---
-import type { HTMLAttributes } from "astro/types";
+import type { HTMLAttributes } from 'astro/types'
 
 /**
  * @component DialogTrigger
@@ -60,7 +60,7 @@ import type { HTMLAttributes } from "astro/types";
  *
  * ```astro nocollapse
  * ---
- * import Button from "@components/actions/Button.astro";
+ * import Button from "@components/actions/Button/Button.astro";
  * import { Dialog, DialogContent, DialogTrigger } from "@components/actions/Dialog";
  * ---
  *
@@ -79,16 +79,16 @@ import type { HTMLAttributes } from "astro/types";
  * - Use `asChild` when you need to render a custom interactive element to avoid invalid nested buttons/links.
  */
 
-interface Props extends Omit<HTMLAttributes<"button">, "type"> {
+interface Props extends Omit<HTMLAttributes<'button'>, 'type'> {
   /**
    * When true, the component will render its child element with a simple wrapper instead of a button component
    */
-  asChild?: boolean;
+  asChild?: boolean
   /**
    * Optional ID of the dialog to trigger. If not provided and the trigger is inside a Dialog component,
    * it will automatically target that dialog. Required when used outside a Dialog component.
    */
-  target?: string;
+  target?: string
 }
 
 const {
@@ -96,37 +96,39 @@ const {
   asChild = false,
   target,
   ...rest
-} = Astro.props as Props;
+} = Astro.props as Props
 
 // Get the first child element if asChild is true
-let hasChildren = false;
+let hasChildren = false
 
-if (Astro.slots.has("default")) {
-  hasChildren = true;
+if (Astro.slots.has('default')) {
+  hasChildren = true
 }
 ---
 
 {
-  asChild && hasChildren ? (
-    <div
-      class={className}
-      data-dialog-trigger
-      data-dialog-as-child
-      data-dialog-target={target}
-    >
-      <slot />
-    </div>
-  ) : (
-    <button
-      type="button"
-      class={className}
-      data-dialog-trigger
-      data-dialog-target={target}
-      aria-haspopup="dialog"
-      aria-expanded="false"
-      {...rest}
-    >
-      <slot />
-    </button>
-  )
+  asChild && hasChildren
+    ? (
+        <div
+          class={className}
+          data-dialog-trigger
+          data-dialog-as-child
+          data-dialog-target={target}
+        >
+          <slot />
+        </div>
+      )
+    : (
+        <button
+          type="button"
+          class={className}
+          data-dialog-trigger
+          data-dialog-target={target}
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          {...rest}
+        >
+          <slot />
+        </button>
+      )
 }
