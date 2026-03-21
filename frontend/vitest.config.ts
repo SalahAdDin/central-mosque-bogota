@@ -1,5 +1,5 @@
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-import { playwright } from "@vitest/browser-playwright";
+// import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+// import { playwright } from "@vitest/browser-playwright";
 import { getViteConfig } from "astro/config";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,7 +10,6 @@ const dirname
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
 
-// TODO: Astro v6 requires Vitest 4.1 to avoid issues
 export default getViteConfig({
   build: {
     rollupOptions: {
@@ -23,6 +22,7 @@ export default getViteConfig({
   resolve: {
     alias: {
       "@components": path.resolve(dirname, "src/components"),
+      "@i18n": path.resolve(dirname, "src/i18n"),
       "@layouts": path.resolve(dirname, "src/layouts"),
       "@styles": path.resolve(dirname, "src/styles"),
       "@utils": path.resolve(dirname, "src/utils"),
@@ -57,6 +57,7 @@ export default getViteConfig({
           setupFiles: ["./src/vitest.setup.ts"],
         },
       },
+      /* TODO:fix when Storybook Astro support is available
       {
         extends: true,
         plugins: [
@@ -80,6 +81,7 @@ export default getViteConfig({
           setupFiles: [".storybook/vitest.setup.ts"],
         },
       },
+      */
     ],
   },
 });
