@@ -1,28 +1,103 @@
 ---
-import Footer from "@components/layout/Footer.astro";
-import Header from "@components/layout/Header.astro";
-import { Font } from "astro:assets";
+import Footer from '@components/layout/Footer/Footer.astro'
+import Header from '@components/layout/Header/Header.astro'
+import { getLangFromUrl } from '@i18n/utils'
+import { Font } from 'astro:assets'
+import {
+  contactInfo,
+  fastLinks,
+  lemma,
+  navLinks,
+  rightsText,
+  socialNetworkLinks,
+} from '@utils/data.mocks'
 
-import "@styles/global.css";
+import '@styles/global.css'
+
+const lang = getLangFromUrl(Astro.url);
 ---
 
 <!doctype html>
 <!-- ﷽ - In the name of Allah, the Most Gracious, the Most Merciful -->
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+    <title>Mezquita Central de Bogotá Abu Bakr As-Siddiq</title>
 
     <Font cssVariable="--font-display" />
     <Font cssVariable="--font-sans" />
     <Font cssVariable="--font-symbols" preload />
+
+    <script is:inline>
+      function initTheme() {
+        const STORAGE_KEY = "theme";
+
+        try {
+          const stored = localStorage.getItem(STORAGE_KEY);
+          const setting =
+            stored === "light" || stored === "dark" || stored === "system"
+              ? stored
+              : "system";
+
+          const resolved =
+            setting === "system"
+              ? window.matchMedia("(prefers-color-scheme: light)").matches
+                ? "light"
+                : "dark"
+              : setting;
+
+          document.documentElement.dataset.theme = resolved;
+          localStorage.setItem(STORAGE_KEY, setting);
+
+          const mql = window.matchMedia("(prefers-color-scheme: dark)");
+          const handleSystemChange = () => {
+            if (localStorage.getItem(STORAGE_KEY) !== "system") return;
+            document.documentElement.dataset.theme = mql.matches
+              ? "dark"
+              : "light";
+          };
+          mql.addEventListener("change", handleSystemChange);
+        } catch {
+          const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
+          document.documentElement.dataset.theme = prefersDark
+            ? "dark"
+            : "light";
+        }
+      }
+
+      initTheme();
+      document.addEventListener("astro:after-swap", initTheme);
+    </script>
   </head>
-  <body class="font-display">
-    <slot />
+  <body
+    class="
+      bg-background font-display text-slate-900 transition-colors duration-300
+      dark:text-slate-100
+    "
+  >
+    <Header navLinks={navLinks} />
+    <main
+      class="
+        mx-auto my-20 flex max-w-7xl flex-col gap-20 px-4
+        sm:px-6
+        lg:px-8
+      "
+    >
+      <slot />
+    </main>
+    <Footer
+      lemma={lemma}
+      contactInfo={contactInfo}
+      rightsText={rightsText}
+      socialNetworkLinks={socialNetworkLinks}
+      fastLinks={fastLinks}
+    />
   </body>
 </html>
 
