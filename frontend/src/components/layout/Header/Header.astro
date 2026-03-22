@@ -1,17 +1,62 @@
 ---
 import ThemeSwitcher from '@components/navigation/ThemeSwitcher/ThemeSwitcher.astro'
 import Icon from '@components/data/display/Icon.astro'
-import Button from '@components/actions/Button.astro'
+import Button from '@components/actions/Button/Button.astro'
 import { getLangFromUrl, useTranslations } from '@i18n/utils'
 import LanguagePicker from '@components/navigation/LanguagePicker/LanguagePicker.astro'
 import Link from '@components/actions/Link/Link.astro'
-import type { TNavLink } from '@utils/types'
-import { Sheet, SheetContent, SheetFooter, SheetTrigger } from './Sheet'
+import type { TNavLink } from '@utils/models/types'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetTrigger,
+} from '@components/layout/Sheet'
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
+/**
+ * @component Header
+ * @title Header
+ * @description Fixed top navigation header with branding, desktop nav links, language/theme controls, a donate CTA, and a mobile sheet menu.
+ *
+ * Props
+ * - `navLinks`: list of navigation links rendered in the desktop nav and mobile sheet
+ *
+ * i18n (used)
+ * - `header.donate-now`
+ *
+ * @preview
+ *
+ * <Header
+ *   navLinks={[
+ *     { label: "Inicio", href: "/" },
+ *     { label: "Eventos", href: "/events" },
+ *     { label: "Donar", href: "/donate" },
+ *   ]}
+ * />
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import Header from "@components/layout/Header.astro";
+ * import type { TNavLink } from "@utils/types";
+ *
+ * const navLinks: Array<TNavLink> = [
+ *   { label: "Inicio", href: "/" },
+ *   { label: "Eventos", href: "/events" },
+ * ];
+ * ---
+ *
+ * <Header navLinks={navLinks} />
+ * ```
+ */
 interface Props {
+  /**
+   * Optional list of navigation links.
+   */
   navLinks: Array<TNavLink>
 }
 
@@ -115,10 +160,11 @@ const { navLinks } = Astro.props as Props;
           }
         </nav>
         <!-- Quick links -->
-        <SheetFooter class="
-          flex-row flex-wrap items-center gap-2
-          xl:gap-4
-        "
+        <SheetFooter
+          class="
+            flex-row flex-wrap items-center gap-2
+            xl:gap-4
+          "
         >
           <!-- TODO: picker and switcher invisible in light theme -->
           <LanguagePicker side="top" align="start" />

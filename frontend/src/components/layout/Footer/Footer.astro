@@ -1,29 +1,113 @@
 ---
 import Icon from '@components/data/display/Icon.astro'
 import Link from '@components/actions/Link/Link.astro'
-import Button from '@components/actions/Button.astro'
+import Button from '@components/actions/Button/Button.astro'
 import SvgIcon from '@components/data/display/SvgIcon.astro'
 import { getLangFromUrl, useTranslations } from '@i18n/utils'
-import type { TSVGIcon, TNavLink } from '@utils/types'
+import type {
+  TSVGIcon,
+  TNavLink,
+  TContactInfo,
+  TRightsTexts,
+} from '@utils/models/types'
 
-type ContactInfo = {
-  address: string
-  phone: string
-  email: string
-}
-
-type RightsTexts = {
-  copyRight: string
-  privacyPolicy: TNavLink
-  termsAndConditions: TNavLink
-}
+/**
+ * @component Footer
+ * @title Footer
+ * @description Site footer with branding, optional lemma, social links, quick links, contact info, and a newsletter form.
+ *
+ * Notes
+ * - Throws if there is no content (at least one of `lemma`, `socialNetworkLinks`, `fastLinks`, `rightsText`).
+ *
+ * Props
+ * - `lemma`: optional short tagline/description for the mosque
+ * - `socialNetworkLinks`: optional list of social links with an icon
+ * - `fastLinks`: optional list of quick navigation links
+ * - `contactInfo`: contact details displayed in the footer
+ * - `rightsText`: copyright and legal links
+ *
+ * i18n (used)
+ * - `footer.quick-links`
+ * - `footer.contact`
+ * - `footer.newsletter`
+ * - `footer.newsletter-description`
+ * - `footer.email-placeholder`
+ * - `footer.subscribe`
+ *
+ * @preview
+ *
+ * <Footer
+ *   lemma="Unidos en oración y comunidad."
+ *   socialNetworkLinks={[
+ *     { label: "Instagram", href: "https://instagram.com", icon: "instagram" },
+ *   ]}
+ *   fastLinks={[
+ *     { label: "Eventos", href: "/events" },
+ *     { label: "Donar", href: "/donate" },
+ *   ]}
+ *   contactInfo={{
+ *     address: "Bogotá, Colombia",
+ *     phone: "+57 300 000 0000",
+ *     email: "info@centralmosque.co",
+ *   }}
+ *   rightsText={{
+ *     copyRight: "© Mezquita Central de Bogotá",
+ *     privacyPolicy: { label: "Privacidad", href: "/privacy" },
+ *     termsAndConditions: { label: "Términos", href: "/terms" },
+ *   }}
+ * />
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import Footer from "@components/layout/Footer.astro";
+ * ---
+ *
+ * <Footer
+ *   lemma="Unidos en oración y comunidad."
+ *   socialNetworkLinks={[
+ *     { label: "Instagram", href: "https://instagram.com", icon: "instagram" },
+ *   ]}
+ *   fastLinks={[
+ *     { label: "Eventos", href: "/events" },
+ *     { label: "Donar", href: "/donate" },
+ *   ]}
+ *   contactInfo={{
+ *     address: "Bogotá, Colombia",
+ *     phone: "+57 300 000 0000",
+ *     email: "info@centralmosque.co",
+ *   }}
+ *   rightsText={{
+ *     copyRight: "© Mezquita Central de Bogotá",
+ *     privacyPolicy: { label: "Privacidad", href: "/privacy" },
+ *     termsAndConditions: { label: "Términos", href: "/terms" },
+ *   }}
+ * />
+ * ```
+ */
 
 interface Props {
-  lemma?: string
-  socialNetworkLinks?: Array<TNavLink & { icon: TSVGIcon }>
-  fastLinks?: Array<TNavLink>
-  contactInfo: ContactInfo
-  rightsText: RightsTexts
+  /**
+   * Optional short tagline/description for the mosque.
+   */
+  lemma: string
+  /**
+   * Optional list of social links with an icon.
+   */
+  socialNetworkLinks: Array<TNavLink & { icon: TSVGIcon }>
+  /**
+   * Optional list of quick navigation links.
+   */
+  fastLinks: Array<TNavLink>
+  /**
+   * Contact information displayed in the footer.
+   */
+  contactInfo: TContactInfo
+  /**
+   * Rights text displayed in the footer.
+   */
+  rightsText: TRightsTexts
 }
 
 const {
@@ -35,17 +119,7 @@ const {
 } = Astro.props as Props
 
 const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang)
-
-const hasContent = Boolean(
-  lemma || socialNetworkLinks.length > 0 || fastLinks.length > 0 || rightsText,
-)
-
-if (!hasContent) {
-  throw new Error(
-    'Footer requires at least one of lemma, socialNetworkLinks, fastLinks or rightsText.',
-  )
-}
+const t = useTranslations(lang);
 ---
 
 <footer class="bg-secondary pt-20 pb-10 text-white">
