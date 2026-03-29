@@ -1,0 +1,127 @@
+---
+import Link from '@components/actions/Link/Link.astro'
+import Icon from '@components/data/display/Icon.astro'
+import { cn } from '@utils/styles.utils'
+
+/**
+ * @component HomeSection
+ * @title Home Section
+ * @description Shared layout wrapper for home page sections (title + description + optional CTA) and a body slot.
+ *
+ * Layout behavior:
+ * - Title (`h2`) always takes full width.
+ * - On `md+`: description and CTA are in the same row with space between.
+ * - Below `md`: description and CTA stack in separate rows.
+ *
+ * Props
+ * - `title`: section heading
+ * - `description`: supporting text shown under the heading
+ * - `ctaLabel`: optional CTA label (renders only if `ctaHref` is also provided)
+ * - `ctaHref`: optional CTA href (renders only if `ctaLabel` is also provided)
+ * - `class`: optional extra classes for the outer `<section>`
+ * - `bodyClass`: optional classes for the body wrapper element
+ * - `bodyAs`: body wrapper tag (`ul` | `ol` | `div`) (defaults to `ul`)
+ *
+ * @preview
+ *
+ * <HomeSection
+ *   title="Próximos Eventos"
+ *   description="Únete a nuestras actividades comunitarias"
+ *   ctaLabel="Ver calendario completo"
+ *   ctaHref="/events"
+ *   bodyClass="grid grid-cols-1 gap-8 md:grid-cols-3"
+ * >
+ *   <li>...</li>
+ *   <li>...</li>
+ *   <li>...</li>
+ * </HomeSection>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import HomeSection from "@components/layout/HomeSection/HomeSection.astro";
+ * ---
+ *
+ * <HomeSection
+ *   title="Podcast & Reflexiones"
+ *   description="Reflexiones, charlas y recursos para fortalecer tu fe."
+ *   ctaLabel="Ver todo"
+ *   ctaHref="/media"
+ *   bodyClass="grid grid-cols-1 gap-6 md:grid-cols-3"
+ * >
+ *   <li>...</li>
+ * </HomeSection>
+ * ```
+ */
+interface Props {
+  /**
+   * Section heading
+   */
+  title: string
+  /**
+   * Supporting text shown under the heading
+   */
+  description: string
+  /**
+   * Optional CTA label (renders only if `ctaHref` is also provided)
+   */
+  ctaLabel?: string
+  /**
+   * Optional CTA href (renders only if `ctaLabel` is also provided)
+   */
+  ctaHref?: string
+  /**
+   * Optional extra classes for the outer `<section>`
+   */
+  class?: string
+  /**
+   * Optional classes for the body wrapper element
+   */
+  bodyClass?: string
+  /**
+   * Body wrapper tag (defaults to `ul`)
+   */
+  bodyAs?: 'ul' | 'ol' | 'div'
+}
+
+const {
+  title,
+  description,
+  ctaLabel,
+  ctaHref,
+  class: className,
+  bodyClass,
+  bodyAs = 'ul',
+} = Astro.props as Props
+
+const BodyTag = bodyAs;
+---
+
+<section class={cn('flex flex-col gap-12', className)}>
+  <header class="flex flex-col gap-4">
+    <h2 class="font-display text-4xl font-bold">
+      {title}
+    </h2>
+    <p
+      class="
+        flex flex-col gap-4 text-slate-500
+        md:flex-row md:items-end md:justify-between
+        dark:text-slate-400
+      "
+    >
+      {description}
+      {
+        ctaLabel && ctaHref && (
+          <Link href={ctaHref} color="secondary" class="hover:gap-2">
+            {ctaLabel}
+            <Icon name="arrow_forward" class="text-sm" />
+          </Link>
+        )
+      }
+    </p>
+  </header>
+  <BodyTag class={bodyClass}>
+    <slot />
+  </BodyTag>
+</section>
