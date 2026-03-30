@@ -1,26 +1,23 @@
-// import type { Renderer } from "@storybook-astro/renderer";
-import { definePreview } from "@storybook-astro/framework";
+import { definePreview, type AstroRenderer } from "@storybook-astro/framework";
 import addonA11y from "@storybook/addon-a11y";
 import addonDocs from "@storybook/addon-docs";
-import { withThemeByClassName } from "@storybook/addon-themes";
+import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { INITIAL_VIEWPORTS } from "storybook/viewport";
 
 import { CUSTOM_VIEW_PORTS } from "./constants";
 
 import "@/styles/global.css";
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 export default definePreview({
   addons: [addonA11y(), addonDocs()],
   decorators: [
-    // withThemeByClassName<Renderer>({
-    withThemeByClassName({
-      // TODO: check this
+    withThemeByDataAttribute<AstroRenderer>({
       themes: {
         light: "light",
         dark: "dark",
       },
       defaultTheme: "light",
+      attributeName: "data-theme",
     }),
   ],
   parameters: {
