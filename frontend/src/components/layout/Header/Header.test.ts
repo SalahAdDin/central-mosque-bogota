@@ -1,29 +1,11 @@
-import { renderAstroComponent } from "@utils/test.helpers";
+import { getAllByRole, getByRole, getByText } from "@testing-library/dom";
+import { renderAstroComponentToDom } from "@utils/test.helpers";
 
 import Header from "./Header.astro";
 
-function getRenderedHeader(result: DocumentFragment): HTMLElement {
-  const header = result.querySelector("header");
-  if (!header) {
-    throw new Error("Expected Header to render a <header> element");
-  }
-  return header;
-}
-
-function getIconByName(
-  result: DocumentFragment,
-  name: string
-): HTMLSpanElement {
-  const icon = Array.from(result.querySelectorAll("span")).find(element => element.textContent.trim() === name);
-  if (!icon) {
-    throw new Error(`Expected Header to render an icon with name "${name}"`);
-  }
-  return icon;
-}
-
 describe("Header", () => {
   it("should render branding and donate CTA when nav links are provided", async () => {
-    const result = await renderAstroComponent(Header, {
+    const { root, close } = await renderAstroComponentToDom(Header, {
       props: {
         navLinks: [
           { label: "Inicio", href: "/" },
@@ -32,17 +14,23 @@ describe("Header", () => {
       },
     });
 
-    const header = getRenderedHeader(result);
-    expect(header.textContent.includes("Mezquita Central")).toBe(true);
-    expect(header.textContent.includes("de Bogotá")).toBe(true);
+    try {
+      const header = getByRole(root, "banner");
+      expect(header).toBeInTheDocument();
+      expect(getByText(root, "Mezquita Central")).toBeInTheDocument();
+      expect(getByText(root, "de Bogotá")).toBeInTheDocument();
 
-    const donateLinks = result.querySelectorAll("a[href=\"/donate\"]");
-    expect(donateLinks.length).toBeGreaterThanOrEqual(1);
-    expect(Array.from(donateLinks).some(a => a.textContent.includes("Donar"))).toBe(true);
+      const donateLinks = getAllByRole(root, "link", { name: "Donar" });
+      expect(donateLinks.length).toBe(1);
+      expect(donateLinks[0].getAttribute("href")).toBe("/donate");
+    }
+    finally {
+      await close();
+    }
   });
 
   it("should render nav links in both desktop and mobile menus when nav links are provided", async () => {
-    const result = await renderAstroComponent(Header, {
+    const { root, close } = await renderAstroComponentToDom(Header, {
       props: {
         navLinks: [
           { label: "Inicio", href: "/" },
@@ -51,18 +39,28 @@ describe("Header", () => {
       },
     });
 
-    expect(result.querySelectorAll("a[href=\"/\"]").length).toBe(2);
-    expect(result.querySelectorAll("a[href=\"/events\"]").length).toBe(2);
+    try {
+      expect(getAllByRole(root, "link", { name: "Inicio", hidden: true }).length).toBe(2);
+      expect(getAllByRole(root, "link", { name: "Eventos", hidden: true }).length).toBe(2);
+    }
+    finally {
+      await close();
+    }
   });
 
   it("should render mosque and menu icons when the component is rendered", async () => {
-    const result = await renderAstroComponent(Header, {
+    const { root, close } = await renderAstroComponentToDom(Header, {
       props: {
         navLinks: [{ label: "Inicio", href: "/" }],
       },
     });
 
-    expect(getIconByName(result, "mosque")).toBeDefined();
-    expect(getIconByName(result, "menu")).toBeDefined();
+    try {
+      expect(getByText(root, "mosque")).toBeInTheDocument();
+      expect(getByText(root, "menu")).toBeInTheDocument();
+    }
+    finally {
+      await close();
+    }
   });
 });

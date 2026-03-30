@@ -1,19 +1,12 @@
-import { renderAstroComponent } from "@utils/test.helpers";
+import { getByRole, getByText } from "@testing-library/dom";
+import { renderAstroComponentToDom } from "@utils/test.helpers";
 
 import Footer from "./Footer.astro";
-
-function getRenderedFooter(result: DocumentFragment): HTMLElement {
-  const footer = result.querySelector("footer");
-  if (!footer) {
-    throw new Error("Expected Footer to render a <footer> element");
-  }
-  return footer;
-}
 
 describe("Footer", () => {
   it("should render branding and lemma when props are provided", async () => {
     const lemma = "Unidos en oración y comunidad.";
-    const result = await renderAstroComponent(Footer, {
+    const { root, close } = await renderAstroComponentToDom(Footer, {
       props: {
         lemma,
         socialNetworkLinks: [
@@ -40,14 +33,20 @@ describe("Footer", () => {
       },
     });
 
-    const footer = getRenderedFooter(result);
-    expect(footer.textContent.includes("Mezquita Central")).toBe(true);
-    expect(footer.textContent.includes("de Bogotá")).toBe(true);
-    expect(footer.textContent.includes(lemma)).toBe(true);
+    try {
+      const footer = getByRole(root, "contentinfo");
+      expect(footer).toBeInTheDocument();
+      expect(getByText(root, "Mezquita Central")).toBeInTheDocument();
+      expect(getByText(root, "de Bogotá")).toBeInTheDocument();
+      expect(getByText(root, lemma)).toBeInTheDocument();
+    }
+    finally {
+      await close();
+    }
   });
 
   it("should render translated section headings when the default language is used", async () => {
-    const result = await renderAstroComponent(Footer, {
+    const { root, close } = await renderAstroComponentToDom(Footer, {
       props: {
         lemma: "",
         socialNetworkLinks: [],
@@ -65,14 +64,20 @@ describe("Footer", () => {
       },
     });
 
-    const footer = getRenderedFooter(result);
-    expect(footer.textContent.includes("Enlaces rápidos")).toBe(true);
-    expect(footer.textContent.includes("Contacto")).toBe(true);
-    expect(footer.textContent.includes("Boletín")).toBe(true);
+    try {
+      const footer = getByRole(root, "contentinfo");
+      expect(footer).toBeInTheDocument();
+      expect(getByText(root, "Enlaces rápidos")).toBeInTheDocument();
+      expect(getByText(root, "Contacto")).toBeInTheDocument();
+      expect(getByText(root, "Boletín")).toBeInTheDocument();
+    }
+    finally {
+      await close();
+    }
   });
 
   it("should render quick links when fastLinks are provided", async () => {
-    const result = await renderAstroComponent(Footer, {
+    const { root, close } = await renderAstroComponentToDom(Footer, {
       props: {
         lemma: "",
         socialNetworkLinks: [],
@@ -93,21 +98,20 @@ describe("Footer", () => {
       },
     });
 
-    const eventsLink = result.querySelector("a[href=\"/events\"]");
-    if (!eventsLink) {
-      throw new Error("Expected Footer to render a link to \"/events\"");
-    }
-    expect(eventsLink.textContent.trim().startsWith("Eventos")).toBe(true);
+    try {
+      const eventsLink = getByRole(root, "link", { name: "Eventos" });
+      expect(eventsLink).toBeInTheDocument();
 
-    const donateLink = result.querySelector("a[href=\"/donate\"]");
-    if (!donateLink) {
-      throw new Error("Expected Footer to render a link to \"/donate\"");
+      const donateLink = getByRole(root, "link", { name: "Donar" });
+      expect(donateLink).toBeInTheDocument();
     }
-    expect(donateLink.textContent.trim().startsWith("Donar")).toBe(true);
+    finally {
+      await close();
+    }
   });
 
   it("should render social links when socialNetworkLinks are provided", async () => {
-    const result = await renderAstroComponent(Footer, {
+    const { root, close } = await renderAstroComponentToDom(Footer, {
       props: {
         lemma: "",
         socialNetworkLinks: [
@@ -131,11 +135,14 @@ describe("Footer", () => {
       },
     });
 
-    const instagramLink = result.querySelector("a[href=\"https://instagram.com\"]");
-    if (!instagramLink) {
-      throw new Error("Expected Footer to render a link to \"https://instagram.com\"");
+    try {
+      const instagramLink = getByRole(root, "link", { name: "Instagram" });
+      expect(instagramLink).toBeInTheDocument();
+      expect(instagramLink.getAttribute("aria-label")).toBe("Instagram");
     }
-    expect(instagramLink.getAttribute("aria-label")).toBe("Instagram");
+    finally {
+      await close();
+    }
   });
 
   it("should render contact info, newsletter form, and rights links when props are provided", async () => {
@@ -150,7 +157,7 @@ describe("Footer", () => {
       termsAndConditions: { label: "Términos", href: "/terms" },
     };
 
-    const result = await renderAstroComponent(Footer, {
+    const { root, close } = await renderAstroComponentToDom(Footer, {
       props: {
         lemma: "",
         socialNetworkLinks: [],
@@ -160,48 +167,34 @@ describe("Footer", () => {
       },
     });
 
-    const address = result.querySelector("address");
-    if (!address) {
-      throw new Error("Expected Footer to render an <address> element");
-    }
-    expect(address.textContent.includes(contactInfo.address)).toBe(true);
+    try {
+      const address = getByText(root, contactInfo.address);
+      expect(address).toBeInTheDocument();
 
-    const phone = result.querySelector("phone");
-    if (!phone) {
-      throw new Error("Expected Footer to render a <phone> element");
-    }
-    expect(phone.textContent.includes(contactInfo.phone)).toBe(true);
+      const phone = getByText(root, contactInfo.phone);
+      expect(phone).toBeInTheDocument();
 
-    const email = result.querySelector("email");
-    if (!email) {
-      throw new Error("Expected Footer to render an <email> element");
-    }
-    expect(email.textContent.includes(contactInfo.email)).toBe(true);
+      const email = getByText(root, contactInfo.email);
+      expect(email).toBeInTheDocument();
 
-    const input = result.querySelector("input[type=\"email\"]");
-    if (!input) {
-      throw new Error("Expected Footer to render an input[type=\"email\"]");
-    }
-    expect(input.getAttribute("placeholder")).toBe("Ingresa tu correo");
+      const input = getByRole(root, "textbox", { type: "email" });
+      expect(input.getAttribute("placeholder")).toBe("Ingresa tu correo");
 
-    const subscribeButton = result.querySelector("button");
-    if (!subscribeButton) {
-      throw new Error("Expected Footer to render a <button> element");
-    }
-    expect(subscribeButton.textContent.trim().startsWith("Suscribirse")).toBe(true);
+      const subscribeButton = getByRole(root, "button", {
+        name: "Suscribirse",
+      });
+      expect(subscribeButton).toBeInTheDocument();
 
-    expect(result.textContent.includes(rightsText.copyRight)).toBe(true);
+      expect(root.textContent.includes(rightsText.copyRight)).toBe(true);
 
-    const privacyLink = result.querySelector("a[href=\"/privacy\"]");
-    if (!privacyLink) {
-      throw new Error("Expected Footer to render a link to \"/privacy\"");
-    }
-    expect(privacyLink.textContent.trim().startsWith("Privacidad")).toBe(true);
+      const privacyLink = getByText(root, rightsText.privacyPolicy.label);
+      expect(privacyLink).toBeInTheDocument();
 
-    const termsLink = result.querySelector("a[href=\"/terms\"]");
-    if (!termsLink) {
-      throw new Error("Expected Footer to render a link to \"/terms\"");
+      const termsLink = getByText(root, rightsText.termsAndConditions.label);
+      expect(termsLink).toBeInTheDocument();
     }
-    expect(termsLink.textContent.trim().startsWith("Términos")).toBe(true);
+    finally {
+      await close();
+    }
   });
 });
