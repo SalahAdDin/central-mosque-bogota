@@ -1,0 +1,21 @@
+---
+import Dropdown from './Dropdown.astro'
+import DropdownTrigger from './DropdownTrigger.astro'
+import DropdownContent from './DropdownContent.astro'
+import DropdownLabel from './DropdownLabel.astro'
+import DropdownItem from './DropdownItem.astro'
+import Button from '@components/actions/Button/Button.astro';
+---
+
+<Dropdown>
+  <DropdownTrigger asChild>
+    <Button>Open Menu</Button>
+  </DropdownTrigger>
+  <DropdownContent>
+    <DropdownLabel>My Account</DropdownLabel>
+    <DropdownItem as="a" href="#">Profile</DropdownItem>
+    <DropdownItem>Settings</DropdownItem>
+    <DropdownItem>Help</DropdownItem>
+    <DropdownItem disabled>Sign out</DropdownItem>
+  </DropdownContent>
+</Dropdown>

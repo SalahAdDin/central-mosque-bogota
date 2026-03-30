@@ -1,0 +1,40 @@
+---
+import Sheet from './Sheet.astro'
+import SheetContent from './SheetContent.astro'
+import SheetTrigger from './SheetTrigger.astro'
+import SheetHeader from './SheetHeader.astro'
+import SheetTitle from './SheetTitle.astro'
+import SheetDescription from './SheetDescription.astro'
+import SheetFooter from './SheetFooter.astro'
+import SheetClose from './SheetClose.astro'
+import Button from '@components/actions/Button/Button.astro';
+---
+
+<Sheet>
+  <SheetTrigger asChild>
+    <Button>Open Sheet</Button>
+  </SheetTrigger>
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle>Edit Profile</SheetTitle>
+      <SheetDescription>
+        Make changes to your profile here. Click save when you're done.
+      </SheetDescription>
+    </SheetHeader>
+    <div class="grid gap-4 px-4">
+      <div class="grid gap-2">
+        <label for="name">Name</label>
+        <input id="name" value="Pedro Duarte" />
+      </div>
+      <div class="grid gap-2">
+        <label for="username">Username</label>
+        <input id="username" value="@peduarte" />
+      </div>
+    </div>
+    <SheetFooter>
+      <SheetClose asChild>
+        <Button type="submit">Save changes</Button>
+      </SheetClose>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>

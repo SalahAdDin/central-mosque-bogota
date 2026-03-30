@@ -1,0 +1,33 @@
+---
+import Button from '@components/actions/Button/Button.astro'
+import Dialog from './Dialog.astro'
+import DialogTrigger from './DialogTrigger.astro'
+import DialogContent from './DialogContent.astro'
+import DialogHeader from './DialogHeader.astro'
+import DialogTitle from './DialogTitle.astro'
+import DialogDescription from './DialogDescription.astro'
+import DialogFooter from './DialogFooter.astro'
+import DialogClose from './DialogClose.astro';
+---
+
+<Dialog>
+  <DialogTrigger asChild>
+    <Button>Open Dialog</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Example Dialog</DialogTitle>
+      <DialogDescription>
+        This is a simple dialog example that demonstrates the basic
+        functionality.
+      </DialogDescription>
+    </DialogHeader>
+    <div class="py-4">Your dialog content goes here.</div>
+    <DialogFooter>
+      <DialogClose asChild>
+        <Button variant="outline">Cancel</Button>
+      </DialogClose>
+      <Button>Save Changes</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
