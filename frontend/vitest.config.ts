@@ -1,14 +1,21 @@
-// import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-// import { playwright } from "@vitest/browser-playwright";
+import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+import { playwright } from "@vitest/browser-playwright";
 import { getViteConfig } from "astro/config";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { coverageConfigDefaults } from "vitest/config";
 
-const dirname
-  = typeof __dirname !== "undefined"
-    ? __dirname
-    : path.dirname(fileURLToPath(import.meta.url));
+// Get the current directory name, work-fix for Windows system
+function getDirname(): string {
+  if (typeof __dirname !== "undefined") return __dirname;
+
+  const metaUrl = import.meta.url;
+  if (metaUrl.startsWith("file:")) return path.dirname(fileURLToPath(metaUrl));
+
+  return path.dirname(metaUrl);
+}
+
+const dirname = getDirname();
 
 export default getViteConfig({
   build: {
@@ -17,16 +24,6 @@ export default getViteConfig({
         banner:
           "/* ﷽ - In the name of Allah, the Most Gracious, the Most Merciful */",
       },
-    },
-  },
-  resolve: {
-    alias: {
-      "@components": path.resolve(dirname, "src/components"),
-      "@i18n": path.resolve(dirname, "src/i18n"),
-      "@layouts": path.resolve(dirname, "src/layouts"),
-      "@styles": path.resolve(dirname, "src/styles"),
-      "@utils": path.resolve(dirname, "src/utils"),
-      "@": path.resolve(dirname, "src"),
     },
   },
   test: {
@@ -57,11 +54,9 @@ export default getViteConfig({
           setupFiles: ["./src/vitest.setup.ts"],
         },
       },
-      /* TODO:fix when Storybook Astro support is available
       {
         extends: true,
         plugins: [
-          // TODO: https://github.com/storybookjs/storybook/issues/33748
           storybookTest({
             configDir: path.join(dirname, ".storybook"),
           }),
@@ -78,10 +73,8 @@ export default getViteConfig({
               },
             ],
           },
-          setupFiles: [".storybook/vitest.setup.ts"],
         },
       },
-      */
     ],
   },
 });

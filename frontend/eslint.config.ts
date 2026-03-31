@@ -158,8 +158,8 @@ export default defineConfig([
   {
     files: ["**/*.css"],
     plugins: { css },
-    language: "css/css",
     extends: ["css/recommended"],
+    language: "css/css",
     languageOptions: {
       customSyntax: tailwind4,
     },
