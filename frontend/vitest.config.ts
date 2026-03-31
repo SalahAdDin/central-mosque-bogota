@@ -5,17 +5,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { coverageConfigDefaults } from "vitest/config";
 
-// Get the current directory name, work-fix for Windows system
-function getDirname(): string {
-  if (typeof __dirname !== "undefined") return __dirname;
-
-  const metaUrl = import.meta.url;
-  if (metaUrl.startsWith("file:")) return path.dirname(fileURLToPath(metaUrl));
-
-  return path.dirname(metaUrl);
-}
-
-const dirname = getDirname();
+const dirname
+  = typeof __dirname !== "undefined"
+    ? __dirname
+    : path.dirname(fileURLToPath(import.meta.url));
 
 export default getViteConfig({
   build: {
@@ -59,6 +52,7 @@ export default getViteConfig({
         plugins: [
           storybookTest({
             configDir: path.join(dirname, ".storybook"),
+            storybookScript: "pnpm storybook --no-open",
           }),
         ],
         test: {
