@@ -1,0 +1,116 @@
+---
+import HomeSection from '@components/layout/HomeSection/HomeSection.astro'
+import EventVerticalCard from '@components/data/display/Events/EventVerticalCard/EventVerticalCard.astro'
+import type { TEvent } from '@utils/models/events'
+
+/**
+ * @component NextEventsSection
+ * @title Next Events Section
+ * @description Section that renders a header (title + description), a CTA link to the events calendar, and a grid of event cards.
+ *
+ * Props
+ * - `title`: section heading
+ * - `description`: supporting text shown below the heading
+ * - `events`: list of events to render
+ * - `ctaLabel`: CTA label text
+ * - `calendarHref`: optional URL for the CTA link (defaults to `/events`)
+ *
+ * @preview
+ *
+ * <NextEventsSection
+ *   title="Próximos Eventos"
+ *   description="Únete a nuestras actividades comunitarias"
+ *   ctaLabel="Ver calendario completo"
+ *   calendarHref="/events"
+ *   events={[
+ *     {
+ *       category: "Comunidad",
+ *       title: "Cena Comunitaria",
+ *       description: "Un espacio para compartir alimentos.",
+ *       schedule: "19:30 - 21:30",
+ *       location: "Mezquita Central de Bogotá",
+ *       url: "/events",
+ *       image: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
+ *       date: { month: "Oct", day: 18 },
+ *     },
+ *   ]}
+ * />
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import NextEventsSection from "@components/data/display/Events/NextEventsSection/NextEventsSection.astro";
+ * import type { TEvent } from "@utils/models/events";
+ * import { getLangFromUrl, useTranslations } from "@i18n/utils";
+ *
+ * const lang = getLangFromUrl(Astro.url);
+ * const t = useTranslations(lang);
+ *
+ * const events: Array<TEvent> = [];
+ * ---
+ *
+ * <NextEventsSection
+ *   title={t("events.next-events")}
+ *   description={t("events.join-us")}
+ *   ctaLabel={t("events.see-calendar")}
+ *   calendarHref="/events"
+ *   events={events}
+ * />
+ * ```
+ */
+interface Props {
+  /**
+   * Title of the section
+   */
+  title: string
+  /**
+   * Description of the section
+   */
+  description: string
+  /**
+   * Array of events to display
+   */
+  events: Array<TEvent>
+  /**
+   * Label of the CTA button
+   */
+  ctaLabel: string
+  /**
+   * URL to the calendar page
+   */
+  calendarHref?: string
+}
+
+const {
+  title,
+  description,
+  ctaLabel,
+  events,
+  calendarHref = '/events',
+} = Astro.props as Props;
+---
+
+<HomeSection
+  title={title}
+  description={description}
+  ctaLabel={ctaLabel}
+  ctaHref={calendarHref}
+  bodyClass="grid grid-cols-1 md:grid-cols-3 gap-8"
+>
+  {
+    events.map(event => (
+      <li>
+        <EventVerticalCard
+          category={event.category}
+          title={event.title}
+          description={event.description}
+          schedule={event.schedule}
+          date={event.date}
+          image={event.image}
+          url={event.url}
+        />
+      </li>
+    ))
+  }
+</HomeSection>
