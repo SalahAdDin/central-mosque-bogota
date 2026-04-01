@@ -1,0 +1,74 @@
+import {
+  IconGallery,
+  IconItem,
+  Meta,
+  Story,
+} from "@storybook/addon-docs/blocks";
+
+import * as IconStories from "./Icon.stories";
+import * as SvgIconStories from "./SvgIcon.stories";
+
+<Meta title="Components/Data/Display/Icons" />
+
+export const MATERIAL_ICONS = [
+  { name: "menu", story: IconStories.Menu },
+  { name: "search", story: IconStories.Search },
+  { name: "chevron_right", story: IconStories.ChevronRight },
+  { name: "favorite", story: IconStories.Favorite },
+  { name: "location_on", story: IconStories.LocationOn },
+  { name: "help", story: IconStories.Help },
+  { name: "language", story: IconStories.Language },
+  { name: "light_mode", story: IconStories.LightMode },
+  { name: "dark_mode", story: IconStories.DarkMode },
+  { name: "computer", story: IconStories.Computer },
+  { name: "mosque", story: IconStories.Mosque },
+  { name: "phone", story: IconStories.Phone },
+  { name: "email", story: IconStories.Email },
+  { name: "close", story: IconStories.Close },
+  { name: "arrow_forward", story: IconStories.ArrowForward },
+  { name: "school", story: IconStories.School },
+  { name: "schedule", story: IconStories.Schedule },
+  { name: "play_arrow", story: IconStories.PlayArrow },
+  { name: "menu_book", story: IconStories.MenuBook },
+  { name: "volunteer_activism", story: IconStories.VolunteerActivism },
+  { name: "church", story: IconStories.Church },
+  { name: "groups", story: IconStories.Groups },
+];
+
+export const SVG_ICONS = [
+  { name: "facebook", story: SvgIconStories.Facebook },
+  { name: "instagram", story: SvgIconStories.Instagram },
+  { name: "youtube", story: SvgIconStories.YouTube },
+];
+
+<mark>TODO: https://storybook.js.org/docs/api/doc-blocks/doc-block-icongallery
+Check it is working properly, it does not, try with the components itself
+<mark>
+
+## Material Icons
+
+<IconGallery>
+  {MATERIAL_ICONS.map(({ name, story }) => (
+    <IconItem key={name} name={name}>
+      <Story of={story} />
+    </IconItem>
+  ))}
+</IconGallery>
+
+## SVG Icons
+
+<IconGallery>
+  {SVG_ICONS.map(({ name, story }) => (
+    <IconItem key={name} name={name}>
+      <div
+        style={{
+          background: "#0f172a",
+          borderRadius: 12,
+          padding: 12,
+          display: "inline-flex",
+        }}>
+        <Story of={story} />
+      </div>
+    </IconItem>
+  ))}
+</IconGallery>

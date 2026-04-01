@@ -9,7 +9,7 @@ import {
   dialogCloseButtonVariants,
   type DialogContentVariants,
 } from './variants'
-import Icon from '@components/data/display/Icon.astro'
+import Icon from '@components/data/display/Icons/Icon.astro'
 import { getLangFromUrl, useTranslations } from '@i18n/utils'
 
 /**
@@ -85,6 +85,7 @@ const {
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang);
 ---
+
 <!-- dialog overlay -->
 <slot name="backdrop">
   <div

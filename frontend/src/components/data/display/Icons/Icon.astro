@@ -22,7 +22,7 @@ import { cn } from '@utils/styles.utils'
  *
  * ```astro nocollapse
  * ---
- * import Icon from "@components/data/display/Icon.astro";
+ * import Icon from "@components/data/display/Icons/Icon.astro";
  * ---
  *
  * <Icon name="menu" ariaLabel="Open navigation" />
@@ -76,7 +76,8 @@ const iconVariants = cva('items-center justify-center', {
   },
 })
 
-interface Props extends VariantProps<typeof iconVariants>, HTMLAttributes<'span'> {
+interface Props
+  extends VariantProps<typeof iconVariants>, HTMLAttributes<'span'> {
   /**
    * Name of the Material Symbols glyph to render, e.g. "menu" or "search".
    */

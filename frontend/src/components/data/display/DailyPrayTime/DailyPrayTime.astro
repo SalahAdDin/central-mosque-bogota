@@ -1,5 +1,5 @@
 ---
-import Icon from '@components/data/display/Icon.astro'
+import Icon from '@components/data/display/Icons/Icon.astro'
 import type { TDailyPrayerSchedule } from '@utils/models/types'
 import { getLangFromUrl, useTranslations } from '@i18n/utils'
 import { formatTime } from '@utils/time.utils'
@@ -219,11 +219,13 @@ const items = PRAYER_ITEMS.map(({ key, label }) => ({
             >
               {item.label}
             </p>
-            <time class="
-              text-sm font-bold
-              sm:text-lg
-            "
-            >{item.time}
+            <time
+              class="
+                text-sm font-bold
+                sm:text-lg
+              "
+            >
+              {item.time}
             </time>
           </li>
         ))
