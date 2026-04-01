@@ -1,0 +1,160 @@
+---
+import Button from '@components/actions/Button/Button.astro'
+import Icon from '../../Icon.astro'
+import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import { calculateProgress } from '@utils/maths.utils'
+
+/**
+ * @component DonationImpactSection
+ * @title Donation Impact Section
+ * @description Donation CTA section with a project label, progress indicator, and a localized "donate now" button.
+ *
+ * i18n keys
+ * - `donations.impact`: section heading
+ * - `donations.project`: "Project:" prefix for the progress label
+ * - `donations.goal`: "Goal:" prefix in the summary line
+ * - `donations.raised`: "Raised:" prefix in the summary line
+ * - `donations.cta`: button label
+ *
+ * Progress calculation
+ * - `progress` is derived from `goal` and `raised` via `calculateProgress(goal, raised)`.
+ * - Amounts can be formatted strings like "$75.000.000 COP" (non-digit characters are ignored).
+ *
+ * @preview
+ *
+ * <DonationImpactSection
+ *   title="Remodelación Sala de Oración"
+ *   description="Tu generosidad permite que la Mezquita Central siga siendo un faro de luz en Bogotá."
+ *   goal="$100.000.000 COP"
+ *   raised="$75.000.000 COP"
+ *   ctaHref="/donate"
+ *   imageUrl="https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80"
+ *   imageAlt="Inside Mosque"
+ * />
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import DonationImpactSection from "@components/data/display/Donations/DonationImpactSection/DonationImpactSection.astro";
+ * ---
+ *
+ * <DonationImpactSection
+ *   title="Proyecto: Mantenimiento"
+ *   description="Tu aporte sostiene nuestros programas y espacios comunitarios."
+ *   goal="$10.000.000 COP"
+ *   raised="$2.500.000 COP"
+ *   ctaHref="/donate"
+ *   imageUrl="/images/donations.jpg"
+ *   imageAlt="Community at the mosque"
+ * />
+ * ```
+ */
+interface Props {
+  /**
+   * Project title used in the progress label (prefixed with `donations.project`).
+   */
+  title: string
+  /**
+   * Supporting text describing the impact of donations.
+   */
+  description: string
+  /**
+   * Goal amount as a display string, e.g. "$100.000.000 COP". Must have the same currency as `raised`.
+   */
+  goal: string
+  /**
+   * Raised amount as a display string, e.g. "$75.000.000 COP". Must have the same currency as `goal`.
+   */
+  raised: string
+  /**
+   * Link target for the donation call-to-action button.
+   */
+  ctaHref: string
+  /**
+   * Background image URL for the right-side panel.
+   */
+  imageUrl: string
+  /**
+   * Alt text for the image.
+   */
+  imageAlt: string
+}
+
+const { title, description, goal, raised, ctaHref, imageUrl, imageAlt }
+  = Astro.props as Props
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const goalLabel = `${t('donations.goal')} ${goal} • ${t('donations.raised')} ${raised}`
+const projectLabel = `${t('donations.project')} ${title}`
+const progress = calculateProgress(goal, raised);
+---
+
+<section>
+  <div
+    class="
+      flex flex-col overflow-hidden rounded-3xl bg-secondary shadow-2xl
+      lg:flex-row
+    "
+  >
+    <div class="
+      p-12 text-white
+      lg:w-1/2
+    "
+    >
+      <h2 class="mb-6 font-display text-4xl font-bold">
+        {t('donations.impact')}
+      </h2>
+      <p class="mb-8 text-lg/relaxed text-white/80">{description}</p>
+
+      <div class="mb-10 space-y-6">
+        <div>
+          <div class="mb-2 flex justify-between">
+            <span class="text-sm font-medium">{projectLabel}</span>
+            <span class="text-sm font-bold">{progress}%</span>
+          </div>
+          <progress
+            class="
+              h-3 w-full overflow-hidden rounded-full bg-white/20
+              [&::-moz-progress-bar]:bg-primary
+              [&::-webkit-progress-bar]:rounded-full
+              [&::-webkit-progress-bar]:bg-white/20
+              [&::-webkit-progress-value]:rounded-full
+              [&::-webkit-progress-value]:bg-primary
+            "
+            value={progress}
+            max="100"
+            aria-label={projectLabel}
+          >
+            {progress}%
+          </progress>
+        </div>
+        <p class="text-xs text-white/70">{goalLabel}</p>
+      </div>
+
+      <Button
+        href={ctaHref}
+        as="a"
+        size="xl"
+        class="
+          gap-3 rounded-xl bg-white text-secondary
+          hover:bg-slate-100
+        "
+      >
+        <Icon name="favorite" class="text-base" />
+        {t('donations.cta')}
+      </Button>
+    </div>
+
+    <div class="
+      relative min-h-[400px] bg-blue-100
+      lg:w-1/2
+    "
+    >
+      <img alt={imageAlt} class="size-full object-cover" src={imageUrl} />
+      <div class="absolute inset-0 bg-primary/20"></div>
+    </div>
+  </div>
+</section>
