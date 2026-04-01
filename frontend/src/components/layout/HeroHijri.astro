@@ -1,0 +1,106 @@
+---
+/**
+ * @component HeroHijri
+ * @description Full-bleed hero banner that displays a background image, Hijri date, current date, and a supporting phrase.
+ *
+ * Required props:
+ * - `imageUrl`: Background image URL.
+ * - `imageAlt`: Accessible image description for the background.
+ * - `hijriDate`: Hijri date string to highlight (also used as the main heading).
+ * - `currentDate`: Current (Gregorian) date string.
+ * - `phrase`: Supporting text shown under the heading.
+ *
+ * Layout notes:
+ * - Uses a "full-bleed" technique (`w-screen` + `inset-x-1/2 -mx-[50vw]`) so it spans the entire viewport even inside a centered container.
+ *
+ * @usage
+ *
+ * ```astro
+ * ---
+ * import HeroHijri from '@components/layout/HeroHijri.astro'
+ * ---
+ *
+ * <HeroHijri
+ *   imageUrl="https://example.com/mosque.jpg"
+ *   imageAlt="Beautiful Mosque Architecture"
+ *   hijriDate="Ramadán 1445 H"
+ *   currentDate="10 Mar 2026"
+ *   phrase="Unidos en oración y comunidad. Bienvenidos al corazón de la espiritualidad islámica en Bogotá."
+ * />
+ * ```
+ */
+interface Props {
+  /**
+   * Background image URL.
+   */
+  imageUrl: string
+  /**
+   * Accessible description for the background image.
+   */
+  imageAlt: string
+  /**
+   * Hijri date label shown as the hero title.
+   */
+  hijriDate: string
+  /**
+   * Gregorian date label shown next to the Hijri date.
+   */
+  currentDate: string
+  /**
+   * Supporting sentence shown under the dates.
+   */
+  phrase: string
+}
+
+const { imageUrl, imageAlt, hijriDate, currentDate, phrase } = Astro.props as Props
+---
+
+<section
+  class="
+    relative inset-x-1/2 -mx-[50vw] flex h-[600px] w-screen items-center
+    overflow-hidden
+  "
+>
+  <img
+    src={imageUrl}
+    alt={imageAlt}
+    class="absolute inset-0 size-full object-cover"
+    fetchpriority="high"
+  />
+  <div class="hero-overlay absolute inset-0" />
+  <div
+    class="
+      relative mx-auto w-full max-w-7xl px-4 text-center
+      lg:px-8
+    "
+  >
+    <h1
+      class="
+        mb-6 text-5xl font-extrabold text-white drop-shadow-lg
+        lg:text-7xl
+      "
+    >
+      {hijriDate}
+    </h1>
+    <div
+      class="
+        mx-auto mb-6 inline-flex flex-wrap items-center justify-center gap-x-3
+        gap-y-2 rounded-full border border-white/15 bg-white/10 px-5 py-2
+        text-sm text-white/90 backdrop-blur-sm
+      "
+    >
+      <span class="font-semibold tracking-wide">{hijriDate}</span>
+      <span class="text-white/50">•</span>
+      <span class="font-medium">{currentDate}</span>
+    </div>
+
+    <p
+      class="
+        mx-auto max-w-2xl text-lg/relaxed font-light text-white/90
+        sm:text-xl/relaxed
+      "
+    >
+      {phrase}
+    </p>
+  </div>
+</section>
