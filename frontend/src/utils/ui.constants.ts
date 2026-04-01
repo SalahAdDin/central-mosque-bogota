@@ -3,9 +3,10 @@
  * These correspond to the semantic colors defined in the global CSS variables.
  */
 export const COLORS = [
+  "navbar",
+  "neutral",
   "primary",
   "secondary",
-  "neutral",
   "accent",
   "info",
   "success",
@@ -36,6 +37,22 @@ export const SIZES = ["xs", "sm", "md", "lg", "xl"] as const;
  * - outline: Transparent background with colored border and text
  */
 export const VARIANTS = ["solid", "soft", "outline"] as const;
+
+/**
+ * Canonical ordering of daily prayer-related time keys used in the UI.
+ *
+ * Notes:
+ * - Includes the five fard prayers plus `sunrise` (informational only).
+ * - Intended for display and type safety, not for calculating prayer times.
+ */
+
+export const DAILY_PRAYERS = [
+  "fajr",
+  "dhuhr",
+  "asr",
+  "maghrib",
+  "isha",
+] as const;
 
 /**
  * Valid positions for a dropdown menu relative to its trigger element.
