@@ -1,0 +1,112 @@
+---
+import type { TMediaHighlight } from '@utils/models/media'
+import MediaHighlightCard from './MediaHighlightCard.astro'
+import HomeSection from '@components/layout/HomeSection/HomeSection.astro'
+
+/**
+ * @component MediaHighlightsSection
+ * @title Media Highlights Section
+ * @description Section that renders a header (title + description), a CTA link to a media page, and a 3-column grid of `MediaHighlightCard` items.
+ *
+ * Props
+ * - `title`: section heading
+ * - `description`: supporting text shown below the heading
+ * - `highlights`: list of media highlights (title, href, imageUrl, imageAlt)
+ * - `cardCtaLabel`: CTA label shown inside each card
+ * - `mediaHref`: URL for the section CTA link
+ * - `ctaLabel`: label for the section CTA link
+ *
+ * i18n (suggested)
+ * - `media-highlights.title`
+ * - `media-highlights.description`
+ * - `media-highlights.cta`
+ * - `media-highlights.cta-card`
+ *
+ * @preview
+ *
+ * <MediaHighlightsSection
+ *   title="Podcast & Reflexiones"
+ *   description="Reflexiones, charlas y recursos para fortalecer tu fe."
+ *   mediaHref="/media"
+ *   ctaLabel="Ver todo"
+ *   cardCtaLabel="Escuchar ahora"
+ *   highlights={[
+ *     {
+ *       title: "La Virtud de Buscar el Conocimiento",
+ *       href: "/media/podcast-3",
+ *       imageUrl: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80",
+ *       imageAlt: "Podcast cover",
+ *     },
+ *   ]}
+ * />
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import MediaHighlightsSection from "@components/data/display/Media/MediaHighlightsSection/MediaHighlightsSection.astro";
+ * import type { TMediaHighlight } from "@utils/models/media";
+ * import { getLangFromUrl, useTranslations } from "@i18n/utils";
+ *
+ * const lang = getLangFromUrl(Astro.url);
+ * const t = useTranslations(lang);
+ *
+ * const highlights: Array<TMediaHighlight> = [];
+ * ---
+ *
+ * <MediaHighlightsSection
+ *   title={t("media-highlights.title")}
+ *   description={t("media-highlights.description")}
+ *   cardCtaLabel={t("media-highlights.cta-card")}
+ *   highlights={highlights}
+ *   mediaHref="/media"
+ *   ctaLabel={t("media-highlights.cta")}
+ * />
+ * ```
+ */
+interface Props {
+  /**
+   * Title of the media highlights section.
+   */
+  title: string
+  /**
+   * Description of the media highlights section.
+   */
+  description: string
+  /**
+   * Array of media highlights to display.
+   */
+  highlights: Array<TMediaHighlight>
+  /**
+   * Label for the call-to-action button.
+   */
+  cardCtaLabel: string
+  /**
+   * URL for the section CTA link.
+   */
+  mediaHref: string
+  /**
+   * Label for the section CTA link.
+   */
+  ctaLabel: string
+}
+
+const { title, description, highlights, cardCtaLabel, mediaHref, ctaLabel }
+  = Astro.props as Props;
+---
+
+<HomeSection
+  title={title}
+  description={description}
+  ctaLabel={ctaLabel}
+  ctaHref={mediaHref}
+  bodyClass="grid grid-cols-1 md:grid-cols-3 gap-6"
+>
+  {
+    highlights.map(highlight => (
+      <li>
+        <MediaHighlightCard {...highlight} ctaLabel={cardCtaLabel} />
+      </li>
+    ))
+  }
+</HomeSection>
