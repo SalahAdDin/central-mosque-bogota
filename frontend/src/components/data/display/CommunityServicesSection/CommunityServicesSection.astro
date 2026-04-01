@@ -1,0 +1,88 @@
+---
+import type { TCommunityService } from '@utils/models/services'
+import CommunityServiceCard from './CommunityServiceCard.astro'
+
+/**
+ * @component CommunityServicesSection
+ * @title Community Services Section
+ * @description Section wrapper that renders a title, a small divider, and a 4-column grid of community services.
+ *
+ * Props
+ * - `title`: section heading
+ * - `services`: list of services to display (icon, title, description)
+ *
+ * @preview
+ *
+ * <CommunityServicesSection
+ *   title="Servicios Comunitarios"
+ *   services={[
+ *     {
+ *       icon: "menu_book",
+ *       title: "Escuela Coránica",
+ *       description:
+ *         "Clases de árabe y memorización del Corán para niños y adultos de todos los niveles.",
+ *     },
+ *     {
+ *       icon: "groups",
+ *       title: "Juventud",
+ *       description:
+ *         "Espacio dedicado a actividades recreativas y educativas para jóvenes musulmanes.",
+ *     },
+ *   ]}
+ * />
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import CommunityServicesSection from "@components/data/display/Donations/CommunityServicesSection/CommunityServicesSection.astro";
+ * import type { TCommunityService } from "@utils/models/services";
+ * import { getLangFromUrl, useTranslations } from "@i18n/utils";
+ *
+ * const lang = getLangFromUrl(Astro.url);
+ * const t = useTranslations(lang);
+ *
+ * const services: Array<TCommunityService> = [
+ *   { icon: "menu_book", title: "Escuela Coránica", description: "..." },
+ *   { icon: "groups", title: "Juventud", description: "..." },
+ * ];
+ * ---
+ *
+ * <CommunityServicesSection title={t("services.community-services")} services={services} />
+ * ```
+ */
+interface Props {
+  /**
+   * Title of the community services section
+   */
+  title: string
+  /**
+   * List of community services to display
+   */
+  services: Array<TCommunityService>
+}
+
+const { title, services } = Astro.props as Props;
+---
+
+<section class="hero-pattern flex flex-col gap-16">
+  <header class="flex flex-col gap-4 text-center">
+    <h2 class="font-display text-4xl font-bold">{title}</h2>
+    <div class="mx-auto h-1 w-20 rounded-full bg-primary"></div>
+  </header>
+
+  <ul class="
+    grid grid-cols-1 gap-8
+    sm:grid-cols-2
+    lg:grid-cols-4
+  "
+  >
+    {
+      services.map(service => (
+        <li class="h-full">
+          <CommunityServiceCard {...service} />
+        </li>
+      ))
+    }
+  </ul>
+</section>

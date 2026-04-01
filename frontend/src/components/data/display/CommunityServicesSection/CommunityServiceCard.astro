@@ -1,0 +1,79 @@
+---
+import Icon from '@components/data/display/Icons/Icon.astro'
+
+/**
+ * @component CommunityServiceCard
+ * @title Community Service Card
+ * @description A service teaser card with an icon, title, and short description. Intended for use in the Community Services section grid.
+ *
+ * @preview
+ *
+ * <div class="max-w-sm">
+ *   <CommunityServiceCard
+ *     icon="menu_book"
+ *     title="Escuela Coránica"
+ *     description="Clases de árabe y memorización del Corán para niños y adultos de todos los niveles."
+ *   />
+ * </div>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import CommunityServiceCard from "@components/data/display/Donations/CommunityServicesSection/CommunityServiceCard.astro";
+ * ---
+ *
+ * <CommunityServiceCard
+ *   icon="groups"
+ *   title="Juventud"
+ *   description="Espacio dedicado a actividades recreativas y educativas para jóvenes musulmanes."
+ * />
+ * ```
+ */
+interface Props {
+  /**
+   * The icon to display in the card. Should be a valid icon name from the Icon component.
+   */
+  icon: string
+  /**
+   * The title of the community service.
+   */
+  title: string
+  /**
+   * A short description of the community service.
+   */
+  description: string
+}
+
+const { icon, title, description } = Astro.props as Props;
+---
+
+<article
+  class="
+    group flex h-full flex-col rounded-2xl border border-slate-100 bg-white p-8
+    shadow-sm transition-all
+    hover:shadow-xl
+    dark:border-slate-700 dark:bg-slate-800
+    dark:hover:shadow-2xl dark:hover:shadow-black/40
+  "
+>
+  <figure
+    class="
+      mb-6 flex size-16 items-center justify-center rounded-2xl bg-blue-50
+      text-secondary transition-colors
+      group-hover:bg-secondary group-hover:text-white
+      dark:bg-blue-900/30 dark:text-primary
+      dark:group-hover:bg-primary
+    "
+  >
+    <Icon name={icon} class="text-3xl" />
+  </figure>
+  <h3 class="mb-3 text-xl font-bold">{title}</h3>
+  <p class="
+    leading-relaxed text-slate-600
+    dark:text-slate-400
+  "
+  >
+    {description}
+  </p>
+</article>
