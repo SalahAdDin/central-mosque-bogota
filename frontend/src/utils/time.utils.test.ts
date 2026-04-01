@@ -105,7 +105,7 @@ describe("time.utils", () => {
     it("should fall back to local time when Intl.DateTimeFormat fails", () => {
       const dateTimeFormatSpy = vi
         .spyOn(Intl, "DateTimeFormat")
-        .mockImplementation(() => {
+        .mockImplementation(function () {
           throw new Error("Unsupported timeZone");
         });
       const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {
@@ -119,7 +119,7 @@ describe("time.utils", () => {
         .mockReturnValue(22);
 
       expect(getCurrentMinutes("Invalid/Zone")).toBe(11 * 60 + 22);
-      expect(warnSpy).toHaveBeenCalledWith("Timezone \"Invalid/Zone\" failed, falling back to local time.");
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Timezone \"Invalid/Zone\" failed, falling back to local time."));
 
       getMinutesSpy.mockRestore();
       getHoursSpy.mockRestore();

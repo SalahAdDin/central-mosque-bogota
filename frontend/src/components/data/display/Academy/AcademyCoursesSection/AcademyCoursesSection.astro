@@ -1,0 +1,115 @@
+---
+import HomeSection from '@components/layout/HomeSection/HomeSection.astro'
+import AcademyCourseCard from './AcademyCourseCard.astro'
+import type { TAcademyArticle } from '@utils/models/academy'
+
+/**
+ * @component AcademyCoursesSection
+ * @title Academy Courses Section
+ * @description Section that renders an academy header (title + description), a CTA link to the academy page, and a 3-column grid of `AcademyCourseCard` items.
+ *
+ * Props
+ * - `title`: section heading
+ * - `description`: supporting text shown below the heading
+ * - `academyHref`: URL for the section CTA link
+ * - `ctaLabel`: label for the section CTA link
+ * - `articleCtaLabel`: label used for each course card CTA button
+ * - `courses`: list of academy articles displayed as cards
+ *
+ * i18n (suggested)
+ * - `academy.home-title`
+ * - `academy.home-description`
+ * - `academy.home-cta-label`
+ * - `academy.article-cta-label`
+ *
+ * @preview
+ *
+ * <AcademyCoursesSection
+ *   title="Academia de Estudios Islámicos"
+ *   description="Formación académica y espiritual para todos los niveles."
+ *   academyHref="/academy"
+ *   ctaLabel="Ver academia"
+ *   articleCtaLabel="Ver curso"
+ *   courses={[
+ *     {
+ *       title: "Introducción al Árabe Coránico",
+ *       description: "Domina las bases de la lectura y escritura del idioma sagrado del Islam desde cero.",
+ *       badgeLabel: "Fundacional",
+ *       href: "/academy/introduccion-arabe-coranico",
+ *       ctaIcon: "menu_book",
+ *       imageAlt: "Arabic Calligraphy",
+ *       imageUrl: "https://example.com/image.jpg",
+ *     },
+ *   ]}
+ * />
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import AcademyCoursesSection from "@components/data/display/Academy/AcademyCoursesSection/AcademyCoursesSection.astro";
+ * import type { TAcademyArticle } from "@utils/models/academy";
+ * import { getLangFromUrl, useTranslations } from "@i18n/utils";
+ *
+ * const lang = getLangFromUrl(Astro.url);
+ * const t = useTranslations(lang);
+ *
+ * const courses: Array<TAcademyArticle> = [];
+ * ---
+ *
+ * <AcademyCoursesSection
+ *   title={t("academy.home-title")}
+ *   description={t("academy.home-description")}
+ *   ctaLabel={t("academy.home-cta-label")}
+ *   articleCtaLabel={t("academy.article-cta-label")}
+ *   academyHref="/academy"
+ *   courses={courses}
+ * />
+ * ```
+ */
+interface Props {
+  /**
+   * Section heading
+   */
+  title: string
+  /**
+   * Supporting text shown below the heading
+   */
+  description: string
+  /**
+   * URL for the section CTA link
+   */
+  academyHref: string
+  /**
+   * Label for the section CTA link
+   */
+  ctaLabel: string
+  /**
+   * Label used for each course card CTA button
+   */
+  articleCtaLabel: string
+  /**
+   * List of academy articles displayed as cards
+   */
+  articles: Array<TAcademyArticle>
+}
+
+const { title, description, academyHref, ctaLabel, articleCtaLabel, articles }
+  = Astro.props as Props;
+---
+
+<HomeSection
+  title={title}
+  description={description}
+  ctaLabel={ctaLabel}
+  ctaHref={academyHref}
+  bodyClass="grid grid-cols-1 gap-8 md:grid-cols-3"
+>
+  {
+    articles.map(article => (
+      <li>
+        <AcademyCourseCard {...article} ctaLabel={articleCtaLabel} />
+      </li>
+    ))
+  }
+</HomeSection>
