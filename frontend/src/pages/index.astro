@@ -1,11 +1,86 @@
 ---
-import Welcome from "@components/Welcome.astro";
-import Layout from "@layouts/Layout.astro";
+import Layout from '@layouts/Layout.astro'
+import HeroHijri from '@components/layout/HeroHijri.astro'
+import DailyPrayerTime from '@components/data/display/DailyPrayTime/DailyPrayTime.astro'
+import CommunityServicesSection from '@components/data/display/CommunityServicesSection/CommunityServicesSection.astro'
+import AcademyCoursesSection from '@components/data/display/Academy/AcademyCoursesSection/AcademyCoursesSection.astro'
+import NextEventsSection from '@components/data/display/Events/NextEventsSection/NextEventsSection.astro'
+import MediaHighlightsSection from '@components/data/display/Media/MediaHighlightsSection/MediaHighlightsSection.astro'
+import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import DonationImpactSection from '@components/data/display/Donations/DonationImpactSection/DonationImpactSection.astro'
+import {
+  academyCourses,
+  defaultServices,
+  events,
+  featuredDonation,
+  mediaHighlights,
+} from '@utils/data.mocks'
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang);
 ---
 
 <Layout>
-  <Welcome />
+  <HeroHijri
+    imageUrl="https://lh3.googleusercontent.com/aida-public/AB6AXuDdlrd8AprY013bVQSvLjSWaOwTysETvmudIyet1ui8bdnFC2mjZ1b5okpi2OJ9rqogESejmF4lJRn8efBrCuCrJcxw9DU7VIr03J1sT4lIhkty48r2AqpqaH069FoNZ5-xcE2ZXPcFDt2HXcaLaHtFY5swEUTuMeikRCAw6RFG_iB1VLOJMmIOLxfFbwudkXDYHFbFajgfAC6WR6QPpMCSmvGVwiv1G7w56_9SUpKGblDJo4l4GYZLxuc-WOiJFjPnUpSaZYKovL4"
+    imageAlt="Beautiful Mosque Architecture"
+    hijriDate="15 Dhu al-Qi'dah"
+    currentDate="25 de Mayo, 2024"
+    phrase="Unidos en oración y comunidad. Bienvenidos al corazón de la espiritualidad islámica en Bogotá."
+  />
+  <DailyPrayerTime
+    location="Bogotá, Colombia"
+    hijriDate="15 Dhu al-Qi'dah"
+    currentDate="25 de Mayo, 2024"
+    schedule={{
+      fajr: '05:40',
+      sunrise: '06:30',
+      dhuhr: '12:00',
+      asr: '15:40',
+      maghrib: '18:20',
+      isha: '20:40',
+    }}
+  />
+  <CommunityServicesSection
+    title={t('services.community-services')}
+    services={defaultServices}
+  />
+  {
+    academyCourses.length > 0 && (
+      <AcademyCoursesSection
+        title={t('academy.home-title')}
+        description={t('academy.home-description')}
+        ctaLabel={t('academy.home-cta-label')}
+        articleCtaLabel={t('academy.article-cta-label')}
+        academyHref="/academy"
+        articles={academyCourses.map(courses => ({
+          ...courses,
+          ctaLabel: t('academy.article-cta-label'),
+        }))}
+      />
+    )
+  }
+  {
+    events.length > 0 && (
+      <NextEventsSection
+        title={t('events.next-events')}
+        description={t('events.join-us')}
+        ctaLabel={t('events.see-calendar')}
+        events={events}
+      />
+    )
+  }
+  {
+    mediaHighlights.length > 0 && (
+      <MediaHighlightsSection
+        title={t('media-highlights.title')}
+        description={t('media-highlights.description')}
+        cardCtaLabel={t('media-highlights.cta-card')}
+        ctaLabel={t('media-highlights.cta')}
+        mediaHref="/media"
+        highlights={mediaHighlights}
+      />
+    )
+  }
+  {featuredDonation && <DonationImpactSection {...featuredDonation} />}
 </Layout>
