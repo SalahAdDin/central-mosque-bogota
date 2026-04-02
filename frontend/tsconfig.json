@@ -3,10 +3,13 @@
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "strictNullChecks": true,
+    "allowJs": true,
     "paths": {
       "@components/*": ["./src/components/*"],
       "@i18n/*": ["./src/i18n/*"],
       "@layouts/*": ["./src/layouts/*"],
+      "@services/*": ["./src/services/*"],
       "@styles/*": ["./src/styles/*"],
       "@storybook/*": ["./.storybook/*"],
       "@utils/*": ["./src/utils/*"],

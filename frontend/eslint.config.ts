@@ -113,7 +113,13 @@ export default defineConfig([
         "error",
         { devDependencies: true },
       ],
-      "import-x/no-unresolved": "error",
+      "import-x/no-unresolved": [
+        "error",
+        // TODO: bug import-x/no-unresolved https://github.com/un-ts/eslint-plugin-import-x/issues/469
+        {
+          ignore: ["^astro:"],
+        },
+      ],
       "indent": "off",
     },
   },
