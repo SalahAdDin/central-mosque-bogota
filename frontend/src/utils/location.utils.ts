@@ -51,22 +51,22 @@ const getTimeZone = (): string => {
  * Returns `null` when unavailable, denied, or timed out.
  */
 const getGeolocation = (): Promise<GeolocationCoordinates | null> => {
-  if (typeof navigator === "undefined") {
+  if (typeof window === "undefined" || typeof navigator === "undefined") {
     return Promise.resolve(null);
   }
 
   return new Promise((resolve) => {
-    const timeoutId = window.setTimeout(() => {
+    const timeoutId = globalThis.setTimeout(() => {
       resolve(null);
     }, LOCATION_CONFIG.DEFAULT_TIMEOUT_MS);
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        window.clearTimeout(timeoutId);
+        globalThis.clearTimeout(timeoutId);
         resolve(position.coords);
       },
       () => {
-        window.clearTimeout(timeoutId);
+        globalThis.clearTimeout(timeoutId);
         resolve(null);
       },
       {
