@@ -15,31 +15,32 @@ import {
   featuredDonation,
   mediaHighlights,
 } from '@utils/data.mocks'
+import { getLiveEntry } from 'astro:content'
 
 const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang);
+const t = useTranslations(lang)
+
+const { entry, error } = await getLiveEntry('prayerTimes', {
+  languageCode: lang,
+})
+
+// TODO: rafactor to get default values from entry
+const { times, location, hijriDate, currentDate } = entry!.data || {};
 ---
 
 <Layout>
   <HeroHijri
     imageUrl="https://lh3.googleusercontent.com/aida-public/AB6AXuDdlrd8AprY013bVQSvLjSWaOwTysETvmudIyet1ui8bdnFC2mjZ1b5okpi2OJ9rqogESejmF4lJRn8efBrCuCrJcxw9DU7VIr03J1sT4lIhkty48r2AqpqaH069FoNZ5-xcE2ZXPcFDt2HXcaLaHtFY5swEUTuMeikRCAw6RFG_iB1VLOJMmIOLxfFbwudkXDYHFbFajgfAC6WR6QPpMCSmvGVwiv1G7w56_9SUpKGblDJo4l4GYZLxuc-WOiJFjPnUpSaZYKovL4"
     imageAlt="Beautiful Mosque Architecture"
-    hijriDate="15 Dhu al-Qi'dah"
-    currentDate="25 de Mayo, 2024"
+    hijriDate={hijriDate}
+    currentDate={currentDate}
     phrase="Unidos en oración y comunidad. Bienvenidos al corazón de la espiritualidad islámica en Bogotá."
   />
   <DailyPrayerTime
-    location="Bogotá, Colombia"
-    hijriDate="15 Dhu al-Qi'dah"
-    currentDate="25 de Mayo, 2024"
-    schedule={{
-      fajr: '05:40',
-      sunrise: '06:30',
-      dhuhr: '12:00',
-      asr: '15:40',
-      maghrib: '18:20',
-      isha: '20:40',
-    }}
+    location={location}
+    hijriDate={hijriDate}
+    currentDate={currentDate}
+    schedule={times}
   />
   <CommunityServicesSection
     title={t('services.community-services')}
