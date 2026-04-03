@@ -1,0 +1,28 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+import { cn } from '@utils/styles.utils'
+
+/**
+ * @component TableCaption
+ * @title Table Caption
+ * @description Styled `<caption>` element placed after the table to describe its contents. Uses muted foreground color and small text size.
+ *
+ * @usage
+ * ```astro nocollapse
+ * ---
+ * import { Table, TableCaption } from "@components/layout/Table";
+ * ---
+ * <Table>
+ *   <TableCaption>A list of your recent orders.</TableCaption>
+ * </Table>
+ * ```
+ */
+type Props = HTMLAttributes<'caption'>
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<caption class={cn('mt-4 text-sm text-muted-foreground', className)} {...rest}>
+  <slot />
+</caption>

@@ -1,0 +1,35 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+import { cn } from '@utils/styles.utils'
+
+/**
+ * @component TableHeader
+ * @title Table Header
+ * @description Styled `<thead>` wrapper. Adds a bottom border to header rows and is typically paired with `TableRow` and `TableHead`.
+ *
+ * @usage
+ * ```astro nocollapse
+ * ---
+ * import { Table, TableHeader, TableRow, TableHead } from "@components/layout/Table";
+ * ---
+ * <Table>
+ *   <TableHeader>
+ *     <TableRow>
+ *       <TableHead>Order</TableHead>
+ *       <TableHead>Status</TableHead>
+ *       <TableHead>Customer</TableHead>
+ *       <TableHead class="text-right">Total</TableHead>
+ *     </TableRow>
+ *   </TableHeader>
+ * </Table>
+ * ```
+ */
+type Props = HTMLAttributes<'thead'>
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<thead class={cn('[&_tr]:border-b', className)} {...rest}>
+  <slot />
+</thead>

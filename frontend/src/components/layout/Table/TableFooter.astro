@@ -1,0 +1,42 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+import { cn } from '@utils/styles.utils'
+
+/**
+ * @component TableFooter
+ * @title Table Footer
+ * @description Styled `<tfoot>` wrapper. Adds a top border, a subtle muted background, and medium font weight; ideal for totals and summary rows.
+ *
+ * @usage
+ * ```astro nocollapse
+ * ---
+ * import { Table, TableFooter, TableRow, TableCell } from "@components/layout/Table";
+ * ---
+ * <Table>
+ *   <TableFooter>
+ *     <TableRow>
+ *       <TableCell colspan="3">Total Orders</TableCell>
+ *       <TableCell class="text-right">$450.00</TableCell>
+ *     </TableRow>
+ *   </TableFooter>
+ * </Table>
+ * ```
+ */
+type Props = HTMLAttributes<'tfoot'>
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<tfoot
+  class={cn(
+    `
+      border-t bg-muted/50 font-medium
+      [&>tr]:last:border-b-0
+    `,
+    className,
+  )}
+  {...rest}
+>
+  <slot />
+</tfoot>

@@ -1,0 +1,44 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+import { cn } from '@utils/styles.utils'
+
+/**
+ * @component TableHead
+ * @title Table Head
+ * @description Styled `<th>` header cell. Left-aligned, medium weight, muted foreground. Removes right padding when it contains an element with `role="checkbox"`.
+ *
+ * @usage
+ * ```astro nocollapse
+ * ---
+ * import { Table, TableHeader, TableRow, TableHead } from "@components/layout/Table";
+ * ---
+ * <Table>
+ *   <TableHeader>
+ *     <TableRow>
+ *       <TableHead>Order</TableHead>
+ *       <TableHead>Status</TableHead>
+ *       <TableHead>Customer</TableHead>
+ *       <TableHead class="text-right">Total</TableHead>
+ *     </TableRow>
+ *   </TableHeader>
+ * </Table>
+ * ```
+ */
+type Props = HTMLAttributes<'th'>
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<th
+  class={cn(
+    `
+      h-12 px-4 text-left align-middle font-medium text-muted-foreground
+      [&:has([role=checkbox])]:pr-0
+    `,
+    className,
+  )}
+  {...rest}
+>
+  <slot />
+</th>

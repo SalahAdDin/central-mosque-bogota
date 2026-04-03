@@ -1,0 +1,69 @@
+---
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '.'
+
+const orders = [
+  {
+    order: 'ORD1001',
+    status: 'Shipped',
+    total: '$120.00',
+    customer: 'Alice Smith',
+  },
+  {
+    order: 'ORD1002',
+    status: 'Processing',
+    total: '$80.00',
+    customer: 'Bob Johnson',
+  },
+  {
+    order: 'ORD1003',
+    status: 'Delivered',
+    total: '$200.00',
+    customer: 'Charlie Rose',
+  },
+  {
+    order: 'ORD1004',
+    status: 'Cancelled',
+    total: '$50.00',
+    customer: 'Dana Lee',
+  },
+];
+---
+
+<Table>
+  <TableCaption>A list of your recent orders.</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableHead class="w-[120px]">Order</TableHead>
+      <TableHead>Status</TableHead>
+      <TableHead>Customer</TableHead>
+      <TableHead class="text-right">Total</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {
+      orders.map(order => (
+        <TableRow>
+          <TableCell class="font-medium">{order.order}</TableCell>
+          <TableCell>{order.status}</TableCell>
+          <TableCell>{order.customer}</TableCell>
+          <TableCell class="text-right">{order.total}</TableCell>
+        </TableRow>
+      ))
+    }
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell colspan="3">Total Orders</TableCell>
+      <TableCell class="text-right">$450.00</TableCell>
+    </TableRow>
+  </TableFooter>
+</Table>

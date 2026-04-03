@@ -1,0 +1,41 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+import { cn } from '@utils/styles.utils'
+
+/**
+ * @component TableCell
+ * @title Table Cell
+ * @description Styled `<td>` data cell. Provides comfortable padding and vertical alignment. Removes right padding when it contains an element with `role="checkbox"`.
+ *
+ * @usage
+ * ```astro nocollapse
+ * ---
+ * import { Table, TableBody, TableRow, TableCell } from "@components/layout/Table";
+ * ---
+ * <Table>
+ *   <TableBody>
+ *     <TableRow>
+ *       <TableCell class="font-medium">ORD1001</TableCell>
+ *       <TableCell>Shipped</TableCell>
+ *       <TableCell>Alice Smith</TableCell>
+ *       <TableCell class="text-right">$120.00</TableCell>
+ *     </TableRow>
+ *   </TableBody>
+ * </Table>
+ * ```
+ */
+type Props = HTMLAttributes<'td'>
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<td
+  class={cn(`
+    p-4 align-middle
+    [&:has([role=checkbox])]:pr-0
+  `, className)}
+  {...rest}
+>
+  <slot />
+</td>

@@ -1,0 +1,69 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+import { cn } from '@utils/styles.utils'
+
+/**
+ * @component Table
+ * @title Table
+ * @description Responsive wrapper and styled `<table>` element. Provides base typography and caption placement while allowing composition with header, body, row, head, cell, and footer subcomponents.
+ *
+ * @usage
+ * ```astro nocollapse
+ * ---
+ * import {
+ *   Table,
+ *   TableBody,
+ *   TableCaption,
+ *   TableCell,
+ *   TableFooter,
+ *   TableHead,
+ *   TableHeader,
+ *   TableRow,
+ * } from "@components/layout/Table";
+ *
+ * const orders = [
+ *   { order: "ORD1001", status: "Shipped", total: "$120.00", customer: "Alice Smith" },
+ *   { order: "ORD1002", status: "Processing", total: "$80.00", customer: "Bob Johnson" },
+ * ];
+ * ---
+ *
+ * <Table>
+ *   <TableCaption>A list of your recent orders.</TableCaption>
+ *   <TableHeader>
+ *     <TableRow>
+ *       <TableHead class="w-[120px]">Order</TableHead>
+ *       <TableHead>Status</TableHead>
+ *       <TableHead>Customer</TableHead>
+ *       <TableHead class="text-right">Total</TableHead>
+ *     </TableRow>
+ *   </TableHeader>
+ *   <TableBody>
+ *     {orders.map(o => (
+ *       <TableRow>
+ *         <TableCell class="font-medium">{o.order}</TableCell>
+ *         <TableCell>{o.status}</TableCell>
+ *         <TableCell>{o.customer}</TableCell>
+ *         <TableCell class="text-right">{o.total}</TableCell>
+ *       </TableRow>
+ *     ))}
+ *   </TableBody>
+ *   <TableFooter>
+ *     <TableRow>
+ *       <TableCell colspan="3">Total Orders</TableCell>
+ *       <TableCell class="text-right">$200.00</TableCell>
+ *     </TableRow>
+ *   </TableFooter>
+ * </Table>
+ * ```
+ */
+type Props = HTMLAttributes<'table'>
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<div class="relative w-full overflow-auto">
+  <table class={cn('w-full caption-bottom text-sm', className)} {...rest}>
+    <slot />
+  </table>
+</div>

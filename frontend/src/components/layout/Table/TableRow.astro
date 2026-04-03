@@ -1,0 +1,51 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+import { cn } from '@utils/styles.utils'
+
+/**
+ * @component TableRow
+ * @title Table Row
+ * @description Styled `<tr>` element. Adds a bottom border and hover background. Supports a selected state via `data-state="selected"` which applies a muted background.
+ *
+ * @usage
+ * ```astro nocollapse
+ * ---
+ * import { Table, TableBody, TableRow, TableCell } from "@components/layout/Table";
+ * ---
+ * <Table>
+ *   <TableBody>
+ *     <TableRow>
+ *       <TableCell>ORD1001</TableCell>
+ *       <TableCell>Shipped</TableCell>
+ *       <TableCell>Alice Smith</TableCell>
+ *       <TableCell class="text-right">$120.00</TableCell>
+ *     </TableRow>
+ *     <TableRow data-state="selected">
+ *       <TableCell>ORD1002</TableCell>
+ *       <TableCell>Processing</TableCell>
+ *       <TableCell>Bob Johnson</TableCell>
+ *       <TableCell class="text-right">$80.00</TableCell>
+ *     </TableRow>
+ *   </TableBody>
+ * </Table>
+ * ```
+ */
+type Props = HTMLAttributes<'tr'>
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<tr
+  class={cn(
+    `
+      border-b transition-colors
+      hover:bg-muted/50
+      data-[state=selected]:bg-muted
+    `,
+    className,
+  )}
+  {...rest}
+>
+  <slot />
+</tr>
