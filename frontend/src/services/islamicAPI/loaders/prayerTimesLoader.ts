@@ -33,14 +33,14 @@ type LoaderCollectionResult = {
 type LoaderSuccessResult = LoaderEntryResult | LoaderCollectionResult;
 type LoaderResult = LoaderSuccessResult | LoaderError;
 
-type LoaderConfig = {
-  languageCode?: string;
-  date?: string;
-};
-
 type EntryFilter = {
   date?: string;
   languageCode?: string;
+};
+
+type CollectionFilter = {
+  languageCode?: string;
+  date?: string;
 };
 
 /**
@@ -55,7 +55,7 @@ const fetchPrayerTimes = async ({
   isMonthly,
 }: FetchPrayerParams): Promise<LoaderResult> => {
   try {
-    const { lat, lon, city, country, timeZone } = await getClientLocation();
+    const { lat, lon, city, country } = await getClientLocation();
 
     const endpoint = "prayer-time/";
     const params = {
@@ -81,20 +81,18 @@ const fetchPrayerTimes = async ({
 
       return {
         type: "collection",
-        result: data.map(entry => ({
-          id: `${currentDate.toISOString()}-${entry.date}`, // Unique ID per day in month
+        result: data.map((entry) => ({
+          id: `${currentDate.toISOString()}-${entry.date}`,
           data: buildPrayerData({
             times: entry.times,
             city,
             country,
-            timeZone,
             languageCode,
             date: new Date(entry.date),
           }),
         })),
       };
-    }
-    else {
+    } else {
       const { data }
         = await fetchIslamicData<TIslamicApiPrayerTimeSingleResponse>(
           endpoint,
@@ -109,15 +107,13 @@ const fetchPrayerTimes = async ({
             times: data.times,
             city,
             country,
-            timeZone,
             languageCode,
             date: currentDate,
           }),
         },
       };
     }
-  }
-  catch (error) {
+  } catch (error) {
     return {
       error: new Error(
         `Failed to load ${isMonthly ? "monthly" : "daily"} prayer times`,
@@ -133,12 +129,21 @@ const fetchPrayerTimes = async ({
  * - `loadEntry`: fetches a single day (uses `filter.date` when provided)
  * - `loadCollection`: fetches a whole month (requires `config.date` in `YYYY-MM` format)
  */
-export function prayerTimesLoader(config: LoaderConfig = {}): LiveLoader<LoaderResponse, EntryFilter> {
+export function prayerTimesLoader(): LiveLoader<
+  LoaderResponse,
+  EntryFilter,
+  CollectionFilter
+> {
   return {
     name: "prayer-times-loader",
 
-    loadCollection: async () => {
-      const { date, languageCode } = config;
+    loadCollection: async ({ filter }) => {
+      if (!filter)
+        return {
+          error: new Error("Date and LanguageCode parameters are required"),
+        };
+
+      const { date, languageCode } = filter;
 
       if (!date || !/^\d{4}-\d{2}$/.test(date)) {
         return {

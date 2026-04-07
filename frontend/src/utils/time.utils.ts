@@ -30,15 +30,14 @@ export const getCurrentMinutes = (timeZone: string): number => {
     };
 
     const parts = new Intl.DateTimeFormat("en-US", options).formatToParts(now);
-    const getPart = (type: string) => Number(parts.find(part => part.type === type)?.value);
+    const getPart = (type: string) => Number(parts.find((part) => part.type === type)?.value);
 
     const h = getPart("hour");
     const m = getPart("minute");
 
     if (isNaN(h) || isNaN(m)) throw new Error("Invalid time parts");
     return h * 60 + m;
-  }
-  catch (error) {
+  } catch (error) {
     console.warn(`Timezone "${timeZone}" failed, falling back to local time.\n${error instanceof Error ? error.message : String(error)}`);
     const now = new Date();
     return now.getHours() * 60 + now.getMinutes();
@@ -82,6 +81,14 @@ export const formatYmd = (date: Date, timeZone: string): string => {
   }).format(date);
 };
 
+export const isToday = (
+  date: Date,
+  timeZone: string,
+  now: Date = new Date()
+): boolean => {
+  return formatYmd(date, timeZone) === formatYmd(now, timeZone);
+};
+
 /**
  * Formats a date into `YYYY-MM` using the given IANA timezone.
  */
@@ -91,8 +98,8 @@ export const formatYm = (date: Date, timeZone: string): string => {
     year: "numeric",
     month: "2-digit",
   }).formatToParts(date);
-  const year = parts.find(part => part.type === "year")?.value;
-  const month = parts.find(part => part.type === "month")?.value;
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
 
   if (!year || !month) {
     throw new Error("Could not format current month");

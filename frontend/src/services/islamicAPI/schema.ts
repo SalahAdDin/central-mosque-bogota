@@ -5,6 +5,8 @@ export const prayerTimeEntrySchema = z.object({
   location: z.string(),
   currentDate: z.string(),
   hijriDate: z.string(),
+  isToday: z.boolean().optional(),
+  activePray: z.string().optional(),
   times: z.object({
     fajr: z.string(),
     sunrise: z.string(),

@@ -1,6 +1,13 @@
+import { calculateActivePrayer } from "@utils/islamic.utils";
 import type { TIslamicApiPrayerTimes } from "@utils/models/islamic";
 import type { TDailyPrayerSchedule } from "@utils/models/types";
-import { formatHijriDate, formatLongDate } from "@utils/time.utils";
+import {
+  formatHijriDate,
+  formatLongDate,
+  getCurrentMinutes,
+  isToday,
+  parseTimeToMinutes,
+} from "@utils/time.utils";
 
 const parsePrayerTimes = (times: TIslamicApiPrayerTimes): TDailyPrayerSchedule => ({
   fajr: times.Fajr,
@@ -11,11 +18,19 @@ const parsePrayerTimes = (times: TIslamicApiPrayerTimes): TDailyPrayerSchedule =
   isha: times.Isha,
 });
 
+const parsePrayerTimesToNumber = (times: TDailyPrayerSchedule) => ({
+  fajr: parseTimeToMinutes(times.fajr),
+  sunrise: parseTimeToMinutes(times.sunrise),
+  dhuhr: parseTimeToMinutes(times.dhuhr),
+  asr: parseTimeToMinutes(times.asr),
+  maghrib: parseTimeToMinutes(times.maghrib),
+  isha: parseTimeToMinutes(times.isha),
+});
+
 export type BuildPrayerDataParams = {
   times: TIslamicApiPrayerTimes;
   city: string;
   country: string;
-  timeZone: string;
   date: Date;
   languageCode?: string;
   fetchedAt?: string;
@@ -25,14 +40,27 @@ export const buildPrayerData = ({
   times,
   city,
   country,
-  timeZone,
   date,
   languageCode = "es",
   fetchedAt = new Date().toISOString(),
-}: BuildPrayerDataParams) => ({
-  fetchedAt,
-  location: `${city}, ${country}`,
-  currentDate: formatLongDate(date, timeZone, languageCode),
-  hijriDate: formatHijriDate(date, timeZone, languageCode),
-  times: parsePrayerTimes(times),
-});
+}: BuildPrayerDataParams) => {
+  const today = isToday(date, "UTC");
+  const parsedTimes = parsePrayerTimes(times);
+  const activePray = today
+    ? calculateActivePrayer(
+        getCurrentMinutes("UTC"),
+        parsePrayerTimesToNumber(parsedTimes),
+        parseTimeToMinutes(parsedTimes.sunrise)
+      )
+    : undefined;
+
+  return {
+    fetchedAt,
+    location: `${city}, ${country}`,
+    currentDate: formatLongDate(date, "UTC", languageCode),
+    hijriDate: formatHijriDate(date, "UTC", languageCode),
+    isToday: today,
+    activePray,
+    times: parsedTimes,
+  };
+};

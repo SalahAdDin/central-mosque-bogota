@@ -173,5 +173,6 @@ export type TIslamicResponse = {
   location: string;
   hijriDate: string;
   currentDate: string;
+  isToday?: boolean;
   times: TDailyPrayerSchedule;
 };
