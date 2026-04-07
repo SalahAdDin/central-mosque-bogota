@@ -1,0 +1,85 @@
+---
+import Button from '@components/actions/Button/Button.astro'
+import Icon from '@components/data/display/Icons/Icon.astro'
+import type { ComponentProps } from 'astro/types'
+import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import { cn } from '@utils/styles.utils'
+
+/**
+ * @component DownloadPDF
+ * @title Download PDF
+ * @description Action button that exports a DOM element to a single-page PDF (Letter, portrait).
+ *
+ * Requirements
+ * - The printable element must exist in the document and be selectable by an attribute selector.
+ * - By default, it looks for `[data-document-prayer-calendar-table]`.
+ *
+ * Behavior
+ * - Captures the target element with `html2canvas-pro`.
+ * - Generates a PDF with `jspdf` using Letter portrait.
+ * - Scales down as needed so the full content fits on a single page.
+ *
+ * @preview
+ *
+ * <DownloadPDF documentTitle="Calendario de Oración" />
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import DownloadPDF from "@components/actions/DownloadPDF/DownloadPDF.astro";
+ * ---
+ *
+ * <DownloadPDF documentTitle="Calendario de Oración" />
+ *
+ * <section data-document-prayer-calendar-table>
+ *   <!-- content to export -->
+ * </section>
+ * ```
+ */
+interface DownloadPDFProps extends Pick<
+  ComponentProps<typeof Button>,
+  'class' | 'variant' | 'color'
+> {
+  documentTitle: string
+  targetAttr?: string
+  marginMm?: number
+}
+
+const {
+  documentTitle,
+  targetAttr = 'data-document-prayer-calendar-table',
+  marginMm = 10,
+  variant = 'solid',
+  color = 'primary',
+  class: className = '',
+} = Astro.props as DownloadPDFProps
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang);
+---
+
+<Button
+  color={color}
+  variant={variant}
+  data-action="download-pdf"
+  class={cn('print:hidden', className)}
+  data-document-title={documentTitle}
+  data-target-attr={targetAttr}
+  data-pdf-margin-mm={marginMm}
+  data-loading-label={t('download.preparing')}
+  data-error-label={t('download.error')}
+  ariaLabel={t('actions.download-pdf')}
+>
+  <Icon name="picture_as_pdf" />
+  <span>{t('download.download-pdf')}</span>
+</Button>
+
+<script>
+  import { initDownloadPdfButtons } from "./download-pdf.controller";
+
+  const setup = () => initDownloadPdfButtons();
+
+  document.addEventListener("DOMContentLoaded", setup);
+  document.addEventListener("astro:after-swap", setup);
+</script>

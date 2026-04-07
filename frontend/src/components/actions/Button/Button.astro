@@ -3,7 +3,6 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import type { HTMLTag, Polymorphic } from 'astro/types'
 
 import { cn } from '@utils/styles.utils'
-import type { TIconPosition } from '@utils/types'
 
 /**
  * @component Button
@@ -454,6 +453,7 @@ const classes = cn(
   }),
   disabled && 'pointer-events-none',
   className,
+  Tag === 'button' && 'cursor-pointer',
 );
 ---
 
