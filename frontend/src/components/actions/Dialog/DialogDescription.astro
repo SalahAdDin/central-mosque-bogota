@@ -1,6 +1,6 @@
 ---
-import { cn } from "@utils/styles.utils";
-import type { HTMLAttributes } from "astro/types";
+import { cn } from '@utils/styles.utils'
+import type { HTMLAttributes } from 'astro/types'
 
 /**
  * @component DialogDescription
@@ -24,13 +24,13 @@ import type { HTMLAttributes } from "astro/types";
  * ```
  */
 
-interface Props extends HTMLAttributes<"p"> {}
+interface Props extends HTMLAttributes<'p'> {}
 
 const { class: className, ...rest } = Astro.props;
 ---
 
 <p
-  class={cn("text-muted-foreground", className)}
+  class={cn('text-muted-foreground', className)}
   {...rest}
   data-slot="dialog-description"
 >

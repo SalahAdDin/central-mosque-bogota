@@ -12,8 +12,7 @@ describe("Icon.astro", () => {
 
     try {
       expect(getByText(root, "menu")).toBeInTheDocument();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -27,8 +26,7 @@ describe("Icon.astro", () => {
       const el = getByText(root, "search");
       expect(el.className).toMatch(/material-symbols-outlined/);
       expect(el.className).toMatch(/text-base/);
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -42,8 +40,7 @@ describe("Icon.astro", () => {
       const el = getByText(root, "favorite");
       expect(el.getAttribute("aria-hidden")).toBe("true");
       expect(el.hasAttribute("aria-label")).toBe(false);
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -57,8 +54,7 @@ describe("Icon.astro", () => {
       const el = getByText(root, "help");
       expect(el.getAttribute("aria-label")).toBe("Help icon");
       expect(el.getAttribute("aria-hidden")).toBeNull();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -71,8 +67,7 @@ describe("Icon.astro", () => {
     try {
       const el = getByText(root, "language");
       expect(el.className).toMatch(/text-secondary/);
-    }
-    finally {
+    } finally {
       await close();
     }
   });

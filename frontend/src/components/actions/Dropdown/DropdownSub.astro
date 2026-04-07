@@ -1,6 +1,6 @@
 ---
-import type { HTMLAttributes } from "astro/types";
-import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from 'astro/types'
+import { cn } from '@utils/styles.utils'
 
 /**
  * @component DropdownSub
@@ -37,11 +37,11 @@ import { cn } from "@utils/styles.utils";
  * ```
  */
 
-type Props = HTMLAttributes<"div">;
+type Props = HTMLAttributes<'div'>
 
 const { class: className, ...rest } = Astro.props as Props;
 ---
 
-<div class={cn("relative", className)} data-dropdown-sub {...rest}>
+<div class={cn('relative', className)} data-dropdown-sub {...rest}>
   <slot />
 </div>

@@ -1,6 +1,6 @@
 ---
-import { cn } from "@utils/styles.utils";
-import type { HTMLAttributes } from "astro/types";
+import { cn } from '@utils/styles.utils'
+import type { HTMLAttributes } from 'astro/types'
 
 /**
  * @component Dropdown
@@ -63,16 +63,16 @@ import type { HTMLAttributes } from "astro/types";
  * </Dropdown>
  */
 
-interface Props extends HTMLAttributes<"div"> {
+interface Props extends HTMLAttributes<'div'> {
   /**
    * When true, the dropdown will open on hover in addition to click
    */
-  openOnHover?: boolean;
+  openOnHover?: boolean
   /**
    * Time in milliseconds to wait before closing when hover open is enabled
    * @default 200
    */
-  closeDelay?: number;
+  closeDelay?: number
 }
 
 const {
@@ -84,8 +84,8 @@ const {
 ---
 
 <div
-  class={cn("relative", className)}
-  data-open-on-hover={openOnHover ? "true" : undefined}
+  class={cn('relative', className)}
+  data-open-on-hover={openOnHover ? 'true' : undefined}
   data-close-delay={closeDelay}
   data-dropdown-root
   {...rest}

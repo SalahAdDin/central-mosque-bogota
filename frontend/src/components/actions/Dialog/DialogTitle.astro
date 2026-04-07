@@ -1,6 +1,6 @@
 ---
-import { cn } from "@utils/styles.utils";
-import type { HTMLAttributes } from "astro/types";
+import { cn } from '@utils/styles.utils'
+import type { HTMLAttributes } from 'astro/types'
 
 /**
  * @component DialogTitle
@@ -24,19 +24,19 @@ import type { HTMLAttributes } from "astro/types";
  * ```
  */
 
-interface Props extends Omit<HTMLAttributes<"h2">, "id"> {
+interface Props extends Omit<HTMLAttributes<'h2'>, 'id'> {
   /**
    * The content to be rendered inside the dialog title
    */
 
-  children: any;
+  children: any
 }
 
 const { class: className, ...rest } = Astro.props;
 ---
 
 <h2
-  class={cn("text-xl leading-none font-semibold tracking-tight", className)}
+  class={cn('text-xl leading-none font-semibold tracking-tight', className)}
   {...rest}
 >
   <slot />

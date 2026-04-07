@@ -28,8 +28,7 @@ describe("MediaHighlightCard", () => {
 
       expect(getByText(root, props.ctaLabel)).toBeInTheDocument();
       expect(getByText(root, "play_arrow")).toBeInTheDocument();
-    }
-    finally {
+    } finally {
       await close();
     }
   });

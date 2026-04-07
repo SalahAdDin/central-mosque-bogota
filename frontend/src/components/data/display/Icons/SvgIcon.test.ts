@@ -11,8 +11,7 @@ describe("SvgIcon.astro", () => {
     try {
       const svg = root.querySelector("svg");
       expect(svg).toBeTruthy();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -26,8 +25,7 @@ describe("SvgIcon.astro", () => {
       expect(svg).toBeTruthy();
       if (!svg) throw new Error("Expected svg to be present");
       expect(svg.innerHTML.toLowerCase()).toContain("<path");
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -42,8 +40,7 @@ describe("SvgIcon.astro", () => {
       if (!svg) throw new Error("Expected svg to be present");
       expect(svg.innerHTML).toContain("<defs>");
       expect(svg.innerHTML).toMatch(/clipPath/i);
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -59,8 +56,7 @@ describe("SvgIcon.astro", () => {
       const classAttr = svg.getAttribute("class") ?? "";
       expect(classAttr).toMatch(/w-6/);
       expect(classAttr).toMatch(/h-6/);
-    }
-    finally {
+    } finally {
       await close();
     }
   });

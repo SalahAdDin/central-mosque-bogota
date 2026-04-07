@@ -1,8 +1,8 @@
 ---
-import { cn } from "@utils/styles.utils";
-import type { HTMLAttributes } from "astro/types";
+import { cn } from '@utils/styles.utils'
+import type { HTMLAttributes } from 'astro/types'
 
-import { dropdownContentVariants } from "./variants";
+import { dropdownContentVariants } from './variants'
 
 /**
  * @component DropdownSubContent
@@ -37,12 +37,12 @@ import { dropdownContentVariants } from "./variants";
  * ```
  */
 
-interface Props extends HTMLAttributes<"div"> {
+interface Props extends HTMLAttributes<'div'> {
   /**
    * Open and close animation duration in milliseconds
    * @default 150
    */
-  animationDuration?: number;
+  animationDuration?: number
 }
 
 const {
@@ -55,8 +55,8 @@ const {
 <div
   class={cn(
     dropdownContentVariants({
-      side: "right",
-      align: "start",
+      side: 'right',
+      align: 'start',
     }),
     className,
   )}
@@ -65,7 +65,7 @@ const {
   tabindex="-1"
   aria-orientation="vertical"
   style={{
-    display: "none",
+    display: 'none',
     animationDuration: `${animationDuration}ms`,
   }}
   {...rest}
