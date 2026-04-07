@@ -19,5 +19,5 @@
     "verbatimModuleSyntax": true
   },
   "include": [".astro/types.d.ts", "**/*", ".storybook/**/*"],
-  "exclude": ["dist"]
+  "exclude": ["coverage", "dist", "node_modules"]
 }

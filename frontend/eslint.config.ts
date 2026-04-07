@@ -65,7 +65,7 @@ export default defineConfig([
           objects: "only-multiline",
           imports: "only-multiline",
           exports: "only-multiline",
-          functions: "never",
+          functions: "only-multiline",
         },
       ],
       "@stylistic/function-paren-newline": "warn",

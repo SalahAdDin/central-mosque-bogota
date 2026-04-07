@@ -8,6 +8,7 @@
   "useTabs": false,
   "quoteProps": "consistent",
   "bracketSameLine": true,
+  "endOfLine": "lf",
   "insertFinalNewline": true,
   "experimentalTailwindcss": {
     "stylesheet": "./src/styles/global.css",
