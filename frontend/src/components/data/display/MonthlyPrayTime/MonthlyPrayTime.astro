@@ -1,0 +1,544 @@
+---
+import Icon from '@components/data/display/Icons/Icon.astro'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@components/layout/Table'
+import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import type { TDailyPrayerSchedule } from '@utils/models/types'
+import { formatTime, formatYm } from '@utils/time.utils'
+import { cn } from '@utils/styles.utils'
+import Button from '@components/actions/Button/Button.astro'
+import DownloadPDF from '@components/actions/DownloadPDF/DownloadPDF.astro'
+import {
+  Dropdown,
+  DropdownContent,
+  DropdownItem,
+  DropdownTrigger,
+} from '@components/actions/Dropdown'
+import {
+  getMonthAnchorDate,
+  buildMonthLabel,
+  buildMonthHref,
+} from '@utils/time.utils'
+
+const PRAYER_KEYS: Array<keyof TDailyPrayerSchedule> = [
+  'fajr',
+  'sunrise',
+  'dhuhr',
+  'asr',
+  'maghrib',
+  'isha',
+]
+
+const PRAYER_HIGHLIGHTS: Partial<Record<keyof TDailyPrayerSchedule, string>> = {
+  sunrise: 'opacity-60', // Sunrise is often shown as informational
+}
+/**
+ * @component MonthlyPrayTime
+ * @title Monthly Prayer Times
+ * @description Renders a monthly prayer timetable using the shared Table component.
+ *
+ * Features
+ * - Month filter: a dropdown lists a small window of months around the current selection.
+ *   Items are built from `selectedYm` using `getMonthAnchorDate` and labeled with
+ *   `buildMonthLabel`. Navigation HREFs come from `buildMonthHref`.
+ * - Export: a PDF download action is available in the header.
+ * - Progressive disclosure: the table initially shows only the first 7 rows. The
+ *   “show more” button expands to full height; clicking again collapses back to 7.
+ *   Height changes are animated and comply with `prefers-reduced-motion`.
+ * - Accessibility: the toggle uses `aria-expanded`, `aria-controls`, and state
+ *   is mirrored in `data-monthly-expanded` for CSS row visibility.
+ * - i18n: all static labels come from `useTranslations(getLangFromUrl(Astro.url))`.
+ *
+ * Props
+ * - `location`: location label (e.g. "Bogotá, Colombia")
+ * - `monthLabel`: month label (e.g. "Marzo 2024")
+ * - `rows`: list of daily rows with `currentDate`, `hijriDate`, `times`, and optional `isToday`
+ * - `title`: card title (defaults to translated pray-schedule.title)
+ * - `description`: short helper text shown under the title
+ * - `dateHeaderLabel`: header label for the date column (defaults based on URL language)
+ * - `todayBadgeLabel`: badge label used when a row is marked as `isToday` (defaults based on URL language)
+ * - `highlightPrayer`: prayer time key to emphasize (defaults to "maghrib")
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import MonthlyPrayTime from "@components/data/display/MonthlyPrayTime/MonthlyPrayTime.astro";
+ * import type { TDailyPrayerSchedule } from "@utils/models/types";
+ *
+ * const rows: Array<{ currentDate: string; hijriDate: string; times: TDailyPrayerSchedule; isToday?: boolean }> = [
+ *   {
+ *     currentDate: "12 de marzo de 2024",
+ *     hijriDate: "1 de Ramadán de 1445",
+ *     isToday: true,
+ *     times: {
+ *       fajr: "04:52",
+ *       sunrise: "06:01",
+ *       dhuhr: "12:09",
+ *       asr: "15:17",
+ *       maghrib: "18:13",
+ *       isha: "19:21",
+ *     },
+ *   },
+ * ];
+ * ---
+ *
+ * <MonthlyPrayTime location="Bogotá, Colombia" monthLabel="Marzo 2024" rows={rows} />
+ * ```
+ */
+type MonthlyRow = {
+  currentDate: string
+  hijriDate: string
+  times: TDailyPrayerSchedule
+  isToday?: boolean
+  activePray?: keyof TDailyPrayerSchedule
+}
+
+interface Props {
+  /** Location label rendered in the header. */
+  location: string
+  /** Visible month label, e.g. “Marzo 2024”. */
+  monthLabel: string
+  /** Daily data for the month. */
+  rows: Array<MonthlyRow>
+  /** IANA timezone used for “today” checking and labels. Defaults to "America/Bogota". */
+  timeZone?: string
+  /** Selected anchor month in YYYY-MM, used to build the month dropdown. */
+  selectedYm: string
+  /** Optional title override. Defaults to translated calendar title. */
+  title?: string
+  /** Optional description under the title. Defaults to translated description using `location`. */
+  description?: string
+  /** Optional header label for the date column. */
+  dateHeaderLabel?: string
+  /** Optional label for the “Today” badge. */
+  todayBadgeLabel?: string
+  /** Prayer key to emphasize visually in each row (e.g. "maghrib"). */
+  highlightPrayer?: keyof TDailyPrayerSchedule
+  /** Optional extra class for the root section. */
+  class?: string
+}
+
+const {
+  location,
+  monthLabel,
+  rows,
+  selectedYm,
+  timeZone,
+  title,
+  description: descriptionProp,
+  dateHeaderLabel,
+  todayBadgeLabel,
+  class: className,
+} = Astro.props as Props
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const resolved = {
+  title: title ?? t('pray-calendar.title'),
+  description: descriptionProp ?? t('pray-calendar.description', location),
+  dateHeader: dateHeaderLabel ?? t('calendar.date'),
+  todayBadge: todayBadgeLabel ?? t('calendar.today'),
+  loadingLabel: t('download.preparing'),
+  errorLabel: t('download.error'),
+  seeMoreLabel: t('pray-calendar.see-whole-month'),
+  seeLessLabel: t('pray-calendar.see-less'),
+  timeZone: timeZone ?? 'America/Bogota',
+}
+
+const monthItems = Array.from({ length: 13 }, (_, i) => {
+  const offset = i - 3
+  const date = getMonthAnchorDate(selectedYm, offset)
+  const ym = formatYm(date, 'UTC')
+
+  return {
+    ym,
+    label: buildMonthLabel(date, lang, resolved.timeZone),
+    active: ym === selectedYm,
+  }
+})
+
+const getCellClasses = (
+  prayer: keyof TDailyPrayerSchedule,
+  isTimeNow: boolean,
+  activePray?: keyof TDailyPrayerSchedule,
+) =>
+  cn(
+    'px-6 py-5 font-medium',
+    PRAYER_HIGHLIGHTS[prayer],
+    isTimeNow && `
+      bg-secondary/80
+      dark:bg-primary/10
+    `,
+    activePray === prayer && 'font-bold text-primary',
+  );
+---
+
+<section class={cn('mx-auto w-full max-w-5xl px-4', className)}>
+  <div
+    class="
+      overflow-hidden rounded-2xl border border-slate-200 bg-card shadow-2xl
+      dark:border-slate-800
+    "
+    data-document-prayer-calendar-table
+    data-monthly-table-root
+    data-monthly-expanded="false"
+  >
+    <header
+      class="
+        flex flex-col items-center justify-between gap-6 border-b
+        border-slate-100 p-6
+        md:flex-row md:p-8
+        dark:border-slate-800
+      "
+    >
+      <div class="flex flex-col gap-2">
+        <h2
+          class="
+            font-display text-2xl font-bold text-secondary
+            dark:text-primary
+          "
+        >
+          {resolved.title}
+        </h2>
+        <p class="
+          text-slate-500
+          dark:text-slate-400
+        "
+        >{resolved.description}
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <Dropdown>
+          <DropdownTrigger asChild>
+            <Button
+              color="secondary"
+              variant="soft"
+              aria-label={t('actions.filter-month')}
+            >
+              <Icon name="filter_list" />
+              <span>{monthLabel}</span>
+            </Button>
+          </DropdownTrigger>
+          <DropdownContent align="start">
+            {
+              monthItems.map(item =>
+                item.active
+                  ? (
+                      <DropdownItem disabled aria-current="page">
+                        {item.label}
+                      </DropdownItem>
+                    )
+                  : (
+                      <DropdownItem
+                        as="a"
+                        href={buildMonthHref(item.ym, Astro.url)}
+                        class="
+                          cursor-pointer
+                          motion-reduce:cursor-default
+                        "
+                      >
+                        {item.label}
+                      </DropdownItem>
+                    ),
+              )
+            }
+          </DropdownContent>
+        </Dropdown>
+        <DownloadPDF documentTitle={`calendar-prayer-${monthLabel}`} />
+      </div>
+    </header>
+
+    <div class="overflow-x-auto" data-monthly-table-clip>
+      <Table class="w-full border-collapse text-left">
+        <TableHeader
+          class="
+            bg-secondary/80 text-xs font-bold tracking-widest uppercase
+            dark:bg-primary/20
+            [&_tr]:border-b-0
+          "
+        >
+          <TableRow class="hover:bg-transparent">
+            <TableHead
+              scope="col"
+              class="
+                px-8 py-4 text-left text-xs font-bold tracking-widest text-white
+                uppercase
+              "
+            >
+              {resolved.dateHeader}
+            </TableHead>
+            {
+              PRAYER_KEYS.map(prayer => (
+                <TableHead
+                  scope="col"
+                  class="
+                    px-6 py-4 text-xs font-bold tracking-widest text-white
+                    uppercase
+                  "
+                >
+                  {t(`pray-schedule.${prayer}`)}
+                </TableHead>
+              ))
+            }
+          </TableRow>
+        </TableHeader>
+
+        <TableBody
+          class="
+            divide-y divide-slate-100
+            dark:divide-slate-800
+          "
+          id="full-month-table"
+        >
+          {
+            rows.map(row => (
+              <TableRow
+                class={cn(
+                  `
+                    hover:bg-secondary/20
+                    dark:hover:bg-primary/10
+                  `,
+                  row.isToday && `
+                    bg-secondary/20
+                    dark:bg-primary/10
+                  `,
+                )}
+                data-monthly-pray-row={row.isToday ? 'today' : undefined}
+              >
+                <TableCell
+                  class={cn(
+                    `
+                      flex flex-col px-8 py-5 text-slate-900
+                      dark:text-slate-100
+                    `,
+                    row.isToday && `
+                      text-secondary
+                      dark:text-primary
+                    `,
+                  )}
+                >
+                  <strong class="font-semibold">
+                    {row.hijriDate}
+                    {row.isToday && (
+                      <span
+                        class="
+                          ml-2 inline-flex items-center rounded-full
+                          bg-secondary px-2 py-0.5 text-[10px] font-bold
+                          tracking-widest text-white uppercase
+                          dark:bg-primary
+                        "
+                        aria-label={resolved.todayBadge}
+                      >
+                        {resolved.todayBadge}
+                      </span>
+                    )}
+                  </strong>
+                  <em class="text-xs">{row.currentDate}</em>
+                </TableCell>
+
+                {PRAYER_KEYS.map(prayer => (
+                  <TableCell
+                    class={getCellClasses(prayer, false, row.activePray)}
+                    headers={`prayer-${prayer}`}
+                    data-monthly-pray-cell={row.isToday ? 'true' : undefined}
+                    data-prayer={row.isToday ? prayer : undefined}
+                    data-time={row.isToday ? row.times[prayer] : undefined}
+                  >
+                    {formatTime(row.times[prayer])}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          }
+        </TableBody>
+      </Table>
+    </div>
+
+    <Button
+      variant="soft"
+      color="secondary"
+      size="lg"
+      fullWidth
+      class="rounded-t-none"
+      aria-expanded="false"
+      aria-controls="full-month-table"
+      data-action="show-more"
+    >
+      <span data-monthly-toggle-more>{resolved.seeMoreLabel}</span>
+      <span data-monthly-toggle-less>{resolved.seeLessLabel}</span>
+    </Button>
+  </div>
+</section>
+
+<style>
+  [data-action="show-more"] [data-monthly-toggle-less] {
+    display: none;
+  }
+
+  [data-action="show-more"][aria-expanded="true"] [data-monthly-toggle-more] {
+    display: none;
+  }
+
+  [data-action="show-more"][aria-expanded="true"] [data-monthly-toggle-less] {
+    display: inline;
+  }
+
+  [data-monthly-table-clip] {
+    overflow-y: hidden;
+  }
+
+  [data-monthly-table-root][data-monthly-expanded="false"]
+    #full-month-table
+    tr:nth-child(n + 8) {
+    display: none;
+  }
+
+  [data-monthly-table-clip][data-monthly-animate="true"] {
+    transition: height 320ms ease;
+    will-change: height;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-monthly-table-clip][data-monthly-animate="true"] {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const COLLAPSED_ROWS = 7;
+
+  function initMonthlyPrayTimeTable(root: HTMLElement): void {
+    const clip = root.querySelector<HTMLElement>("[data-monthly-table-clip]");
+    const toggle = root.querySelector<HTMLButtonElement>(
+      '[data-action="show-more"]',
+    );
+    const table = clip?.querySelector<HTMLTableElement>("table");
+    const body =
+      root.querySelector<HTMLTableSectionElement>("#full-month-table");
+
+    if (!clip || !toggle || !table || !body) return;
+    if (root.dataset.monthlyToggleReady === "true") return;
+    root.dataset.monthlyToggleReady = "true";
+
+    const rows = Array.from(body.querySelectorAll<HTMLTableRowElement>("tr"));
+
+    if (rows.length <= COLLAPSED_ROWS) {
+      toggle.style.display = "none";
+      clip.style.height = "";
+      clip.dataset.monthlyAnimate = "";
+      root.dataset.monthlyExpanded = "true";
+      return;
+    }
+
+    toggle.style.display = "";
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const computeCollapsedHeight = (): number => {
+      const clipTop = clip.getBoundingClientRect().top;
+      const collapsedRow = rows[Math.min(COLLAPSED_ROWS - 1, rows.length - 1)];
+      return Math.ceil(collapsedRow.getBoundingClientRect().bottom - clipTop);
+    };
+
+    const computeExpandedHeight = (): number =>
+      Math.ceil(table.getBoundingClientRect().height);
+
+    const setClipHeight = (
+      height: number,
+      options: { animate: boolean },
+    ): void => {
+      const { animate } = options;
+      if (animate) clip.dataset.monthlyAnimate = "true";
+      else clip.dataset.monthlyAnimate = "";
+
+      clip.style.height = `${height}px`;
+    };
+
+    const setExpanded = (
+      expanded: boolean,
+      options: { animate: boolean },
+    ): void => {
+      root.dataset.monthlyExpanded = expanded ? "true" : "false";
+      toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+      if (expanded) setClipHeight(computeExpandedHeight(), options);
+      else setClipHeight(computeCollapsedHeight(), options);
+    };
+
+    setExpanded(false, { animate: false });
+    requestAnimationFrame(() => {
+      clip.dataset.monthlyAnimate = "true";
+    });
+
+    toggle.addEventListener("click", () => {
+      const expanded = toggle.getAttribute("aria-expanded") === "true";
+      if (expanded) {
+        const collapsedHeight = computeCollapsedHeight();
+        toggle.setAttribute("aria-expanded", "false");
+        setClipHeight(collapsedHeight, { animate: !prefersReducedMotion });
+
+        if (prefersReducedMotion) {
+          root.dataset.monthlyExpanded = "false";
+          return;
+        }
+
+        const onEnd = (event: TransitionEvent) => {
+          if (event.propertyName !== "height") return;
+          clip.removeEventListener("transitionend", onEnd);
+          if (toggle.getAttribute("aria-expanded") === "false") {
+            root.dataset.monthlyExpanded = "false";
+          }
+        };
+        clip.addEventListener("transitionend", onEnd);
+        return;
+      }
+
+      root.dataset.monthlyExpanded = "true";
+      toggle.setAttribute("aria-expanded", "true");
+
+      requestAnimationFrame(() => {
+        setClipHeight(computeExpandedHeight(), {
+          animate: !prefersReducedMotion,
+        });
+      });
+    });
+
+    const onResize = () => {
+      const expanded = toggle.getAttribute("aria-expanded") === "true";
+      if (expanded) {
+        root.dataset.monthlyExpanded = "true";
+        setClipHeight(computeExpandedHeight(), { animate: false });
+      } else {
+        root.dataset.monthlyExpanded = "false";
+        setClipHeight(computeCollapsedHeight(), { animate: false });
+      }
+      requestAnimationFrame(() => {
+        clip.dataset.monthlyAnimate = "true";
+      });
+    };
+
+    window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("load", onResize, { passive: true });
+  }
+
+  const setup = () => {
+    const roots = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-monthly-table-root]"),
+    );
+    for (const root of roots) initMonthlyPrayTimeTable(root);
+  };
+
+  document.addEventListener("DOMContentLoaded", setup);
+  document.addEventListener("astro:after-swap", setup);
+</script>

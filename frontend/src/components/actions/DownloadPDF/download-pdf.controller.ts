@@ -1,4 +1,6 @@
 import { slugifyFilenamePart } from "@utils/string.utils";
+import html2canvas from "html2canvas-pro";
+import { jsPDF } from "jspdf";
 
 type PdfPlacement = {
   widthMm: number;
@@ -35,6 +37,56 @@ export function computeLetterPortraitPlacement(input: {
   return { widthMm, heightMm, xMm, yMm };
 }
 
+function expandForPdfCapture(container: HTMLElement): () => void {
+  const restoreActions: Array<() => void> = [];
+
+  container
+    .querySelectorAll<HTMLElement>("[data-monthly-table-root]")
+    .forEach((root) => {
+      const prev = root.dataset.monthlyTableState;
+      root.dataset.monthlyTableState = "expanded";
+      restoreActions.push(() => {
+        if (typeof prev === "string") root.dataset.monthlyTableState = prev;
+        else delete root.dataset.monthlyTableState;
+      });
+    });
+
+  container
+    .querySelectorAll<HTMLElement>("[data-monthly-table-clip]")
+    .forEach((clip) => {
+      const prevMaxHeight = clip.style.maxHeight;
+      const prevOverflow = clip.style.overflow;
+      const prevTransition = clip.style.transition;
+      const prevWillChange = clip.style.willChange;
+
+      clip.style.maxHeight = "none";
+      clip.style.overflow = "visible";
+      clip.style.transition = "none";
+      clip.style.willChange = "auto";
+
+      restoreActions.push(() => {
+        clip.style.maxHeight = prevMaxHeight;
+        clip.style.overflow = prevOverflow;
+        clip.style.transition = prevTransition;
+        clip.style.willChange = prevWillChange;
+      });
+    });
+
+  return () => {
+    restoreActions.reverse().forEach((restore) => {
+      restore();
+    });
+  };
+}
+
+function parseMarginMm(raw: string | undefined): number | null {
+  if (!raw) return null;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed)) return null;
+  if (parsed < 0) return null;
+  return parsed;
+}
+
 type InitDownloadPdfButtonsOptions = {
   buttonSelector?: string;
   defaultTargetAttr?: string;
@@ -53,14 +105,6 @@ export function initDownloadPdfButtons(options: InitDownloadPdfButtonsOptions = 
       initializedButtons.add(btn);
       btn.addEventListener("click", () => void handleClick(btn, options));
     });
-}
-
-function parseMarginMm(raw: string | undefined): number | null {
-  if (!raw) return null;
-  const parsed = Number(raw);
-  if (!Number.isFinite(parsed)) return null;
-  if (parsed < 0) return null;
-  return parsed;
 }
 
 async function handleClick(
@@ -82,6 +126,7 @@ async function handleClick(
 
   const root = document.documentElement;
   const prevTheme = root.dataset.theme;
+  let restoreExpandedLayout: (() => void) | null = null;
 
   try {
     btn.disabled = true;
@@ -92,10 +137,12 @@ async function handleClick(
       await new Promise((response) => setTimeout(response, 50));
     }
 
-    const [{ default: html2canvas }, { default: JsPdf }] = await Promise.all([
-      import("html2canvas-pro"),
-      import("jspdf"),
-    ]);
+    restoreExpandedLayout = expandForPdfCapture(element);
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => {
+        resolve();
+      });
+    });
 
     const canvas = await html2canvas(element, {
       scale: 2,
@@ -117,7 +164,7 @@ async function handleClick(
 
     const imgData = canvas.toDataURL("image/jpeg", 0.98);
 
-    const pdf = new JsPdf({
+    const pdf = new jsPDF({
       unit: "mm",
       format: "letter",
       orientation: "portrait",
@@ -148,6 +195,7 @@ async function handleClick(
     console.error("PDF generation failed:", error);
     alert(btn.dataset.errorLabel ?? "Failed to generate PDF. Please try again.");
   } finally {
+    restoreExpandedLayout?.();
     btn.disabled = false;
     btn.innerHTML = originalContent;
     if (prevTheme) root.dataset.theme = prevTheme;
