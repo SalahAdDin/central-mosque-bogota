@@ -40,4 +40,16 @@ export const tr = {
   "academy.home-description": "İslam hakkında bilmeniz gereken her şey.",
   "academy.home-cta-label": "İslam hakkında daha fazla",
   "academy.article-cta-label": "Oku",
+  "calendar.date": "Tarih",
+  "calendar.today": "Bugün",
+  "download.download-pdf": "PDF İndir",
+  "pray-calendar.title": "Namaz Takvimi",
+  "pray-calendar.description":
+    "{{ location }} ve çevresi için hesaplanan vakitler.",
+  "pray-calendar.see-whole-month": "Tüm ayı gör",
+  "pray-calendar.see-less": "Daha az göster",
+  "actions.filter-month": "Ayı filtrele",
+  "actions.download-pdf": "PDF İndir",
+  "download.preparing": "Hazırlanıyor...",
+  "download.error": "PDF indirilemedi. Lütfen tekrar deneyin.",
 };

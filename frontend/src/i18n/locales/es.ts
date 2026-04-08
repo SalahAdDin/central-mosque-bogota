@@ -40,4 +40,16 @@ export const es = {
   "academy.home-description": "Todo lo que necesitas saber sobre el Islam.",
   "academy.home-cta-label": "Más sobre el Islam",
   "academy.article-cta-label": "Leer",
+  "calendar.date": "Fecha",
+  "calendar.today": "Hoy",
+  "download.download-pdf": "Descargar PDF",
+  "pray-calendar.title": "Calendario de Oración",
+  "pray-calendar.description":
+    "Tempos calculados para {{ location }}, y sus alrededores.",
+  "pray-calendar.see-whole-month": "Ver mes completo",
+  "pray-calendar.see-less": "Ver menos",
+  "actions.filter-month": "Filtrar mes",
+  "actions.download-pdf": "Descargar PDF",
+  "download.preparing": "Preparando...",
+  "download.error": "Error al descargar PDF. Por favor, intenta de nuevo.",
 };

@@ -40,4 +40,16 @@ export const en = {
   "academy.home-description": "Everything you need to know about Islam.",
   "academy.home-cta-label": "More about Islam",
   "academy.article-cta-label": "Read",
+  "calendar.date": "Date",
+  "calendar.today": "Today",
+  "download.download-pdf": "Download PDF",
+  "pray-calendar.title": "Prayer Calendar",
+  "pray-calendar.description":
+    "Times calculated for {{ location }}, and surrounding areas.",
+  "pray-calendar.see-whole-month": "See full month",
+  "pray-calendar.see-less": "Show less",
+  "actions.filter-month": "Filter month",
+  "actions.download-pdf": "Download PDF",
+  "download.preparing": "Preparing...",
+  "download.error": "Error downloading PDF. Please try again.",
 };
