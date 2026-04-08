@@ -51,7 +51,7 @@ export const navLinks = [
   { label: "Islam", href: "/islam-and-faith" },
   { label: "Prayer", href: "/prayer-information" },
   { label: "Events", href: "/events-and-programs" },
-  { label: "Comminity", href: "/community-services" },
+  { label: "Community", href: "/community-services" },
   { label: "Contact", href: "/contact-and-visit" },
 ];
 

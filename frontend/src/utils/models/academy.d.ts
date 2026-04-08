@@ -1,5 +1,3 @@
-import type { TSVGIcon } from "@utils/models/types";
-
 type TAcademyArticle = {
   /**
    * Title of the article
@@ -36,5 +34,5 @@ type TAcademyArticle = {
   /**
    * Icon to be displayed on the CTA button
    */
-  ctaIcon: TSVGIcon;
+  ctaIcon: string;
 };

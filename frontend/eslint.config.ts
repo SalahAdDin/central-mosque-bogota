@@ -58,6 +58,8 @@ export default defineConfig([
       },
     },
     rules: {
+      "@stylistic/arrow-parens": ["error", "always"],
+      "@stylistic/brace-style": ["error", "1tbs", { allowSingleLine: true }],
       "@stylistic/comma-dangle": [
         "error",
         {

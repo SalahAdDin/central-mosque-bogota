@@ -81,6 +81,9 @@ export const formatYmd = (date: Date, timeZone: string): string => {
   }).format(date);
 };
 
+/**
+ * Returns true when `date` is the same calendar day as `now` in the given IANA timezone.
+ */
 export const isToday = (
   date: Date,
   timeZone: string,
@@ -145,4 +148,49 @@ export const formatHijriDate = (
   }).format(date);
 
   return formatted.replace(/\s*A\.?H\.?\s*$/i, "").trim();
+};
+
+/**
+ * Builds a stable "anchor" date for a given `YYYY-MM` string and month offset.
+ *
+ * The returned date is set to the 15th at 12:00 UTC to avoid edge cases around
+ * month boundaries and DST when later formatted in a timezone.
+ */
+export const getMonthAnchorDate = (
+  ym: string | null | undefined,
+  offsetMonths: number
+): Date => {
+  const safeYm = typeof ym === "string" ? ym : "";
+  const [y, m] = safeYm.split("-").map((part) => Number.parseInt(part, 10));
+  const baseYear = Number.isFinite(y) ? y : new Date().getUTCFullYear();
+  const baseMonthIndex = Number.isFinite(m) ? m - 1 : new Date().getUTCMonth();
+  return new Date(Date.UTC(baseYear, baseMonthIndex + offsetMonths, 15, 12, 0, 0));
+};
+
+/**
+ * Formats a month label like "March 2026" in the given language and timezone,
+ * then capitalizes the first character.
+ */
+export const buildMonthLabel = (
+  date: Date,
+  languageCode: string,
+  timeZone: string
+): string => {
+  const raw = new Intl.DateTimeFormat(languageCode, {
+    timeZone,
+    month: "long",
+    year: "numeric",
+  }).format(date);
+
+  return raw.length > 0 ? `${raw[0].toUpperCase()}${raw.slice(1)}` : raw;
+};
+
+/**
+ * Builds a month navigation HREF by copying a base URL and setting the `date`
+ * search parameter to the provided `YYYY-MM` value.
+ */
+export const buildMonthHref = (ym: string, baseUrl: URL): string => {
+  const url = new URL(baseUrl);
+  url.searchParams.set("date", ym);
+  return `${url.pathname}${url.search}`;
 };
