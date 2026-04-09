@@ -2,7 +2,11 @@
 import ThemeSwitcher from '@components/actions/ThemeSwitcher/ThemeSwitcher.astro'
 import Icon from '@components/data/display/Icons/Icon.astro'
 import Button from '@components/actions/Button/Button.astro'
-import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import {
+  getLangFromUrl,
+  useTranslations,
+  useTranslatedPath,
+} from '@i18n/utils'
 import LanguagePicker from '@components/navigation/LanguagePicker/LanguagePicker.astro'
 import Link from '@components/actions/Link/Link.astro'
 import type { TNavLink } from '@utils/models/types'
@@ -12,9 +16,6 @@ import {
   SheetFooter,
   SheetTrigger,
 } from '@components/layout/Sheet'
-
-const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang)
 
 /**
  * @component Header
@@ -60,41 +61,36 @@ interface Props {
   navLinks: Array<TNavLink>
 }
 
-const { navLinks } = Astro.props as Props;
+const { navLinks } = Astro.props as Props
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const translatePath = useTranslatedPath(lang);
 ---
 
 <header class="fixed inset-x-0 top-0 z-50 bg-secondary shadow-lg">
   <div
     class="
-      mx-auto flex h-20 max-w-7xl items-center justify-between px-4
+      mx-auto flex h-20 max-w-7xl items-center justify-between px-4 text-white
       sm:px-6
       lg:px-8
     "
   >
     <!-- Mosque branding -->
-    <section class="flex items-center gap-3">
+    <a href={translatePath('/')} class="flex items-center gap-3">
       <div class="rounded-full bg-white px-3 py-1.5">
         <Icon name="mosque" class="text-3xl text-secondary" />
       </div>
       <div>
-        <span
-          class="
-            block text-xl/tight font-bold tracking-tight
-            dark:text-white
-          "
-        >
+        <span class="block text-xl/tight font-bold tracking-tight">
           Mezquita Central
         </span>
-        <span
-          class="
-            text-xs tracking-widest uppercase opacity-80
-            dark:text-white
-          "
-        >
+        <span class="text-xs tracking-widest uppercase opacity-80">
           de Bogotá
         </span>
       </div>
-    </section>
+    </a>
     <!-- Main links -->
     <nav
       class="
@@ -105,7 +101,7 @@ const { navLinks } = Astro.props as Props;
     >
       {
         navLinks.map(({ label, href }) => (
-          <Link href={href} color="navbar">
+          <Link href={translatePath(href)} color="navbar">
             {label}
           </Link>
         ))
@@ -126,7 +122,7 @@ const { navLinks } = Astro.props as Props;
           transform rounded-full shadow-md transition-all
           hover:scale-105
         "
-        href="/donate"
+        href={translatePath('/donate')}
       >
         {t('header.donate-now')}
       </Button>
@@ -153,7 +149,11 @@ const { navLinks } = Astro.props as Props;
         >
           {
             navLinks.map(({ label, href }) => (
-              <Link href={href} color="navbar" class="text-foreground">
+              <Link
+                href={translatePath(href)}
+                color="navbar"
+                class="text-foreground"
+              >
                 {label}
               </Link>
             ))
@@ -175,7 +175,7 @@ const { navLinks } = Astro.props as Props;
               transform rounded-full shadow-md transition-all
               hover:scale-105
             "
-            href="/donate"
+            href={translatePath('/donate')}
           >
             {t('header.donate-now')}
           </Button>

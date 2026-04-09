@@ -1,0 +1,85 @@
+---
+export const prerender = false
+
+import MonthlyPrayTime from '@components/data/display/MonthlyPrayTime/MonthlyPrayTime.astro'
+import { getLangFromUrl } from '@i18n/utils'
+import Layout from '@layouts/Layout.astro'
+import { BOGOTA_LOCATION, getClientLocation } from '@utils/location.utils'
+import { formatYm } from '@utils/time.utils'
+import { getLiveCollection } from 'astro:content'
+import type { TDailyPrayerSchedule } from '@utils/models/types'
+import type { TIslamicApiDateYm } from '@utils/models/islamic'
+
+const lang = getLangFromUrl(Astro.url)
+
+const { timeZone } = await getClientLocation()
+
+const rawDateParam = Astro.url.searchParams.get('date')
+const requestedYm: TIslamicApiDateYm | null
+  = rawDateParam && /^\d{4}-\d{2}$/.test(rawDateParam)
+    ? (rawDateParam as TIslamicApiDateYm)
+    : null
+
+const selectedYm = requestedYm ?? formatYm(new Date(), timeZone)
+
+const live = await getLiveCollection('prayerTimes', {
+  date: selectedYm,
+  languageCode: lang,
+})
+const entries = live.entries ?? []
+
+const resolvedLocation
+  = entries[0]?.data.location
+    ?? `${BOGOTA_LOCATION.city}, ${BOGOTA_LOCATION.country}`
+
+const monthAnchorDate = requestedYm
+  ? new Date(`${selectedYm}-15T12:00:00Z`)
+  : new Date()
+
+const rawMonthLabel = new Intl.DateTimeFormat(lang, {
+  timeZone,
+  month: 'long',
+  year: 'numeric',
+}).format(monthAnchorDate)
+
+const resolvedMonthLabel
+  = rawMonthLabel.length > 0
+    ? `${rawMonthLabel[0].toUpperCase()}${rawMonthLabel.slice(1)}`
+    : rawMonthLabel
+
+const ACTIVE_PRAY_KEYS: Array<keyof TDailyPrayerSchedule> = [
+  'fajr',
+  'sunrise',
+  'dhuhr',
+  'asr',
+  'maghrib',
+  'isha',
+]
+
+const rows = entries.map(({ data }) => {
+  const activePrayRaw = data.activePray
+  const activePray
+    = typeof activePrayRaw === 'string'
+      && ACTIVE_PRAY_KEYS.includes(activePrayRaw as keyof TDailyPrayerSchedule)
+      ? (activePrayRaw as keyof TDailyPrayerSchedule)
+      : undefined
+
+  return {
+    currentDate: data.currentDate,
+    hijriDate: data.hijriDate,
+    times: data.times,
+    isToday: data.isToday,
+    activePray,
+  }
+});
+---
+
+<Layout>
+  <MonthlyPrayTime
+    location={resolvedLocation}
+    monthLabel={resolvedMonthLabel}
+    rows={rows}
+    timeZone={timeZone}
+    selectedYm={selectedYm}
+  />
+</Layout>

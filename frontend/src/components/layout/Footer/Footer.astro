@@ -3,7 +3,11 @@ import Icon from '@components/data/display/Icons/Icon.astro'
 import Link from '@components/actions/Link/Link.astro'
 import Button from '@components/actions/Button/Button.astro'
 import SvgIcon from '@components/data/display/Icons/SvgIcon.astro'
-import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import {
+  getLangFromUrl,
+  useTranslatedPath,
+  useTranslations,
+} from '@i18n/utils'
 import type {
   TSVGIcon,
   TNavLink,
@@ -119,7 +123,8 @@ const {
 } = Astro.props as Props
 
 const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang);
+const t = useTranslations(lang)
+const translatePath = useTranslatedPath(lang);
 ---
 
 <footer class="bg-secondary pt-20 pb-10 text-white">
@@ -138,7 +143,7 @@ const t = useTranslations(lang);
     "
     >
       <!-- Mosque branding -->
-      <div class="mb-6 flex items-center gap-3">
+      <a href={translatePath('/')} class="mb-6 flex items-center gap-3">
         <div class="rounded-full bg-white px-3 py-1.5">
           <Icon name="mosque" class="text-3xl text-secondary" />
         </div>
@@ -150,7 +155,7 @@ const t = useTranslations(lang);
             de Bogotá
           </span>
         </div>
-      </div>
+      </a>
       <!-- Mosque lemma -->
       {lemma && <p class="mb-6 leading-relaxed text-blue-100/70">{lemma}</p>}
       <!-- Mosque social networks -->
@@ -180,7 +185,7 @@ const t = useTranslations(lang);
         {
           fastLinks.map(({ label, href }) => (
             <li>
-              <Link href={href} color="navbar">
+              <Link href={translatePath(href)} color="navbar">
                 {label}
               </Link>
             </li>
@@ -246,10 +251,13 @@ const t = useTranslations(lang);
         md:mt-0 md:gap-6
       "
     >
-      <Link color="navbar" href={rightsText?.privacyPolicy.href}>
+      <Link color="navbar" href={translatePath(rightsText?.privacyPolicy.href)}>
         {rightsText?.privacyPolicy.label}
       </Link>
-      <Link color="navbar" href={rightsText?.termsAndConditions.href}>
+      <Link
+        color="navbar"
+        href={translatePath(rightsText?.termsAndConditions.href)}
+      >
         {rightsText?.termsAndConditions.label}
       </Link>
     </div>

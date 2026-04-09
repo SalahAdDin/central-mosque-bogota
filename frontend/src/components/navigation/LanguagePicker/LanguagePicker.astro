@@ -2,12 +2,11 @@
 import {
   Dropdown,
   DropdownContent,
-  DropdownItem,
   DropdownTrigger,
 } from '@components/actions/Dropdown'
 import Icon from '@components/data/display/Icons/Icon.astro'
-import { languages, localeFlags } from '@i18n/ui'
-import { getLangFromUrl, useTranslations } from '@i18n/utils'
+import { languages, localeFlags, routes, type TLang } from '@i18n/ui'
+import { getLangFromUrl, isSupportedLang, useTranslations } from '@i18n/utils'
 import type { TDropdownAlign, TDropdownPosition } from '@utils/models/types'
 
 // TODO: https://github.com/starwind-ui/starwind-ui/issues/135
@@ -27,7 +26,37 @@ interface Props {
 const { side = 'bottom', align = 'end' } = Astro.props as Props
 
 const currentLang = getLangFromUrl(Astro.url)
-const t = useTranslations(currentLang);
+const t = useTranslations(currentLang)
+
+const url = Astro.url
+const parts = url.pathname.split('/').filter(Boolean)
+const langFromPath = parts[0]
+const rest = isSupportedLang(langFromPath) ? parts.slice(1) : parts
+
+const buildLangHref = (targetLang: TLang): string => {
+  const suffix = `${url.search}${url.hash}`
+
+  if (rest.length === 0) {
+    return `/${targetLang}/${suffix}`
+  }
+
+  if (rest.length === 1) {
+    const slug = rest[0]
+    const entries = Object.entries(routes[currentLang])
+    const match = entries.find(([, value]) => value === slug)
+    const fallbackKey = slug in routes[currentLang] ? slug : undefined
+    const canonicalKey = match?.[0] ?? fallbackKey
+
+    if (canonicalKey) {
+      const localizedSlug = routes[targetLang][canonicalKey] ?? canonicalKey
+      return `/${targetLang}/${localizedSlug}${suffix}`
+    }
+
+    return `/${targetLang}/${slug}${suffix}`
+  }
+
+  return `/${targetLang}/${rest.join('/')}${suffix}`
+};
 ---
 
 <Dropdown>
@@ -67,9 +96,8 @@ const t = useTranslations(currentLang);
   >
     {
       localeFlags.map(({ code, flag }) => (
-        <DropdownItem
-          as="a"
-          href={`/${code}/`}
+        <a
+          href={buildLangHref(code)}
           class="
             flex cursor-pointer items-center gap-3 px-4 py-2 text-sm
             font-semibold text-slate-700 transition-colors
@@ -81,6 +109,9 @@ const t = useTranslations(currentLang);
             dark:focus-visible:bg-slate-800
           "
           aria-current={code === currentLang ? 'page' : undefined}
+          role="menuitem"
+          tabindex="0"
+          data-dropdown-item
         >
           <span
             class="
@@ -92,7 +123,7 @@ const t = useTranslations(currentLang);
             {flag}
           </span>
           <span>{languages[code]}</span>
-        </DropdownItem>
+        </a>
       ))
     }
   </DropdownContent>

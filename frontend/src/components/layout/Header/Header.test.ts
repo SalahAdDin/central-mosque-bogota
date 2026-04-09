@@ -22,9 +22,8 @@ describe("Header", () => {
 
       const donateLinks = getAllByRole(root, "link", { name: "Donar" });
       expect(donateLinks.length).toBe(1);
-      expect(donateLinks[0].getAttribute("href")).toBe("/donate");
-    }
-    finally {
+      expect(donateLinks[0].getAttribute("href")).toBe("/es/donate");
+    } finally {
       await close();
     }
   });
@@ -42,8 +41,7 @@ describe("Header", () => {
     try {
       expect(getAllByRole(root, "link", { name: "Inicio", hidden: true }).length).toBe(2);
       expect(getAllByRole(root, "link", { name: "Eventos", hidden: true }).length).toBe(2);
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -58,8 +56,7 @@ describe("Header", () => {
     try {
       expect(getByText(root, "mosque")).toBeInTheDocument();
       expect(getByText(root, "menu")).toBeInTheDocument();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
