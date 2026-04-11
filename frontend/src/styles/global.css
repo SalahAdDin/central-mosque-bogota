@@ -1,7 +1,30 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/forms";
 
-/* TODO  https://github.com/humanwhocodes/tailwind-csstree/issues/2 */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+:root {
+  --accent-foreground: var(--color-neutral-900);
+  --background: var(--color-slate-50);
+  --foreground: var(--color-neutral-950);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --card: var(--color-white);
+}
+
+[data-theme="dark"] {
+  --accent-foreground: var(--color-neutral-100);
+  --background: var(--color-slate-900);
+  --foreground: var(--color-neutral-50);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --card: var(--color-slate-800);
+}
 
 @theme {
   --breakpoint-sm: 22.8125rem; /* 365px */
@@ -13,8 +36,6 @@
   --color-secondary: #212e80;
   --color-primary: #c13026;
   --color-neutral-sand: #f6f5f1;
-  --color-background-light: #fdfbf7;
-  --color-background-dark: "#0F172A";
 
   /* TODO: match with max and min width */
   --container-8xl: 88rem; /* 1408px */
@@ -22,19 +43,28 @@
   --container-9xl: 96rem; /* 1536px */
 }
 
+/* https://github.com/humanwhocodes/tailwind-csstree/issues/56 */
+/* eslint-disable-next-line css/no-invalid-at-rules */
 @theme inline {
-  --font-display: var(--font-display);
-  --font-sans: var(--font-sans);
-  --font-symbols: var(--font-symbols);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-card: var(--card);
 }
 
-@layer base {
+@layer components {
   .material-symbols-outlined {
     font-variation-settings:
       "FILL" 0,
       "wght" 400,
       "GRAD" 0,
       "opsz" 24;
+    /* https://github.com/withastro/astro/issues/16285 */
+    /* eslint-disable-next-line css/no-invalid-properties */
     font-family: var(--font-symbols);
     font-weight: normal;
     font-style: normal;
@@ -87,5 +117,18 @@
     word-wrap: normal;
     white-space: nowrap;
     direction: ltr;
+  }
+
+  .hero-overlay {
+    background: linear-gradient(rgba(33, 46, 128, 0.4), rgba(33, 46, 128, 0.6));
+  }
+
+  .hero-pattern {
+    background-image: radial-gradient(
+      circle at 2px 2px,
+      rgba(33, 46, 128, 0.05) 1px,
+      transparent 0
+    );
+    background-size: 24px 24px;
   }
 }
