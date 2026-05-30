@@ -43,8 +43,6 @@
   --container-9xl: 96rem; /* 1536px */
 }
 
-/* https://github.com/humanwhocodes/tailwind-csstree/issues/56 */
-/* eslint-disable-next-line css/no-invalid-at-rules */
 @theme inline {
   --color-accent-foreground: var(--accent-foreground);
   --color-background: var(--background);

@@ -17,6 +17,13 @@ import globals from "globals";
 import { tailwind4 } from "tailwind-csstree";
 import tseslint from "typescript-eslint";
 
+// TODO: https://github.com/storybookjs/storybook/issues/34468
+const sbConfigs = storybook.configs["flat/recommended"];
+type SBConfig = Exclude<
+  (typeof sbConfigs)[0],
+  { plugins: { storybook: Record<string, unknown> } }
+>;
+
 export default defineConfig([
   globalIgnores([
     "coverage",
@@ -58,28 +65,9 @@ export default defineConfig([
       },
     },
     rules: {
-      "@stylistic/arrow-parens": ["error", "always"],
       "@stylistic/brace-style": ["error", "1tbs", { allowSingleLine: true }],
-      "@stylistic/comma-dangle": [
-        "error",
-        {
-          arrays: "only-multiline",
-          objects: "only-multiline",
-          imports: "only-multiline",
-          exports: "only-multiline",
-          functions: "only-multiline",
-        },
-      ],
       "@stylistic/function-paren-newline": "warn",
       "@stylistic/implicit-arrow-linebreak": "warn",
-      "@stylistic/linebreak-style": ["error", "unix"],
-      "@stylistic/member-delimiter-style": [
-        "error",
-        {
-          multiline: { delimiter: "semi", requireLast: true },
-          singleline: { delimiter: "semi", requireLast: false },
-        },
-      ],
       "@stylistic/operator-linebreak": "warn",
       "@stylistic/object-curly-newline": [
         "error",
@@ -87,8 +75,6 @@ export default defineConfig([
           ExportDeclaration: { multiline: true, minProperties: 5 },
         },
       ],
-      "@stylistic/quotes": ["error", "double"],
-      "@stylistic/semi": ["error", "always"],
       "@typescript-eslint/array-type": [
         "error",
         {
@@ -141,14 +127,46 @@ export default defineConfig([
         parser: tseslint.parser,
       },
     },
-    // TODO: bug https://github.com/eslint-stylistic/eslint-stylistic/issues/259
+  },
+  {
+    files: ["**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,astro}"],
     rules: {
-      "@stylistic/arrow-parens": "warn",
-      "@stylistic/jsx-one-expression-per-line": "off",
-      "@stylistic/member-delimiter-style": "warn",
-      "@stylistic/multiline-ternary": "warn",
-      "@stylistic/quotes": "warn",
-      "@stylistic/semi": "warn",
+      "@stylistic/arrow-parens": ["error", "always"],
+      "@stylistic/comma-dangle": [
+        "error",
+        {
+          arrays: "always-multiline",
+          objects: "always-multiline",
+          generics: "always-multiline",
+          imports: "always-multiline",
+          exports: "always-multiline",
+          functions: "only-multiline",
+        },
+      ],
+      "@stylistic/linebreak-style": ["error", "unix"],
+      "@stylistic/member-delimiter-style": [
+        "error",
+        {
+          multiline: { delimiter: "semi", requireLast: true },
+          singleline: { delimiter: "semi", requireLast: false },
+        },
+      ],
+      "@stylistic/quote-props": ["error", "consistent"],
+      "@stylistic/quotes": ["error", "double"],
+      "@stylistic/semi": ["error", "always"],
+      "eol-last": ["error", "always"],
+      "max-len": [
+        "error",
+        {
+          code: 80,
+          ignoreComments: true,
+          ignoreRegExpLiterals: true,
+          ignoreStrings: true,
+          ignoreTemplateLiterals: true,
+          ignoreUrls: true,
+        },
+      ],
+      "no-trailing-spaces": ["error"],
     },
   },
   {
@@ -203,5 +221,6 @@ export default defineConfig([
       },
     },
   },
-  ...storybook.configs["flat/recommended"],
+  // TODO: https://github.com/storybookjs/storybook/issues/34468
+  ...(sbConfigs as unknown as Array<SBConfig>),
 ]);

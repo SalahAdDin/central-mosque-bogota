@@ -23,6 +23,10 @@ export const websiteThemeLight = create({
   inputBorder: "#e2e8f0",
   inputTextColor: "#0a0a0a",
   inputBorderRadius: 8,
+  buttonBg: "#ffffff",
+  buttonBorder: "#e2e8f0",
+  booleanBg: "#e2e8f0",
+  booleanSelectedBg: "#c13026",
   fontBase:
     "'Public Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
   fontCode:
@@ -52,6 +56,10 @@ export const websiteThemeDark = create({
   inputBorder: "#334155",
   inputTextColor: "#fafafa",
   inputBorderRadius: 8,
+  buttonBg: "#0f172a",
+  buttonBorder: "#334155",
+  booleanBg: "#334155",
+  booleanSelectedBg: "#c13026",
   fontBase:
     "'Public Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
   fontCode:
