@@ -45,10 +45,7 @@ export default defineConfig([
   // https://typescript-eslint.io/getting-started/typed-linting/#performance
   // tseslint.configs.strict,
   // tseslint.configs.stylistic,
-  // TODO: bug Astro support https://github.com/eslint-stylistic/eslint-stylistic/issues/259
   stylistic.configs.recommended,
-  // TODO: bug defineConfig support: https://github.com/un-ts/eslint-plugin-import-x/issues/469
-  // importX.configs.recommended,
   importX.configs.typescript,
   {
     files: ["**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}"],
@@ -103,7 +100,6 @@ export default defineConfig([
       ],
       "import-x/no-unresolved": [
         "error",
-        // TODO: bug import-x/no-unresolved https://github.com/un-ts/eslint-plugin-import-x/issues/469
         {
           ignore: ["^astro:"],
         },
@@ -126,6 +122,10 @@ export default defineConfig([
       parserOptions: {
         parser: tseslint.parser,
       },
+    },
+    rules: {
+      // TODO: bug Astro support https://github.com/eslint-stylistic/eslint-stylistic/issues/259#issuecomment-4656201980
+      "@stylistic/jsx-one-expression-per-line": "warn",
     },
   },
   {

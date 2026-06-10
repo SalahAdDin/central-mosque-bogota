@@ -1,13 +1,11 @@
-// import type { ViteUserConfig } from "astro";
-// import path from "node:path";
-// import { fileURLToPath } from "node:url";
 import { defineMain } from "@storybook-astro/framework/node";
+// import path from "node:path";
 
 /*
 const dirname =
   typeof __dirname !== "undefined"
     ? __dirname
-    : path.dirname(fileURLToPath(import.meta.url));
+    : path.dirname(new URL(import.meta.url).pathname);
 */
 
 export default defineMain({
@@ -24,8 +22,9 @@ export default defineMain({
   framework: {
     name: "@storybook-astro/framework",
   },
-  /* TODO: it seems path aliases are supported by default
-  viteFinal: async (config: ViteUserConfig) => {
+  /*
+  TODO: it seems path aliases are supported by default
+  viteFinal: async (config) => {
     const { mergeConfig } = await import("vite");
 
     return mergeConfig(config, {

@@ -28,6 +28,7 @@ export default definePreview({
       },
     },
     docs: {
+      codePanel: true,
       toc: true,
     },
     viewport: {

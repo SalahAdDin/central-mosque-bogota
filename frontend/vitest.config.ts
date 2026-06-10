@@ -2,13 +2,12 @@ import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import { playwright } from "@vitest/browser-playwright";
 import { getViteConfig } from "astro/config";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { coverageConfigDefaults } from "vitest/config";
 
 const dirname
   = typeof __dirname !== "undefined"
     ? __dirname
-    : path.dirname(fileURLToPath(import.meta.url));
+    : path.dirname(new URL(import.meta.url).pathname);
 
 export default getViteConfig({
   build: {
@@ -47,6 +46,7 @@ export default getViteConfig({
           setupFiles: ["./src/vitest.setup.ts"],
         },
       },
+      // TODO: https://github.com/withastro/astro/issues/16275
       {
         extends: true,
         plugins: [
