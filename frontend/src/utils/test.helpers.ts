@@ -17,31 +17,51 @@ type GlobalDomShim = {
   requestAnimationFrame: typeof requestAnimationFrame;
 };
 
+/**
+ * Installs a minimal DOM shim on `globalThis` for tests running in Node.
+ *
+ * This is primarily used to make browser-only code (components/controllers)
+ * work under `happy-dom` by providing commonly accessed globals like:
+ * `window`, `document`, element constructors, and events.
+ *
+ * @param window - The `happy-dom` window instance for the test.
+ * @param document - The `happy-dom` document instance for the test.
+ */
 export function installDomGlobals(window: Window, document: Document): void {
   const globalDom = globalThis as unknown as GlobalDomShim;
   globalDom.window = window;
   globalDom.document = document;
 
-  globalDom.HTMLDialogElement
-    = window.HTMLDialogElement as unknown as typeof HTMLDialogElement;
-  globalDom.HTMLButtonElement
-    = window.HTMLButtonElement as unknown as typeof HTMLButtonElement;
+  globalDom.HTMLDialogElement =
+    window.HTMLDialogElement as unknown as typeof HTMLDialogElement;
+  globalDom.HTMLButtonElement =
+    window.HTMLButtonElement as unknown as typeof HTMLButtonElement;
   globalDom.HTMLElement = window.HTMLElement as unknown as typeof HTMLElement;
   globalDom.Event = window.Event as unknown as typeof Event;
   globalDom.MouseEvent = window.MouseEvent as unknown as typeof MouseEvent;
-  globalDom.KeyboardEvent
-    = window.KeyboardEvent as unknown as typeof KeyboardEvent;
+  globalDom.KeyboardEvent =
+    window.KeyboardEvent as unknown as typeof KeyboardEvent;
 
-  globalDom.requestAnimationFrame = ((cb: FrameRequestCallback): number => {
+  globalDom.requestAnimationFrame = (cb: FrameRequestCallback): number => {
     cb(0);
     return 0;
-  }) as typeof requestAnimationFrame;
+  };
 }
 
+/**
+ * Patches `window.matchMedia` for `happy-dom` tests.
+ *
+ * - Forces `prefers-reduced-motion` queries to match (so animation code paths
+ *   can reliably short-circuit in tests).
+ * - Delegates to the original `matchMedia` implementation when available.
+ * - Otherwise returns a minimal `MediaQueryList`-compatible object.
+ *
+ * @param window - The `happy-dom` window instance to patch.
+ */
 export function installMatchMedia(window: Window): void {
   const win = window;
-  const existingMatchMedia
-    = typeof win.matchMedia === "function" ? win.matchMedia.bind(win) : null;
+  const existingMatchMedia =
+    typeof win.matchMedia === "function" ? win.matchMedia.bind(win) : null;
 
   type HappyDomMediaQueryList = ReturnType<Window["matchMedia"]>;
 
@@ -74,6 +94,12 @@ export function installMatchMedia(window: Window): void {
   };
 }
 
+/**
+ * Ensures `element.getAnimations()` exists for environments that don't implement
+ * the Web Animations API (or implement it partially).
+ *
+ * @param element - The element to patch.
+ */
 export function ensureElementGetAnimations(element: HTMLElement): void {
   const elAny = element as unknown as {
     getAnimations?: () => Array<Animation>;
@@ -83,6 +109,17 @@ export function ensureElementGetAnimations(element: HTMLElement): void {
   }
 }
 
+/**
+ * Ensures a `HTMLDialogElement` instance has the dialog methods used by the app.
+ *
+ * `happy-dom` may not implement the full dialog API. This helper polyfills:
+ * - `showModal()`
+ * - `show()`
+ * - `close()` (dispatches a `"close"` event)
+ * - `getAnimations()` (returns an empty array when missing)
+ *
+ * @param dialog - The dialog element instance to patch.
+ */
 export function ensureDialogApi(dialog: HTMLDialogElement): void {
   const dialogApi = dialog as unknown as {
     showModal?: () => void;
@@ -122,6 +159,15 @@ export function ensureDialogApi(dialog: HTMLDialogElement): void {
 type UserEventModule = typeof import("@testing-library/user-event");
 type UserEventApi = ReturnType<UserEventModule["default"]["setup"]>;
 
+/**
+ * Creates a `@testing-library/user-event` instance configured for the provided window.
+ *
+ * This uses a dynamic import to avoid loading user-event unless needed, and wires
+ * timer advancement into Vitest's fake timers.
+ *
+ * @param window - The `happy-dom` window used by the test.
+ * @returns The configured user-event API.
+ */
 export async function createUser(window: Window): Promise<UserEventApi> {
   const { default: userEvent } = await import("@testing-library/user-event");
 
@@ -133,16 +179,27 @@ export async function createUser(window: Window): Promise<UserEventApi> {
 
 type TAstroComponentFactory = Parameters<AstroContainer["renderToString"]>[0];
 
-type ComponentContainerRenderOptions<TProps extends TAstroComponentFactory>
-  = Omit<ContainerRenderOptions, "props"> & {
+type ComponentContainerRenderOptions<TProps extends TAstroComponentFactory> =
+  Omit<ContainerRenderOptions, "props"> & {
     // @ts-expect-error ComponentProps expects a type that extends a function of arity 1, but
     // AstroComponentFactory is a function of arity 3. Either this is an internal mix up in Astro,
     // or I'm missing something.
     props?: ComponentProps<TProps>;
   };
 
+/**
+ * Renders an Astro component to HTML and mounts it into a `happy-dom` document body.
+ *
+ * This is useful for unit testing Astro components with DOM assertions via
+ * `@testing-library/dom`, while still supporting component rendering through
+ * Astro's container renderer.
+ *
+ * @param Component - The Astro component factory to render.
+ * @param options - Render options passed through to Astro's container renderer.
+ * @returns `{ window, root, close }` where `root` is the mounted body element.
+ */
 export async function renderAstroComponentToDom<
-  TComponent extends TAstroComponentFactory
+  TComponent extends TAstroComponentFactory,
 >(
   Component: TComponent,
   options: ComponentContainerRenderOptions<TComponent> = {}
@@ -156,7 +213,9 @@ export async function renderAstroComponentToDom<
     url: "http://localhost:4321",
   });
 
-  window.document.write("<html><head><title>Test page</title></head><body></body></html>");
+  window.document.write(
+    "<html><head><title>Test page</title></head><body></body></html>"
+  );
 
   await window.happyDOM.waitUntilComplete();
 
