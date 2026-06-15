@@ -1,0 +1,24 @@
+---
+import MonthlyPrayTime from "@components/data/display/MonthlyPrayTime/MonthlyPrayTime.astro";
+import Layout from "@layouts/Layout.astro";
+import { routes } from "@i18n/ui";
+
+export async function getStaticPaths({ routePattern }) {
+  console.log("RoutePattern:", routePattern);
+
+  const paths = Object.entries(routes)
+    .map(([lang, slugs]) => ({
+      params: {
+        lang,
+        prayerInformation: slugs.prayerInformation,
+      },
+    }))
+    .filter(({ params }) => Boolean(params.prayerInformation));
+
+  return paths;
+}
+---
+
+<Layout>
+  <MonthlyPrayTime server:defer />
+</Layout>

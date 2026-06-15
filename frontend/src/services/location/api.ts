@@ -12,5 +12,5 @@ export const fetchLocationData = async (): Promise<TServiceLocation> => {
     throw new Error(`Location API request failed (${String(res.status)})`);
   }
 
-  return (await res.json()) as unknown as TServiceLocation;
+  return (await res.json()) as TServiceLocation;
 };

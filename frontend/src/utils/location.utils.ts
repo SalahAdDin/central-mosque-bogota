@@ -26,8 +26,8 @@ let locationCache: {
 const isCacheValid = (): boolean => {
   const now = Date.now();
   return (
-    locationCache.data !== null
-    && now - locationCache.timestamp < LOCATION_CONFIG.CACHE_TTL_MS
+    locationCache.data !== null &&
+    now - locationCache.timestamp < LOCATION_CONFIG.CACHE_TTL_MS
   );
 };
 
@@ -39,8 +39,7 @@ const getTimeZone = (): string => {
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (tz.trim()) return tz;
-  }
-  catch {
+  } catch {
     // Fallback silently
   }
   return BOGOTA_LOCATION.timeZone;
@@ -134,8 +133,7 @@ export const getClientLocation = async (): Promise<TClientLocation> => {
 
     locationCache = { data: result, timestamp: Date.now() };
     return result;
-  }
-  catch (error) {
+  } catch (error) {
     console.warn("Location API failed, using coordinates fallback:", error);
 
     const fallback: TClientLocation = {

@@ -53,6 +53,11 @@ interface DownloadPDFProps extends Pick<
    * The margin in millimeters to apply to the PDF.
    */
   marginMm?: number;
+  /**
+   * The visible button label.
+   * @default t("download.download-pdf")
+   */
+  label?: string;
 }
 
 const {
@@ -62,10 +67,13 @@ const {
   variant = "solid",
   color = "primary",
   class: className = "",
+  label,
 } = Astro.props as DownloadPDFProps;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+
+const resolvedLabel = label ?? t("download.download-pdf");
 ---
 
 <Button
@@ -81,14 +89,54 @@ const t = useTranslations(lang);
   ariaLabel={t("actions.download-pdf")}
 >
   <Icon name="picture_as_pdf" />
-  <span>{t("download.download-pdf")}</span>
+  <span>{resolvedLabel}</span>
 </Button>
 
 <script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   import { initDownloadPdfButtons } from "./download-pdf.controller";
 
   const setup = () => initDownloadPdfButtons();
 
   document.addEventListener("DOMContentLoaded", setup);
   document.addEventListener("astro:after-swap", setup);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>

@@ -20,6 +20,35 @@ export const COLORS = [
 export const ICON_POSITIONS = ["leading", "trailing"] as const;
 
 /**
+ * List of supported icon names that can be used in components like Icons.
+ * @see Icon.astro
+ */
+export const ICON_NAMES = [
+  "menu",
+  "search",
+  "chevron_right",
+  "favorite",
+  "location_on",
+  "help",
+  "language",
+  "light_mode",
+  "dark_mode",
+  "computer",
+  "mosque",
+  "phone",
+  "email",
+  "close",
+  "arrow_forward",
+  "school",
+  "schedule",
+  "play_arrow",
+  "menu_book",
+  "volunteer_activism",
+  "church",
+  "groups",
+] as const;
+
+/**
  * List of supported social media and brand icons that are rendered as custom SVGs.
  * @see SvgIcon.astro
  */

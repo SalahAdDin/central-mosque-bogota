@@ -39,6 +39,7 @@ export function calculateActivePrayer(
   if (fajr !== null && dhuhr !== null && now >= fajr && now < dhuhr) {
     return "fajr";
   }
+  // TODO: check it is working, cause we saw it was not working in the calendar
   if (dhuhr !== null && asr !== null && now >= dhuhr && now < asr) {
     return "dhuhr";
   }

@@ -10,7 +10,13 @@ import {
 } from "@components/layout/Table";
 import { getLangFromUrl, useTranslations } from "@i18n/utils";
 import type { TDailyPrayerSchedule } from "@utils/models/types";
-import { formatTime, formatYm } from "@utils/time.utils";
+import {
+  formatTime,
+  formatYm,
+  getMonthAnchorDate,
+  buildMonthLabel,
+  buildMonthHref,
+} from "@utils/time.utils";
 import { cn } from "@utils/styles.utils";
 import Button from "@components/actions/Button/Button.astro";
 import DownloadPDF from "@components/actions/DownloadPDF/DownloadPDF.astro";
@@ -20,11 +26,9 @@ import {
   DropdownItem,
   DropdownTrigger,
 } from "@components/actions/Dropdown";
-import {
-  getMonthAnchorDate,
-  buildMonthLabel,
-  buildMonthHref,
-} from "@utils/time.utils";
+import { BOGOTA_LOCATION, getClientLocation } from "@utils/location.utils";
+import type { TIslamicApiDateYm } from "@utils/models/islamic";
+import { getLiveCollection } from "astro:content";
 
 const PRAYER_KEYS: Array<keyof TDailyPrayerSchedule> = [
   "fajr",
@@ -38,6 +42,7 @@ const PRAYER_KEYS: Array<keyof TDailyPrayerSchedule> = [
 const PRAYER_HIGHLIGHTS: Partial<Record<keyof TDailyPrayerSchedule, string>> = {
   sunrise: "opacity-60", // Sunrise is often shown as informational
 };
+
 /**
  * @component MonthlyPrayTime
  * @title Monthly Prayer Times
@@ -56,9 +61,6 @@ const PRAYER_HIGHLIGHTS: Partial<Record<keyof TDailyPrayerSchedule, string>> = {
  * - i18n: all static labels come from `useTranslations(getLangFromUrl(Astro.url))`.
  *
  * Props
- * - `location`: location label (e.g. "Bogotá, Colombia")
- * - `monthLabel`: month label (e.g. "Marzo 2024")
- * - `rows`: list of daily rows with `currentDate`, `hijriDate`, `times`, and optional `isToday`
  * - `title`: card title (defaults to translated pray-schedule.title)
  * - `description`: short helper text shown under the title
  * - `dateHeaderLabel`: header label for the date column (defaults based on URL language)
@@ -92,6 +94,7 @@ const PRAYER_HIGHLIGHTS: Partial<Record<keyof TDailyPrayerSchedule, string>> = {
  * <MonthlyPrayTime location="Bogotá, Colombia" monthLabel="Marzo 2024" rows={rows} />
  * ```
  */
+
 type MonthlyRow = {
   /**
    * Gregorian date for the row, e.g. `"2024-03-01"`.
@@ -117,27 +120,6 @@ type MonthlyRow = {
 };
 
 interface Props {
-  /**
-   * Location label rendered in the header.
-   */
-  location: string;
-  /**
-   * Visible month label, e.g. “Marzo 2024”.
-   */
-  monthLabel: string;
-  /**
-   * Daily data for the month.
-   */
-  rows: Array<MonthlyRow>;
-  /**
-   * Selected anchor month in `YYYY-MM`, used to build the month dropdown.
-   */
-  selectedYm: string;
-  /**
-   * IANA timezone used for “today” checking and labels.
-   * @default "America/Bogota"
-   */
-  timeZone?: string;
   /**
    * Optional title override.
    * @default t("pray-calendar.title")
@@ -169,11 +151,6 @@ interface Props {
 }
 
 const {
-  location,
-  monthLabel,
-  rows,
-  selectedYm,
-  timeZone,
   title,
   description: descriptionProp,
   dateHeaderLabel,
@@ -181,8 +158,31 @@ const {
   class: className,
 } = Astro.props as Props;
 
-const lang = getLangFromUrl(Astro.url);
+const referer = Astro.request.headers.get("Referer");
+const url = referer ? new URL(referer) : Astro.url;
+
+const { timeZone } = await getClientLocation();
+
+const rawDateParam = url.searchParams.get("date");
+const requestedYm: TIslamicApiDateYm | null
+  = rawDateParam && /^\d{4}-\d{2}$/.test(rawDateParam)
+    ? (rawDateParam as TIslamicApiDateYm)
+    : null;
+
+const selectedYm = requestedYm ?? formatYm(new Date(), timeZone);
+
+const lang = getLangFromUrl(url);
 const t = useTranslations(lang);
+
+const live = await getLiveCollection("prayerTimes", {
+  date: selectedYm,
+  languageCode: lang,
+});
+const entries = live.entries ?? [];
+
+const location
+  = entries[0]?.data.location
+    ?? `${BOGOTA_LOCATION.city}, ${BOGOTA_LOCATION.country}`;
 
 const resolved = {
   title: title ?? t("pray-calendar.title"),
@@ -195,6 +195,29 @@ const resolved = {
   seeLessLabel: t("pray-calendar.see-less"),
   timeZone: timeZone ?? "America/Bogota",
 };
+
+const monthAnchorDate = requestedYm
+  ? new Date(`${selectedYm}-15T12:00:00Z`)
+  : new Date();
+
+const monthLabel = buildMonthLabel(monthAnchorDate, lang, resolved.timeZone);
+
+const rows = entries.map(({ data }) => {
+  const activePrayRaw = data.activePray;
+  const activePray
+    = typeof activePrayRaw === "string"
+      && PRAYER_KEYS.includes(activePrayRaw as keyof TDailyPrayerSchedule)
+      ? (activePrayRaw as keyof TDailyPrayerSchedule)
+      : undefined;
+
+  return {
+    currentDate: data.currentDate,
+    hijriDate: data.hijriDate,
+    times: data.times,
+    isToday: data.isToday,
+    activePray,
+  };
+});
 
 const monthItems = Array.from({ length: 13 }, (_, i) => {
   const offset = i - 3;
@@ -297,7 +320,10 @@ const getCellClasses = (
             }
           </DropdownContent>
         </Dropdown>
-        <DownloadPDF documentTitle={`calendar-prayer-${monthLabel}`} />
+        <DownloadPDF
+          documentTitle={`calendar-prayer-${monthLabel}`}
+          label={t("download.download-pdf")}
+        />
       </div>
     </header>
 
@@ -434,6 +460,16 @@ const getCellClasses = (
 
 
 
+
+
+
+
+
+
+
+
+
+
   [data-action="show-more"] [data-monthly-toggle-less] {
     display: none;
   }
@@ -476,6 +512,16 @@ const getCellClasses = (
 
 
 
+
+
+
+
+
+
+
+
+
+
 </style>
 
 <script>
@@ -489,132 +535,38 @@ const getCellClasses = (
 
 
 
-  const COLLAPSED_ROWS = 7;
 
-  function initMonthlyPrayTimeTable(root: HTMLElement): void {
-    const clip = root.querySelector<HTMLElement>("[data-monthly-table-clip]");
-    const toggle = root.querySelector<HTMLButtonElement>(
-      '[data-action="show-more"]',
-    );
-    const table = clip?.querySelector<HTMLTableElement>("table");
-    const body =
-      root.querySelector<HTMLTableSectionElement>("#full-month-table");
 
-    if (!clip || !toggle || !table || !body) return;
-    if (root.dataset.monthlyToggleReady === "true") return;
-    root.dataset.monthlyToggleReady = "true";
 
-    const rows = Array.from(body.querySelectorAll<HTMLTableRowElement>("tr"));
 
-    if (rows.length <= COLLAPSED_ROWS) {
-      toggle.style.display = "none";
-      clip.style.height = "";
-      clip.dataset.monthlyAnimate = "";
-      root.dataset.monthlyExpanded = "true";
-      return;
-    }
 
-    toggle.style.display = "";
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
 
-    const computeCollapsedHeight = (): number => {
-      const clipTop = clip.getBoundingClientRect().top;
-      const collapsedRow = rows[Math.min(COLLAPSED_ROWS - 1, rows.length - 1)];
-      return Math.ceil(collapsedRow.getBoundingClientRect().bottom - clipTop);
-    };
 
-    const computeExpandedHeight = (): number =>
-      Math.ceil(table.getBoundingClientRect().height);
 
-    const setClipHeight = (
-      height: number,
-      options: { animate: boolean },
-    ): void => {
-      const { animate } = options;
-      if (animate) clip.dataset.monthlyAnimate = "true";
-      else clip.dataset.monthlyAnimate = "";
 
-      clip.style.height = `${height}px`;
-    };
+  import { initMonthlyPrayTimes } from "./monthly-pray-time.controller";
 
-    const setExpanded = (
-      expanded: boolean,
-      options: { animate: boolean },
-    ): void => {
-      root.dataset.monthlyExpanded = expanded ? "true" : "false";
-      toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
-      if (expanded) setClipHeight(computeExpandedHeight(), options);
-      else setClipHeight(computeCollapsedHeight(), options);
-    };
-
-    setExpanded(false, { animate: false });
-    requestAnimationFrame(() => {
-      clip.dataset.monthlyAnimate = "true";
-    });
-
-    toggle.addEventListener("click", () => {
-      const expanded = toggle.getAttribute("aria-expanded") === "true";
-      if (expanded) {
-        const collapsedHeight = computeCollapsedHeight();
-        toggle.setAttribute("aria-expanded", "false");
-        setClipHeight(collapsedHeight, { animate: !prefersReducedMotion });
-
-        if (prefersReducedMotion) {
-          root.dataset.monthlyExpanded = "false";
-          return;
-        }
-
-        const onEnd = (event: TransitionEvent) => {
-          if (event.propertyName !== "height") return;
-          clip.removeEventListener("transitionend", onEnd);
-          if (toggle.getAttribute("aria-expanded") === "false") {
-            root.dataset.monthlyExpanded = "false";
-          }
-        };
-        clip.addEventListener("transitionend", onEnd);
-        return;
-      }
-
-      root.dataset.monthlyExpanded = "true";
-      toggle.setAttribute("aria-expanded", "true");
-
-      requestAnimationFrame(() => {
-        setClipHeight(computeExpandedHeight(), {
-          animate: !prefersReducedMotion,
-        });
-      });
-    });
-
-    const onResize = () => {
-      const expanded = toggle.getAttribute("aria-expanded") === "true";
-      if (expanded) {
-        root.dataset.monthlyExpanded = "true";
-        setClipHeight(computeExpandedHeight(), { animate: false });
-      } else {
-        root.dataset.monthlyExpanded = "false";
-        setClipHeight(computeCollapsedHeight(), { animate: false });
-      }
-      requestAnimationFrame(() => {
-        clip.dataset.monthlyAnimate = "true";
-      });
-    };
-
-    window.addEventListener("resize", onResize, { passive: true });
-    window.addEventListener("load", onResize, { passive: true });
+  // This component is rendered as a server island (`server:defer`), so its
+  // HTML/script can be injected after `DOMContentLoaded` has already fired.
+  // Run immediately when the DOM is ready instead of waiting for an event that
+  // may never come.
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMonthlyPrayTimes);
+  } else {
+    initMonthlyPrayTimes();
   }
+  document.addEventListener("astro:after-swap", initMonthlyPrayTimes);
 
-  const setup = () => {
-    const roots = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-monthly-table-root]"),
-    );
-    for (const root of roots) initMonthlyPrayTimeTable(root);
-  };
 
-  document.addEventListener("DOMContentLoaded", setup);
-  document.addEventListener("astro:after-swap", setup);
+
+
+
+
+
+
+
+
 
 
 

@@ -9,7 +9,9 @@ import {
   parseTimeToMinutes,
 } from "@utils/time.utils";
 
-const parsePrayerTimes = (times: TIslamicApiPrayerTimes): TDailyPrayerSchedule => ({
+const parsePrayerTimes = (
+  times: TIslamicApiPrayerTimes
+): TDailyPrayerSchedule => ({
   fajr: times.Fajr,
   sunrise: times.Sunrise,
   dhuhr: times.Dhuhr,
@@ -47,11 +49,11 @@ export const buildPrayerData = ({
   const today = isToday(date, "UTC");
   const parsedTimes = parsePrayerTimes(times);
   const activePray = today
-    ? calculateActivePrayer(
+    ? (calculateActivePrayer(
         getCurrentMinutes("UTC"),
         parsePrayerTimesToNumber(parsedTimes),
         parseTimeToMinutes(parsedTimes.sunrise)
-      )
+      ) ?? undefined)
     : undefined;
 
   return {
