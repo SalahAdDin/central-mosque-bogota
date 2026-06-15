@@ -36,8 +36,7 @@ describe("HeroHijri", () => {
 
       const overlay = root.querySelector(".hero-overlay");
       expect(overlay).not.toBeNull();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
