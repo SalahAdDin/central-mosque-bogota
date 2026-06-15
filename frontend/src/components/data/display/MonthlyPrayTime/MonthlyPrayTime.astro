@@ -1,5 +1,5 @@
 ---
-import Icon from '@components/data/display/Icons/Icon.astro'
+import Icon from "@components/data/display/Icons/Icon.astro";
 import {
   Table,
   TableBody,
@@ -7,37 +7,37 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@components/layout/Table'
-import { getLangFromUrl, useTranslations } from '@i18n/utils'
-import type { TDailyPrayerSchedule } from '@utils/models/types'
-import { formatTime, formatYm } from '@utils/time.utils'
-import { cn } from '@utils/styles.utils'
-import Button from '@components/actions/Button/Button.astro'
-import DownloadPDF from '@components/actions/DownloadPDF/DownloadPDF.astro'
+} from "@components/layout/Table";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+import type { TDailyPrayerSchedule } from "@utils/models/types";
+import { formatTime, formatYm } from "@utils/time.utils";
+import { cn } from "@utils/styles.utils";
+import Button from "@components/actions/Button/Button.astro";
+import DownloadPDF from "@components/actions/DownloadPDF/DownloadPDF.astro";
 import {
   Dropdown,
   DropdownContent,
   DropdownItem,
   DropdownTrigger,
-} from '@components/actions/Dropdown'
+} from "@components/actions/Dropdown";
 import {
   getMonthAnchorDate,
   buildMonthLabel,
   buildMonthHref,
-} from '@utils/time.utils'
+} from "@utils/time.utils";
 
 const PRAYER_KEYS: Array<keyof TDailyPrayerSchedule> = [
-  'fajr',
-  'sunrise',
-  'dhuhr',
-  'asr',
-  'maghrib',
-  'isha',
-]
+  "fajr",
+  "sunrise",
+  "dhuhr",
+  "asr",
+  "maghrib",
+  "isha",
+];
 
 const PRAYER_HIGHLIGHTS: Partial<Record<keyof TDailyPrayerSchedule, string>> = {
-  sunrise: 'opacity-60', // Sunrise is often shown as informational
-}
+  sunrise: "opacity-60", // Sunrise is often shown as informational
+};
 /**
  * @component MonthlyPrayTime
  * @title Monthly Prayer Times
@@ -93,39 +93,79 @@ const PRAYER_HIGHLIGHTS: Partial<Record<keyof TDailyPrayerSchedule, string>> = {
  * ```
  */
 type MonthlyRow = {
-  currentDate: string
-  hijriDate: string
-  times: TDailyPrayerSchedule
-  isToday?: boolean
-  activePray?: keyof TDailyPrayerSchedule
-}
+  /**
+   * Gregorian date for the row, e.g. `"2024-03-01"`.
+   */
+  currentDate: string;
+  /**
+   * Hijri (Islamic) date label for the row.
+   */
+  hijriDate: string;
+  /**
+   * Prayer times for the day.
+   */
+  times: TDailyPrayerSchedule;
+  /**
+   * Whether this row represents the current day.
+   * @default false
+   */
+  isToday?: boolean;
+  /**
+   * Prayer key whose time is currently active for this row.
+   */
+  activePray?: keyof TDailyPrayerSchedule;
+};
 
 interface Props {
-  /** Location label rendered in the header. */
-  location: string
-  /** Visible month label, e.g. “Marzo 2024”. */
-  monthLabel: string
-  /** Daily data for the month. */
-  rows: Array<MonthlyRow>
+  /**
+   * Location label rendered in the header.
+   */
+  location: string;
+  /**
+   * Visible month label, e.g. “Marzo 2024”.
+   */
+  monthLabel: string;
+  /**
+   * Daily data for the month.
+   */
+  rows: Array<MonthlyRow>;
+  /**
+   * Selected anchor month in `YYYY-MM`, used to build the month dropdown.
+   */
+  selectedYm: string;
   /**
    * IANA timezone used for “today” checking and labels.
-   * @default America/Bogota
+   * @default "America/Bogota"
    */
-  timeZone?: string
-  /** Selected anchor month in YYYY-MM, used to build the month dropdown. */
-  selectedYm: string
-  /** Optional title override. Defaults to translated calendar title. */
-  title?: string
-  /** Optional description under the title. Defaults to translated description using `location`. */
-  description?: string
-  /** Optional header label for the date column. */
-  dateHeaderLabel?: string
-  /** Optional label for the “Today” badge. */
-  todayBadgeLabel?: string
-  /** Prayer key to emphasize visually in each row (e.g. "maghrib"). */
-  highlightPrayer?: keyof TDailyPrayerSchedule
-  /** Optional extra class for the root section. */
-  class?: string
+  timeZone?: string;
+  /**
+   * Optional title override.
+   * @default t("pray-calendar.title")
+   */
+  title?: string;
+  /**
+   * Optional description under the title.
+   * @default t("pray-calendar.description", location)
+   */
+  description?: string;
+  /**
+   * Optional header label for the date column.
+   * @default t("calendar.date")
+   */
+  dateHeaderLabel?: string;
+  /**
+   * Optional label for the “Today” badge.
+   * @default t("calendar.today")
+   */
+  todayBadgeLabel?: string;
+  /**
+   * Prayer key to emphasize visually in each row (e.g. `"maghrib"`).
+   */
+  highlightPrayer?: keyof TDailyPrayerSchedule;
+  /**
+   * Optional extra class for the root section.
+   */
+  class?: string;
 }
 
 const {
@@ -139,34 +179,34 @@ const {
   dateHeaderLabel,
   todayBadgeLabel,
   class: className,
-} = Astro.props as Props
+} = Astro.props as Props;
 
-const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang)
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const resolved = {
-  title: title ?? t('pray-calendar.title'),
-  description: descriptionProp ?? t('pray-calendar.description', location),
-  dateHeader: dateHeaderLabel ?? t('calendar.date'),
-  todayBadge: todayBadgeLabel ?? t('calendar.today'),
-  loadingLabel: t('download.preparing'),
-  errorLabel: t('download.error'),
-  seeMoreLabel: t('pray-calendar.see-whole-month'),
-  seeLessLabel: t('pray-calendar.see-less'),
-  timeZone: timeZone ?? 'America/Bogota',
-}
+  title: title ?? t("pray-calendar.title"),
+  description: descriptionProp ?? t("pray-calendar.description", location),
+  dateHeader: dateHeaderLabel ?? t("calendar.date"),
+  todayBadge: todayBadgeLabel ?? t("calendar.today"),
+  loadingLabel: t("download.preparing"),
+  errorLabel: t("download.error"),
+  seeMoreLabel: t("pray-calendar.see-whole-month"),
+  seeLessLabel: t("pray-calendar.see-less"),
+  timeZone: timeZone ?? "America/Bogota",
+};
 
 const monthItems = Array.from({ length: 13 }, (_, i) => {
-  const offset = i - 3
-  const date = getMonthAnchorDate(selectedYm, offset)
-  const ym = formatYm(date, 'UTC')
+  const offset = i - 3;
+  const date = getMonthAnchorDate(selectedYm, offset);
+  const ym = formatYm(date, "UTC");
 
   return {
     ym,
     label: buildMonthLabel(date, lang, resolved.timeZone),
     active: ym === selectedYm,
-  }
-})
+  };
+});
 
 const getCellClasses = (
   prayer: keyof TDailyPrayerSchedule,
@@ -174,17 +214,17 @@ const getCellClasses = (
   activePray?: keyof TDailyPrayerSchedule,
 ) =>
   cn(
-    'px-6 py-5 font-medium',
+    "px-6 py-5 font-medium",
     PRAYER_HIGHLIGHTS[prayer],
     isTimeNow && `
       bg-secondary/80
       dark:bg-primary/10
     `,
-    activePray === prayer && 'font-bold text-primary',
+    activePray === prayer && "font-bold text-primary",
   );
 ---
 
-<section class={cn('mx-auto w-full max-w-5xl px-4', className)}>
+<section class={cn("mx-auto w-full max-w-5xl px-4", className)}>
   <div
     class="
       overflow-hidden rounded-2xl border border-slate-200 bg-card shadow-2xl
@@ -215,7 +255,8 @@ const getCellClasses = (
           text-slate-500
           dark:text-slate-400
         "
-        >{resolved.description}
+        >
+          {resolved.description}
         </p>
       </div>
 
@@ -225,7 +266,7 @@ const getCellClasses = (
             <Button
               color="secondary"
               variant="soft"
-              aria-label={t('actions.filter-month')}
+              aria-label={t("actions.filter-month")}
             >
               <Icon name="filter_list" />
               <span>{monthLabel}</span>
@@ -233,7 +274,7 @@ const getCellClasses = (
           </DropdownTrigger>
           <DropdownContent align="start">
             {
-              monthItems.map(item =>
+              monthItems.map((item) =>
                 item.active
                   ? (
                       <DropdownItem disabled aria-current="page">
@@ -280,7 +321,7 @@ const getCellClasses = (
               {resolved.dateHeader}
             </TableHead>
             {
-              PRAYER_KEYS.map(prayer => (
+              PRAYER_KEYS.map((prayer) => (
                 <TableHead
                   scope="col"
                   class="
@@ -303,7 +344,7 @@ const getCellClasses = (
           id="full-month-table"
         >
           {
-            rows.map(row => (
+            rows.map((row) => (
               <TableRow
                 class={cn(
                   `
@@ -315,7 +356,7 @@ const getCellClasses = (
                     dark:bg-primary/10
                   `,
                 )}
-                data-monthly-pray-row={row.isToday ? 'today' : undefined}
+                data-monthly-pray-row={row.isToday ? "today" : undefined}
               >
                 <TableCell
                   class={cn(
@@ -348,11 +389,11 @@ const getCellClasses = (
                   <em class="text-xs">{row.currentDate}</em>
                 </TableCell>
 
-                {PRAYER_KEYS.map(prayer => (
+                {PRAYER_KEYS.map((prayer) => (
                   <TableCell
                     class={getCellClasses(prayer, false, row.activePray)}
                     headers={`prayer-${prayer}`}
-                    data-monthly-pray-cell={row.isToday ? 'true' : undefined}
+                    data-monthly-pray-cell={row.isToday ? "true" : undefined}
                     data-prayer={row.isToday ? prayer : undefined}
                     data-time={row.isToday ? row.times[prayer] : undefined}
                   >
@@ -383,6 +424,16 @@ const getCellClasses = (
 </section>
 
 <style>
+
+
+
+
+
+
+
+
+
+
   [data-action="show-more"] [data-monthly-toggle-less] {
     display: none;
   }
@@ -415,9 +466,29 @@ const getCellClasses = (
       transition: none;
     }
   }
+
+
+
+
+
+
+
+
+
+
 </style>
 
 <script>
+
+
+
+
+
+
+
+
+
+
   const COLLAPSED_ROWS = 7;
 
   function initMonthlyPrayTimeTable(root: HTMLElement): void {
@@ -544,4 +615,14 @@ const getCellClasses = (
 
   document.addEventListener("DOMContentLoaded", setup);
   document.addEventListener("astro:after-swap", setup);
+
+
+
+
+
+
+
+
+
+
 </script>
