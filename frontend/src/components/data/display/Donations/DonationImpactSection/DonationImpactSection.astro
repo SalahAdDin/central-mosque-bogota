@@ -1,8 +1,9 @@
 ---
-import Button from '@components/actions/Button/Button.astro'
-import Icon from '@components/data/display/Icons/Icon.astro'
-import { getLangFromUrl, useTranslations } from '@i18n/utils'
-import { calculateProgress } from '@utils/maths.utils'
+import Button from "@components/actions/Button/Button.astro";
+import Icon from "@components/data/display/Icons/Icon.astro";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+import { calculateProgress } from "@utils/maths.utils";
+import { Image } from "astro:assets";
 
 /**
  * @component DonationImpactSection
@@ -54,41 +55,41 @@ interface Props {
   /**
    * Project title used in the progress label (prefixed with `donations.project`).
    */
-  title: string
+  title: string;
   /**
    * Supporting text describing the impact of donations.
    */
-  description: string
+  description: string;
   /**
    * Goal amount as a display string, e.g. "$100.000.000 COP". Must have the same currency as `raised`.
    */
-  goal: string
+  goal: string;
   /**
    * Raised amount as a display string, e.g. "$75.000.000 COP". Must have the same currency as `goal`.
    */
-  raised: string
+  raised: string;
   /**
    * Link target for the donation call-to-action button.
    */
-  ctaHref: string
+  ctaHref: string;
   /**
    * Background image URL for the right-side panel.
    */
-  imageUrl: string
+  imageUrl: string;
   /**
    * Alt text for the image.
    */
-  imageAlt: string
+  imageAlt: string;
 }
 
 const { title, description, goal, raised, ctaHref, imageUrl, imageAlt }
-  = Astro.props as Props
+  = Astro.props as Props;
 
-const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang)
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
-const goalLabel = `${t('donations.goal')} ${goal} • ${t('donations.raised')} ${raised}`
-const projectLabel = `${t('donations.project')} ${title}`
+const goalLabel = `${t("donations.goal")} ${goal} • ${t("donations.raised")} ${raised}`;
+const projectLabel = `${t("donations.project")} ${title}`;
 const progress = calculateProgress(goal, raised);
 ---
 
@@ -105,7 +106,7 @@ const progress = calculateProgress(goal, raised);
     "
     >
       <h2 class="mb-6 font-display text-4xl font-bold">
-        {t('donations.impact')}
+        {t("donations.impact")}
       </h2>
       <p class="mb-8 text-lg/relaxed text-white/80">{description}</p>
 
@@ -113,7 +114,10 @@ const progress = calculateProgress(goal, raised);
         <div>
           <div class="mb-2 flex justify-between">
             <span class="text-sm font-medium">{projectLabel}</span>
-            <span class="text-sm font-bold">{progress}%</span>
+            <span class="text-sm font-bold">
+              {progress}
+              %
+            </span>
           </div>
           <progress
             class="
@@ -128,7 +132,8 @@ const progress = calculateProgress(goal, raised);
             max="100"
             aria-label={projectLabel}
           >
-            {progress}%
+            {progress}
+            %
           </progress>
         </div>
         <p class="text-xs text-white/70">{goalLabel}</p>
@@ -144,7 +149,7 @@ const progress = calculateProgress(goal, raised);
         "
       >
         <Icon name="favorite" class="text-base" />
-        {t('donations.cta')}
+        {t("donations.cta")}
       </Button>
     </div>
 
@@ -153,7 +158,14 @@ const progress = calculateProgress(goal, raised);
       lg:w-1/2
     "
     >
-      <img alt={imageAlt} class="size-full object-cover" src={imageUrl} />
+      <Image
+        src={imageUrl}
+        alt={imageAlt}
+        class="size-full object-cover"
+        layout="constrained"
+        width={1200}
+        height={800}
+      />
       <div class="absolute inset-0 bg-primary/20"></div>
     </div>
   </div>

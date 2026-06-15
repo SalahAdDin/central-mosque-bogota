@@ -1,4 +1,6 @@
 ---
+import { Image } from "astro:assets";
+
 /**
  * @component HeroHijri
  * @description Full-bleed hero banner that displays a background image, Hijri date, current date, and a supporting phrase.
@@ -33,46 +35,49 @@ interface Props {
   /**
    * Background image URL.
    */
-  imageUrl: string
+  imageUrl: string;
   /**
    * Accessible description for the background image.
    */
-  imageAlt: string
+  imageAlt: string;
   /**
    * Hijri date label shown as the hero title.
    */
-  hijriDate: string
+  hijriDate: string;
   /**
    * Gregorian date label shown next to the Hijri date.
    */
-  currentDate: string
+  currentDate: string;
   /**
    * Supporting sentence shown under the dates.
    */
-  phrase: string
+  phrase: string;
 }
 
-const { imageUrl, imageAlt, hijriDate, currentDate, phrase } = Astro.props as Props
+const { imageUrl, imageAlt, hijriDate, currentDate, phrase }
+  = Astro.props as Props;
 ---
 
 <section
   class="
-    relative inset-x-1/2 -mx-[50vw] flex h-[600px] w-screen items-center
+    relative inset-x-1/2 mx-[-50vw] flex h-[600px] w-screen items-center
     overflow-hidden
   "
 >
-  <img
+  <Image
     src={imageUrl}
     alt={imageAlt}
     class="absolute inset-0 size-full object-cover"
-    fetchpriority="high"
+    priority={true}
+    layout="constrained"
+    width={512}
+    height={512}
   />
-  <div class="hero-overlay absolute inset-0" />
-  <div
-    class="
-      relative mx-auto w-full max-w-7xl px-4 text-center
-      lg:px-8
-    "
+  <div class="hero-overlay absolute inset-0"></div>
+  <div class="
+    relative mx-auto w-full max-w-7xl px-4 text-center
+    lg:px-8
+  "
   >
     <h1
       class="

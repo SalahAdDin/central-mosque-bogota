@@ -1,8 +1,9 @@
 ---
-import Button from '@components/actions/Button/Button.astro'
-import Icon from '@components/data/display/Icons/Icon.astro'
-import type { TAcademyArticle } from '@utils/models/academy'
-import { cn } from '@utils/styles.utils'
+import Button from "@components/actions/Button/Button.astro";
+import Icon from "@components/data/display/Icons/Icon.astro";
+import type { TAcademyArticle } from "@utils/models/academy";
+import { cn } from "@utils/styles.utils";
+import { Image } from "astro:assets";
 
 /**
  * @component AcademyCourseCard
@@ -42,29 +43,32 @@ const {
   imageUrl,
   imageAlt,
   badgeLabel,
-  badgeTone = 'primary',
+  badgeTone = "primary",
   href,
   ctaLabel,
   ctaIcon,
-} = Astro.props as Props
+} = Astro.props as Props;
 
 const badgeClasses = cn(
   `
     rounded-full px-3 py-1 text-[10px] font-extrabold tracking-widest text-white
     uppercase shadow-lg
   `,
-  badgeTone === 'secondary' ? 'bg-secondary' : 'bg-primary',
+  badgeTone === "secondary" ? "bg-secondary" : "bg-primary",
 );
 ---
 
 <article class="group relative h-[450px] overflow-hidden rounded-2xl shadow-lg">
-  <img
+  <Image
+    src={imageUrl}
     alt={imageAlt}
     class="
       absolute inset-0 size-full object-cover transition-transform duration-700
       group-hover:scale-110
     "
-    src={imageUrl}
+    layout="constrained"
+    width={380}
+    height={450}
   />
   <div
     class="

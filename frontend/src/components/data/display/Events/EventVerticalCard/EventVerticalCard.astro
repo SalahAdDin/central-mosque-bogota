@@ -1,8 +1,9 @@
 ---
-import Link from '@components/actions/Link/Link.astro'
-import Icon from '@components/data/display/Icons/Icon.astro'
-import { getLangFromUrl, useTranslations } from '@i18n/utils'
-import type { TEvent } from '@utils/models/events'
+import Link from "@components/actions/Link/Link.astro";
+import Icon from "@components/data/display/Icons/Icon.astro";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+import type { TEvent } from "@utils/models/events";
+import { Image } from "astro:assets";
 
 /**
  * @component EventVerticalCard
@@ -40,12 +41,12 @@ import type { TEvent } from '@utils/models/events'
  * ```
  */
 
-interface Props extends Omit<TEvent, 'location'> {}
+interface Props extends Omit<TEvent, "location"> {}
 
 const { category, title, description, schedule, date, image, url }
-  = Astro.props as Props
+  = Astro.props as Props;
 
-const lang = getLangFromUrl(Astro.url)
+const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
@@ -57,11 +58,14 @@ const t = useTranslations(lang);
   "
 >
   <div class="relative h-56 overflow-hidden">
-    <img
+    <Image
+      width={512}
+      height={512}
       class="
         size-full object-cover transition-transform duration-500
         group-hover:scale-105
       "
+      layout="constrained"
       data-alt={title}
       alt={title}
       src={image}
@@ -111,7 +115,7 @@ const t = useTranslations(lang);
           hover:gap-2
         "
       >
-        {t('see-more')}
+        {t("see-more")}
         <Icon name="arrow_forward" class="text-sm" />
       </Link>
     </div>

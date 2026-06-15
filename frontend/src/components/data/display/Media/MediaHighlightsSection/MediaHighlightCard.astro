@@ -1,5 +1,6 @@
 ---
-import Icon from '@components/data/display/Icons/Icon.astro'
+import Icon from "@components/data/display/Icons/Icon.astro";
+import { Image } from "astro:assets";
 
 /**
  * @component MediaHighlightCard
@@ -42,23 +43,23 @@ interface Props {
   /**
    * Card title
    */
-  title: string
+  title: string;
   /**
    * Card href (link destination)
    */
-  href: string
+  href: string;
   /**
    * Background image URL
    */
-  imageUrl: string
+  imageUrl: string;
   /**
    * Background image alt text
    */
-  imageAlt: string
+  imageAlt: string;
   /**
    * Call-to-action label
    */
-  ctaLabel: string
+  ctaLabel: string;
 }
 
 const { title, href, imageUrl, imageAlt, ctaLabel } = Astro.props as Props;
@@ -71,14 +72,17 @@ const { title, href, imageUrl, imageAlt, ctaLabel } = Astro.props as Props;
     rounded-2xl shadow-lg
   "
 >
-  <img
+  <Image
+    src={imageUrl}
     alt={imageAlt}
     class="
       absolute inset-0 size-full object-cover grayscale transition-all
       duration-700
       group-hover:grayscale-0
     "
-    src={imageUrl}
+    layout="constrained"
+    width={512}
+    height={512}
   />
   <div
     class="
