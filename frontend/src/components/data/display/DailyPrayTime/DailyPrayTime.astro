@@ -1,9 +1,9 @@
 ---
-import Icon from '@components/data/display/Icons/Icon.astro'
-import type { TDailyPrayerSchedule } from '@utils/models/types'
-import { getLangFromUrl, useTranslations } from '@i18n/utils'
-import { formatTime } from '@utils/time.utils'
-import Link from '@components/actions/Link/Link.astro'
+import Icon from "@components/data/display/Icons/Icon.astro";
+import type { TDailyPrayerSchedule } from "@utils/models/types";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+import { formatTime } from "@utils/time.utils";
+import Link from "@components/actions/Link/Link.astro";
 
 /**
  * @component DailyPrayTime
@@ -77,16 +77,17 @@ import Link from '@components/actions/Link/Link.astro'
 interface Props {
   /**
    * Location label shown next to the location icon (display-only).
+   * @default Bogotá D.C., Colombia
    */
-  location: string
+  location: string;
   /**
    * Hijri date label shown in the header (display-only).
    */
-  hijriDate: string
+  hijriDate: string;
   /**
    * Gregorian date label shown in the header (display-only).
    */
-  currentDate: string
+  currentDate: string;
   /**
    * Prayer time schedule as HH:mm strings.
    *
@@ -94,33 +95,33 @@ interface Props {
    * - `fajr`, `dhuhr`, `asr`, `maghrib`, `isha`
    * - `sunrise` is used for display and for the post-sunrise prohibited window (recommended).
    */
-  schedule: TDailyPrayerSchedule
+  schedule: TDailyPrayerSchedule;
   /**
    * IANA timezone used by the controller when determining "now".
-   * Defaults to America/Bogota.
+   * @default America/Bogota
    */
-  timeZone?: string
+  timeZone?: string;
 }
 
 const {
-  location = 'Bogotá D.C., Colombia',
+  location = "Bogotá D.C., Colombia",
   hijriDate,
   currentDate,
   schedule,
-  timeZone = 'America/Bogota',
-} = Astro.props as Props
+  timeZone = "America/Bogota",
+} = Astro.props as Props;
 
-const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang)
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const PRAYER_ITEMS = [
-  { key: 'fajr', label: t('pray-schedule.fajr') },
-  { key: 'sunrise', label: t('pray-schedule.sunrise') },
-  { key: 'dhuhr', label: t('pray-schedule.dhuhr') },
-  { key: 'asr', label: t('pray-schedule.asr') },
-  { key: 'maghrib', label: t('pray-schedule.maghrib') },
-  { key: 'isha', label: t('pray-schedule.isha') },
-] as const
+  { key: "fajr", label: t("pray-schedule.fajr") },
+  { key: "sunrise", label: t("pray-schedule.sunrise") },
+  { key: "dhuhr", label: t("pray-schedule.dhuhr") },
+  { key: "asr", label: t("pray-schedule.asr") },
+  { key: "maghrib", label: t("pray-schedule.maghrib") },
+  { key: "isha", label: t("pray-schedule.isha") },
+] as const;
 
 const items = PRAYER_ITEMS.map(({ key, label }) => ({
   key,
@@ -133,7 +134,7 @@ const items = PRAYER_ITEMS.map(({ key, label }) => ({
   class="relative z-20 mx-auto -mt-40 max-w-5xl px-4"
   data-prayer-schedule
   data-timezone={timeZone}
-  data-sunrise={schedule.sunrise ?? ''}
+  data-sunrise={schedule.sunrise ?? ""}
 >
   <div
     class="
@@ -160,12 +161,12 @@ const items = PRAYER_ITEMS.map(({ key, label }) => ({
         {location}
       </div>
       <h3 class="mb-1 text-2xl font-bold">
-        {t('pray-schedule.title')}
+        {t("pray-schedule.title")}
         <!-- TODO: ensure the page does exist in CMS -->
         <Link
           href="/how-to-calculate-pray-times"
           class="text-sm text-slate-400"
-          ariaLabel={t('pray-schedule.how-to-calculate')}
+          ariaLabel={t("pray-schedule.how-to-calculate")}
         >
           <Icon name="help" class="text-sm" />
         </Link>
@@ -175,7 +176,10 @@ const items = PRAYER_ITEMS.map(({ key, label }) => ({
         dark:text-slate-400
       "
       >
-        {currentDate} • {hijriDate}
+        {currentDate}
+        {" "}
+        •
+        {hijriDate}
       </p>
     </div>
     <ul class="
@@ -184,7 +188,7 @@ const items = PRAYER_ITEMS.map(({ key, label }) => ({
     "
     >
       {
-        items.map(item => (
+        items.map((item) => (
           <li
             class:list={[
               `
@@ -192,14 +196,14 @@ const items = PRAYER_ITEMS.map(({ key, label }) => ({
                 p-3 text-center transition-all duration-300
                 dark:bg-slate-700/50
               `,
-              'data-prayer-item-active:text-white',
-              'data-prayer-item-active:shadow-lg',
-              'data-prayer-item-active:ring-4',
-              'data-prayer-item-active:bg-secondary',
-              'dark:data-prayer-item-active:bg-primary',
-              'data-prayer-item-active:ring-secondary/20',
-              'dark:data-prayer-item-active:ring-primary/20',
-              'data-prayer-item-active:scale-105',
+              "data-prayer-item-active:text-white",
+              "data-prayer-item-active:shadow-lg",
+              "data-prayer-item-active:ring-4",
+              "data-prayer-item-active:bg-secondary",
+              "dark:data-prayer-item-active:bg-primary",
+              "data-prayer-item-active:ring-secondary/20",
+              "dark:data-prayer-item-active:ring-primary/20",
+              "data-prayer-item-active:scale-105",
             ]}
             data-prayer-item
             data-prayer={item.key}
@@ -212,8 +216,8 @@ const items = PRAYER_ITEMS.map(({ key, label }) => ({
                   text-slate-400 uppercase
                   sm:text-[10px]
                 `,
-                'data-prayer-label-active:text-white/70',
-                'mb-1 font-bold transition-colors duration-300',
+                "data-prayer-label-active:text-white/70",
+                "mb-1 font-bold transition-colors duration-300",
               ]}
               data-prayer-label
             >
@@ -235,10 +239,30 @@ const items = PRAYER_ITEMS.map(({ key, label }) => ({
 </section>
 
 <script>
+
+
+
+
+
+
+
+
+
+
   import { initDailyPrayerTimes } from "./daily-pray-time.controller";
 
   const setup = () => initDailyPrayerTimes();
 
   document.addEventListener("DOMContentLoaded", setup);
   document.addEventListener("astro:after-swap", setup);
+
+
+
+
+
+
+
+
+
+
 </script>

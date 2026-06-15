@@ -1,8 +1,8 @@
 ---
-import { cn } from '@utils/styles.utils'
-import type { HTMLAttributes } from 'astro/types'
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
 
-import { dropdownContentVariants } from './variants'
+import { dropdownContentVariants } from "./variants";
 
 /**
  * @component DropdownSubContent
@@ -52,8 +52,9 @@ interface Props extends HTMLAttributes<"div"> {
 }
 
 const {
-  animationDuration = 150,
   class: className,
+  sideOffset = 0,
+  animationDuration = 150,
   ...rest
 } = Astro.props as Props;
 ---
@@ -61,17 +62,18 @@ const {
 <div
   class={cn(
     dropdownContentVariants({
-      side: 'right',
-      align: 'start',
+      side: "right",
+      align: "start",
     }),
     className,
   )}
   data-dropdown-sub-content
+  data-side-offset={sideOffset}
   role="menu"
   tabindex="-1"
   aria-orientation="vertical"
   style={{
-    display: 'none',
+    display: "none",
     animationDuration: `${animationDuration}ms`,
   }}
   {...rest}

@@ -1,8 +1,9 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
-import { cva, type VariantProps } from 'class-variance-authority'
+import type { HTMLAttributes } from "astro/types";
+import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from '@utils/styles.utils'
+import type { TIconName } from "@utils/models/types";
+import { cn } from "@utils/styles.utils";
 
 /**
  * @component Icon
@@ -55,26 +56,26 @@ import { cn } from '@utils/styles.utils'
  *   <Icon name="arrow_forward" ariaLabel="Continue to next step" />
  * </div>
  */
-const iconVariants = cva('items-center justify-center', {
+const iconVariants = cva("items-center justify-center", {
   variants: {
     size: {
-      xs: 'text-xs',
-      sm: 'text-sm',
-      md: 'text-base',
-      lg: 'text-lg',
-      xl: 'text-xl',
+      xs: "text-xs",
+      sm: "text-sm",
+      md: "text-base",
+      lg: "text-lg",
+      xl: "text-xl",
     },
     variant: {
-      outlined: 'material-symbols-outlined',
-      rounded: 'material-symbols-rounded',
-      sharp: 'material-symbols-sharp',
+      outlined: "material-symbols-outlined",
+      rounded: "material-symbols-rounded",
+      sharp: "material-symbols-sharp",
     },
   },
   defaultVariants: {
-    size: 'md',
-    variant: 'outlined',
+    size: "md",
+    variant: "outlined",
   },
-})
+});
 
 interface Props
   extends VariantProps<typeof iconVariants>, HTMLAttributes<"span"> {
@@ -105,7 +106,7 @@ const {
   class: className,
   ariaLabel,
   ...rest
-} = Astro.props as Props
+} = Astro.props as Props;
 
 const isDecorative = !ariaLabel;
 ---

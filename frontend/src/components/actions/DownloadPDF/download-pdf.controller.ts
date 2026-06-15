@@ -94,9 +94,11 @@ type InitDownloadPdfButtonsOptions = {
 
 const initializedButtons = new WeakSet<HTMLButtonElement>();
 
-export function initDownloadPdfButtons(options: InitDownloadPdfButtonsOptions = {}): void {
-  const buttonSelector
-    = options.buttonSelector ?? "[data-action='download-pdf']";
+export function initDownloadPdfButtons(
+  options: InitDownloadPdfButtonsOptions = {}
+): void {
+  const buttonSelector =
+    options.buttonSelector ?? "[data-action='download-pdf']";
 
   document
     .querySelectorAll<HTMLButtonElement>(buttonSelector)
@@ -111,10 +113,10 @@ async function handleClick(
   btn: HTMLButtonElement,
   options: InitDownloadPdfButtonsOptions
 ): Promise<void> {
-  const targetAttr
-    = btn.dataset.targetAttr
-      ?? options.defaultTargetAttr
-      ?? "data-document-prayer-calendar-table";
+  const targetAttr =
+    btn.dataset.targetAttr ??
+    options.defaultTargetAttr ??
+    "data-document-prayer-calendar-table";
 
   const element = document.querySelector<HTMLElement>(`[${targetAttr}]`);
   if (!element) {
@@ -156,8 +158,8 @@ async function handleClick(
       windowHeight: Math.max(element.scrollHeight, element.clientHeight),
       ignoreElements: (el) => {
         return (
-          el.matches("[data-action='download-pdf']")
-          || el.matches("[data-action='show-more']")
+          el.matches("[data-action='download-pdf']") ||
+          el.matches("[data-action='show-more']")
         );
       },
     });
@@ -193,7 +195,9 @@ async function handleClick(
     pdf.save(`${filename}.pdf`);
   } catch (error) {
     console.error("PDF generation failed:", error);
-    alert(btn.dataset.errorLabel ?? "Failed to generate PDF. Please try again.");
+    alert(
+      btn.dataset.errorLabel ?? "Failed to generate PDF. Please try again."
+    );
   } finally {
     restoreExpandedLayout?.();
     btn.disabled = false;

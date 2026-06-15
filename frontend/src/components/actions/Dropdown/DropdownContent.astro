@@ -1,12 +1,12 @@
 ---
-import { cn } from '@utils/styles.utils'
-import type { HTMLAttributes } from 'astro/types'
-import type { TDropdownAlign, TDropdownPosition } from '@utils/models/types'
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+import type { TDropdownAlign, TDropdownPosition } from "@utils/models/types";
 
 import {
   dropdownContentVariants,
   type DropdownContentVariants,
-} from './variants'
+} from "./variants";
 
 /**
  * @component DropdownContent
@@ -79,8 +79,8 @@ interface Props extends HTMLAttributes<"div">, DropdownContentVariants {
 }
 
 const {
-  side = 'bottom',
-  align = 'start',
+  side = "bottom",
+  align = "start",
   sideOffset = 4,
   animationDuration = 150,
   class: className,
@@ -93,16 +93,13 @@ const {
   data-dropdown-content
   data-side={side}
   data-align={align}
+  data-side-offset={sideOffset}
   role="menu"
   tabindex="-1"
   aria-orientation="vertical"
   style={{
-    display: 'none',
+    display: "none",
     animationDuration: `${animationDuration}ms`,
-    marginTop: side === 'bottom' ? `${sideOffset}px` : undefined,
-    marginBottom: side === 'top' ? `${sideOffset}px` : undefined,
-    marginLeft: side === 'right' ? `${sideOffset}px` : undefined,
-    marginRight: side === 'left' ? `${sideOffset}px` : undefined,
   }}
   {...rest}
 >

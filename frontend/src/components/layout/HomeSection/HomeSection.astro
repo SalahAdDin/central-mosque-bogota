@@ -1,7 +1,7 @@
 ---
-import Link from '@components/actions/Link/Link.astro'
-import Icon from '@components/data/display/Icons/Icon.astro'
-import { cn } from '@utils/styles.utils'
+import Link from "@components/actions/Link/Link.astro";
+import Icon from "@components/data/display/Icons/Icon.astro";
+import { cn } from "@utils/styles.utils";
 
 /**
  * @component HomeSection
@@ -58,32 +58,32 @@ interface Props {
   /**
    * Section heading
    */
-  title: string
+  title: string;
   /**
    * Supporting text shown under the heading
    */
-  description: string
+  description: string;
   /**
    * Optional CTA label (renders only if `ctaHref` is also provided)
    */
-  ctaLabel?: string
+  ctaLabel?: string;
   /**
    * Optional CTA href (renders only if `ctaLabel` is also provided)
    */
-  ctaHref?: string
+  ctaHref?: string;
   /**
    * Optional extra classes for the outer `<section>`
    */
-  class?: string
+  class?: string;
   /**
    * Optional classes for the body wrapper element
    */
-  bodyClass?: string
+  bodyClass?: string;
   /**
    * Body wrapper tag
    * @default ul
    */
-  bodyAs?: 'ul' | 'ol' | 'div'
+  bodyAs?: "ul" | "ol" | "div";
 }
 
 const {
@@ -93,13 +93,13 @@ const {
   ctaHref,
   class: className,
   bodyClass,
-  bodyAs = 'ul',
-} = Astro.props as Props
+  bodyAs = "ul",
+} = Astro.props as Props;
 
 const BodyTag = bodyAs;
 ---
 
-<section class={cn('flex flex-col gap-12', className)}>
+<section class={cn("flex flex-col gap-12", className)}>
   <header class="flex flex-col gap-4">
     <h2 class="font-display text-4xl font-bold">
       {title}

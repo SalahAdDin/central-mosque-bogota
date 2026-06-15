@@ -23,8 +23,12 @@ describe("computeLetterPortraitPlacement", () => {
     expect(placement.heightMm).toBeLessThanOrEqual(innerHeightMm + 1e-6);
     expect(placement.xMm).toBeGreaterThanOrEqual(marginMm - 1e-6);
     expect(placement.yMm).toBeGreaterThanOrEqual(marginMm - 1e-6);
-    expect(placement.xMm + placement.widthMm).toBeLessThanOrEqual(pageWidthMm - marginMm + 1e-6);
-    expect(placement.yMm + placement.heightMm).toBeLessThanOrEqual(pageHeightMm - marginMm + 1e-6);
+    expect(placement.xMm + placement.widthMm).toBeLessThanOrEqual(
+      pageWidthMm - marginMm + 1e-6
+    );
+    expect(placement.yMm + placement.heightMm).toBeLessThanOrEqual(
+      pageHeightMm - marginMm + 1e-6
+    );
 
     expect(placement.widthMm).toBeCloseTo(innerWidthMm, 4);
   });

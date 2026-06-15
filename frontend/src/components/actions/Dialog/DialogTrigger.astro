@@ -1,5 +1,5 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
 /**
  * @component DialogTrigger
@@ -97,13 +97,13 @@ const {
   asChild = false,
   target,
   ...rest
-} = Astro.props as Props
+} = Astro.props as Props;
 
 // Get the first child element if asChild is true
-let hasChildren = false
+let hasChildren = false;
 
-if (Astro.slots.has('default')) {
-  hasChildren = true
+if (Astro.slots.has("default")) {
+  hasChildren = true;
 }
 ---
 

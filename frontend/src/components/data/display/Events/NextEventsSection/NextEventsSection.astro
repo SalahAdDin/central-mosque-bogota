@@ -1,7 +1,7 @@
 ---
-import HomeSection from '@components/layout/HomeSection/HomeSection.astro'
-import EventVerticalCard from '@components/data/display/Events/EventVerticalCard/EventVerticalCard.astro'
-import type { TEvent } from '@utils/models/events'
+import HomeSection from "@components/layout/HomeSection/HomeSection.astro";
+import EventVerticalCard from "@components/data/display/Events/EventVerticalCard/EventVerticalCard.astro";
+import type { TEvent } from "@utils/models/events";
 
 /**
  * @component NextEventsSection
@@ -63,23 +63,24 @@ interface Props {
   /**
    * Title of the section
    */
-  title: string
+  title: string;
   /**
    * Description of the section
    */
-  description: string
+  description: string;
   /**
    * Array of events to display
    */
-  events: Array<TEvent>
+  events: Array<TEvent>;
   /**
    * Label of the CTA button
    */
-  ctaLabel: string
+  ctaLabel: string;
   /**
    * URL to the calendar page
+   * @default /events
    */
-  calendarHref?: string
+  calendarHref?: string;
 }
 
 const {
@@ -87,7 +88,7 @@ const {
   description,
   ctaLabel,
   events,
-  calendarHref = '/events',
+  calendarHref = "/events",
 } = Astro.props as Props;
 ---
 
@@ -99,7 +100,7 @@ const {
   bodyClass="grid grid-cols-1 md:grid-cols-3 gap-8"
 >
   {
-    events.map(event => (
+    events.map((event) => (
       <li>
         <EventVerticalCard
           category={event.category}

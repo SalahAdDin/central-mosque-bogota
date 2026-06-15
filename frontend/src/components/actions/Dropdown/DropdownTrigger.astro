@@ -1,10 +1,10 @@
 ---
-import { cn } from '@utils/styles.utils'
-import type { HTMLAttributes } from 'astro/types'
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
 import {
   dropdownTriggerVariants,
   type DropdownTriggerVariants,
-} from './variants'
+} from "./variants";
 
 /**
  * @component DropdownTrigger
@@ -59,7 +59,7 @@ import {
 interface Props
   extends
   DropdownTriggerVariants,
-    Omit<HTMLAttributes<"button">, "role" | "type"> {
+  Omit<HTMLAttributes<"button">, "role" | "type"> {
   /**
    * When true, the component will render its child element with a simple wrapper instead of a button component
    * @default false
@@ -72,20 +72,30 @@ interface Props
   for?: string;
 }
 
-const { class: className, asChild = false, ...rest } = Astro.props
+const {
+  class: className,
+  asChild = false,
+  for: dropdownFor,
+  ...rest
+} = Astro.props;
 
 // Get the first child element if asChild is true
-let hasChildren = false
+let hasChildren = false;
 
-if (Astro.slots.has('default')) {
-  hasChildren = true
+if (Astro.slots.has("default")) {
+  hasChildren = true;
 }
 ---
 
 {
   asChild && hasChildren
     ? (
-        <div class={className} data-dropdown-trigger data-dropdown-as-child>
+        <div
+          class={className}
+          data-dropdown-trigger
+          data-dropdown-as-child
+          data-dropdown-for={dropdownFor}
+        >
           <slot />
         </div>
       )
@@ -94,6 +104,7 @@ if (Astro.slots.has('default')) {
           type="button"
           class={cn(dropdownTriggerVariants(), className)}
           data-dropdown-trigger
+          data-dropdown-for={dropdownFor}
           aria-haspopup="true"
           aria-expanded="false"
           {...rest}

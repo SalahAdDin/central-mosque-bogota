@@ -41,7 +41,9 @@ async function setupDialogDom(): Promise<SetupResult> {
   // Ensure native API exists in test env
   ensureDialogApi(dialog);
 
-  const backdrop = document.querySelector<HTMLElement>("[data-dialog-backdrop]");
+  const backdrop = document.querySelector<HTMLElement>(
+    "[data-dialog-backdrop]"
+  );
   if (!backdrop)
     throw new Error("Expected dialog mock to render a backdrop element");
   ensureElementGetAnimations(backdrop);
@@ -80,8 +82,7 @@ describe("Dialog Component", () => {
       expect(root.dataset.closeOnEsc).toBe("true");
       expect(root.dataset.lockScroll).toBe("true");
       expect(root.className).toContain("relative");
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -100,16 +101,15 @@ describe("Dialog Component", () => {
       expect(dialog.dataset.state).toBe("open");
       expect(backdrop.dataset.state).toBe("open");
       expect(window.document.body.style.overflow).toBe("hidden");
-    }
-    finally {
+    } finally {
       await close();
     }
   });
 
   it("should close the dialog when a close control is clicked", async () => {
     const { initDialogs } = await import("./dialog.controller");
-    const { window, close, trigger, dialog, closeButton }
-      = await setupDialogDom();
+    const { window, close, trigger, dialog, closeButton } =
+      await setupDialogDom();
     const user = await createUser(window);
 
     try {
@@ -124,8 +124,7 @@ describe("Dialog Component", () => {
       expect(dialog.dataset.state).toBe("closed");
       expect(dialog.hasAttribute("open")).toBe(false);
       expect(window.document.body.style.overflow).toBe("");
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -149,8 +148,7 @@ describe("Dialog Component", () => {
 
       expect(dialog.dataset.state).toBe("closed");
       expect(dialog.hasAttribute("open")).toBe(false);
-    }
-    finally {
+    } finally {
       await close();
     }
   });

@@ -27,8 +27,8 @@ function prefersReducedMotion(): boolean {
 
 function getScrollbarWidth(): number {
   if (cachedScrollbarWidth !== null) return cachedScrollbarWidth;
-  cachedScrollbarWidth
-    = window.innerWidth - document.documentElement.clientWidth;
+  cachedScrollbarWidth =
+    window.innerWidth - document.documentElement.clientWidth;
   return cachedScrollbarWidth;
 }
 
@@ -57,13 +57,13 @@ function getDurationMs(element: HTMLElement): number {
 }
 
 function waitMs(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function usesCssStateAnimations(dialog: HTMLElement): boolean {
   return (
-    dialog.dataset.slot === "sheet-content"
-    || dialog.dataset.slot === "dialog-content"
+    dialog.dataset.slot === "sheet-content" ||
+    dialog.dataset.slot === "dialog-content"
   );
 }
 
@@ -85,11 +85,9 @@ async function animateElement(
 
   try {
     await animation.finished;
-  }
-  catch {
+  } catch {
     animation.cancel();
-  }
-  finally {
+  } finally {
     animation.cancel();
   }
 }
@@ -98,8 +96,8 @@ async function animateDialogOpen(dialog: HTMLElement): Promise<void> {
   if (prefersReducedMotion()) return;
 
   const base = window.getComputedStyle(dialog).transform;
-  const matrix
-    = base && base !== "none"
+  const matrix =
+    base && base !== "none"
       ? new DOMMatrixReadOnly(base)
       : new DOMMatrixReadOnly();
   const from = matrix
@@ -123,8 +121,8 @@ async function animateDialogClose(dialog: HTMLElement): Promise<void> {
   if (prefersReducedMotion()) return;
 
   const base = window.getComputedStyle(dialog).transform;
-  const matrix
-    = base && base !== "none"
+  const matrix =
+    base && base !== "none"
       ? new DOMMatrixReadOnly(base)
       : new DOMMatrixReadOnly();
   const to = matrix
@@ -205,7 +203,9 @@ function findBackdropForDialog(dialog: HTMLElement): HTMLElement | null {
     sibling = sibling.previousElementSibling;
   }
   return (
-    dialog.parentElement?.querySelector<HTMLElement>("[data-dialog-backdrop]") ?? null
+    dialog.parentElement?.querySelector<HTMLElement>(
+      "[data-dialog-backdrop]"
+    ) ?? null
   );
 }
 
@@ -225,9 +225,14 @@ const FOCUSABLE_SELECTOR = [
 ].join(",");
 
 function getFocusableElements(container: HTMLElement): Array<HTMLElement> {
-  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(el => isVisible(el)
-    && !el.hasAttribute("disabled")
-    && el.getAttribute("aria-disabled") !== "true");
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+  ).filter(
+    (el) =>
+      isVisible(el) &&
+      !el.hasAttribute("disabled") &&
+      el.getAttribute("aria-disabled") !== "true"
+  );
 }
 
 function updateNestedDialogAttributes(): void {
@@ -260,7 +265,9 @@ class DialogController {
   constructor(dialog: HTMLDialogElement) {
     this.dialog = dialog;
     this.backdrop = findBackdropForDialog(dialog);
-    this.options = getRootOptions(dialog.closest<HTMLElement>("[data-dialog-root]"));
+    this.options = getRootOptions(
+      dialog.closest<HTMLElement>("[data-dialog-root]")
+    );
 
     if (!this.dialog.id) this.dialog.id = nextId("dialog");
     this.dialog.setAttribute("aria-modal", "true");
@@ -276,8 +283,7 @@ class DialogController {
     if (depth <= 0) {
       this.dialog.removeAttribute("data-nested-dialog-open");
       this.dialog.style.removeProperty("--nested-dialogs");
-    }
-    else {
+    } else {
       this.dialog.setAttribute("data-nested-dialog-open", "true");
       this.dialog.style.setProperty("--nested-dialogs", String(depth));
     }
@@ -375,8 +381,7 @@ class DialogController {
         event.preventDefault();
         focusables[lastIndex].focus();
       }
-    }
-    else {
+    } else {
       if (currentIndex === -1 || currentIndex >= lastIndex) {
         event.preventDefault();
         focusables[0].focus();
@@ -386,8 +391,8 @@ class DialogController {
 
   public async openFromTrigger(trigger: HTMLElement | null): Promise<void> {
     if (trigger) this.registerTrigger(trigger);
-    this.returnFocusTo
-      = trigger ?? (document.activeElement as HTMLElement | null);
+    this.returnFocusTo =
+      trigger ?? (document.activeElement as HTMLElement | null);
     await this.openDialog();
   }
 
@@ -404,12 +409,10 @@ class DialogController {
 
     try {
       this.dialog.showModal();
-    }
-    catch {
+    } catch {
       try {
         this.dialog.show();
-      }
-      catch {
+      } catch {
         return;
       }
     }
@@ -455,8 +458,7 @@ class DialogController {
       if (this.dialog.open) {
         try {
           this.dialog.close();
-        }
-        catch {
+        } catch {
           this.dialog.removeAttribute("open");
         }
       }
@@ -513,8 +515,7 @@ class DialogController {
     if (this.dialog.open) {
       try {
         this.dialog.close();
-      }
-      catch {
+      } catch {
         this.dialog.removeAttribute("open");
       }
     }
@@ -540,12 +541,16 @@ function getControllerForDialog(dialog: HTMLDialogElement): DialogController {
   return controller;
 }
 
-function resolveDialogFromTrigger(triggerWrapper: HTMLElement): HTMLDialogElement | null {
+function resolveDialogFromTrigger(
+  triggerWrapper: HTMLElement
+): HTMLDialogElement | null {
   const targetId = triggerWrapper.dataset.dialogTarget?.trim();
   if (targetId) {
     const el = document.getElementById(targetId);
     if (el instanceof HTMLDialogElement) return el;
-    const nested = el?.querySelector<HTMLDialogElement>("[data-dialog-content]");
+    const nested = el?.querySelector<HTMLDialogElement>(
+      "[data-dialog-content]"
+    );
     if (nested instanceof HTMLDialogElement) return nested;
   }
 
@@ -585,7 +590,9 @@ function handleGlobalClick(event: MouseEvent): void {
     const interactive = resolveInteractiveElement(closeWrapper);
     if (interactive.contains(target) || closeWrapper === target) {
       event.preventDefault();
-      const dialog = interactive.closest<HTMLDialogElement>("[data-dialog-content]");
+      const dialog = interactive.closest<HTMLDialogElement>(
+        "[data-dialog-content]"
+      );
       if (dialog) {
         const controller = getControllerForDialog(dialog);
         void controller.close({ returnFocus: true });

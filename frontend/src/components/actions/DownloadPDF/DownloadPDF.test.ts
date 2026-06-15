@@ -15,7 +15,9 @@ describe("DownloadPDF", () => {
     });
 
     try {
-      const btn = root.querySelector<HTMLButtonElement>("[data-action='download-pdf']");
+      const btn = root.querySelector<HTMLButtonElement>(
+        "[data-action='download-pdf']"
+      );
       expect(btn).toBeTruthy();
       if (!btn) throw new Error("Expected download button to be present");
 

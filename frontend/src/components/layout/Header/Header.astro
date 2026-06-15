@@ -1,21 +1,21 @@
 ---
-import ThemeSwitcher from '@components/actions/ThemeSwitcher/ThemeSwitcher.astro'
-import Icon from '@components/data/display/Icons/Icon.astro'
-import Button from '@components/actions/Button/Button.astro'
+import ThemeSwitcher from "@components/actions/ThemeSwitcher/ThemeSwitcher.astro";
+import Icon from "@components/data/display/Icons/Icon.astro";
+import Button from "@components/actions/Button/Button.astro";
 import {
   getLangFromUrl,
   useTranslations,
   useTranslatedPath,
-} from '@i18n/utils'
-import LanguagePicker from '@components/navigation/LanguagePicker/LanguagePicker.astro'
-import Link from '@components/actions/Link/Link.astro'
-import type { TNavLink } from '@utils/models/types'
+} from "@i18n/utils";
+import LanguagePicker from "@components/navigation/LanguagePicker/LanguagePicker.astro";
+import Link from "@components/actions/Link/Link.astro";
+import type { TNavLink } from "@utils/models/types";
 import {
   Sheet,
   SheetContent,
   SheetFooter,
   SheetTrigger,
-} from '@components/layout/Sheet'
+} from "@components/layout/Sheet";
 
 /**
  * @component Header
@@ -61,10 +61,10 @@ interface Props {
   navLinks: Array<TNavLink>;
 }
 
-const { navLinks } = Astro.props as Props
+const { navLinks } = Astro.props as Props;
 
-const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang)
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const translatePath = useTranslatedPath(lang);
 ---
@@ -78,7 +78,7 @@ const translatePath = useTranslatedPath(lang);
     "
   >
     <!-- Mosque branding -->
-    <a href={translatePath('/')} class="flex items-center gap-3">
+    <a href={translatePath("/")} class="flex items-center gap-3">
       <div class="rounded-full bg-white px-3 py-1.5">
         <Icon name="mosque" class="text-3xl text-secondary" />
       </div>
@@ -122,9 +122,9 @@ const translatePath = useTranslatedPath(lang);
           transform rounded-full shadow-md transition-all
           hover:scale-105
         "
-        href={translatePath('/donate')}
+        href={translatePath("/donate")}
       >
-        {t('header.donate-now')}
+        {t("header.donate-now")}
       </Button>
     </section>
     <!-- Mobile menu -->
@@ -175,9 +175,9 @@ const translatePath = useTranslatedPath(lang);
               transform rounded-full shadow-md transition-all
               hover:scale-105
             "
-            href={translatePath('/donate')}
+            href={translatePath("/donate")}
           >
-            {t('header.donate-now')}
+            {t("header.donate-now")}
           </Button>
         </SheetFooter>
       </SheetContent>

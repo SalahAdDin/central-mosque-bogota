@@ -1,19 +1,19 @@
 ---
-import Icon from '@components/data/display/Icons/Icon.astro'
-import Link from '@components/actions/Link/Link.astro'
-import Button from '@components/actions/Button/Button.astro'
-import SvgIcon from '@components/data/display/Icons/SvgIcon.astro'
+import Icon from "@components/data/display/Icons/Icon.astro";
+import Link from "@components/actions/Link/Link.astro";
+import Button from "@components/actions/Button/Button.astro";
+import SvgIcon from "@components/data/display/Icons/SvgIcon.astro";
 import {
   getLangFromUrl,
   useTranslatedPath,
   useTranslations,
-} from '@i18n/utils'
+} from "@i18n/utils";
 import type {
   TSVGIcon,
   TNavLink,
   TContactInfo,
   TRightsTexts,
-} from '@utils/models/types'
+} from "@utils/models/types";
 
 /**
  * @component Footer
@@ -122,10 +122,10 @@ const {
   fastLinks = [],
   contactInfo,
   rightsText,
-} = Astro.props as Props
+} = Astro.props as Props;
 
-const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang)
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 ---
 
@@ -145,7 +145,7 @@ const translatePath = useTranslatedPath(lang);
     "
     >
       <!-- Mosque branding -->
-      <a href={translatePath('/')} class="mb-6 flex items-center gap-3">
+      <a href={translatePath("/")} class="mb-6 flex items-center gap-3">
         <div class="rounded-full bg-white px-3 py-1.5">
           <Icon name="mosque" class="text-3xl text-secondary" />
         </div>
@@ -168,8 +168,8 @@ const translatePath = useTranslatedPath(lang);
               <Link
                 class="
                   flex size-10 items-center justify-center rounded-full
-                  bg-white/10
-                  hover:bg-primary
+                  bg-white/10 text-white
+                  hover:bg-primary hover:text-white
                 "
                 href={href}
                 aria-label={label}
@@ -182,7 +182,7 @@ const translatePath = useTranslatedPath(lang);
       </ul>
     </div>
     <div class="col-span-1">
-      <h4 class="mb-6 text-lg font-bold">{t('footer.quick-links')}</h4>
+      <h4 class="mb-6 text-lg font-bold">{t("footer.quick-links")}</h4>
       <ul class="space-y-4 text-blue-100/70">
         {
           fastLinks.map(({ label, href }) => (
@@ -196,7 +196,7 @@ const translatePath = useTranslatedPath(lang);
       </ul>
     </div>
     <div class="col-span-1">
-      <h4 class="mb-6 text-lg font-bold">{t('footer.contact')}</h4>
+      <h4 class="mb-6 text-lg font-bold">{t("footer.contact")}</h4>
       <ul class="space-y-4 text-blue-100/70">
         <li class="flex items-center gap-3">
           <Icon
@@ -216,9 +216,9 @@ const translatePath = useTranslatedPath(lang);
       </ul>
     </div>
     <div class="col-span-1">
-      <h4 class="mb-6 text-lg font-bold">{t('footer.newsletter')}</h4>
+      <h4 class="mb-6 text-lg font-bold">{t("footer.newsletter")}</h4>
       <p class="mb-4 text-sm text-blue-100/70">
-        {t('footer.newsletter-description')}
+        {t("footer.newsletter-description")}
       </p>
       <form class="flex flex-col gap-2">
         <input
@@ -227,11 +227,11 @@ const translatePath = useTranslatedPath(lang);
             placeholder-blue-100/30
             focus:ring-2 focus:ring-secondary focus:outline-none
           "
-          placeholder={t('footer.email-placeholder')}
+          placeholder={t("footer.email-placeholder")}
           type="email"
         />
         <Button color="primary" type="submit" variant="solid">
-          {t('footer.subscribe')}
+          {t("footer.subscribe")}
         </Button>
       </form>
     </div>

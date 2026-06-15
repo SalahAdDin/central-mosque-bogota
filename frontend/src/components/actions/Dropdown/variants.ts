@@ -3,17 +3,17 @@ import { cva, type VariantProps } from "class-variance-authority";
 export const dropdownContentVariants = cva(
   `
     bg-popover text-popover-foreground z-50 min-w-[9rem] overflow-x-hidden overflow-y-auto rounded-md border p-1 shadow-md
-    data-[state=open]:animate-in fade-in zoom-in-95
+    data-[state=open]:animate-in fade-in zoom-in-95  outline-none
     data-[state=closed]:animate-out data-[state=closed]:fill-mode-forwards fade-out zoom-out-95
-    absolute will-change-transform
+    pointer-events-auto fixed isolate will-change-transform
   `,
   {
     variants: {
       side: {
-        bottom: "slide-in-from-top-2 slide-out-to-top-2 top-full",
-        top: "slide-in-from-bottom-2 slide-out-to-bottom-2 bottom-full",
-        right: "slide-in-from-left-2 slide-out-to-left-2 top-0 left-full",
-        left: "slide-in-from-right-2 slide-out-to-right-2 top-0 right-full",
+        bottom: "slide-in-from-top-2 slide-out-to-top-2",
+        top: "slide-in-from-bottom-2 slide-out-to-bottom-2",
+        right: "slide-in-from-left-2 slide-out-to-left-2",
+        left: "slide-in-from-right-2 slide-out-to-right-2",
       },
       align: {
         start: "",
@@ -25,32 +25,12 @@ export const dropdownContentVariants = cva(
       {
         side: ["top", "bottom"],
         align: "start",
-        class: "slide-in-from-left-1 slide-out-to-left-1 left-0",
-      },
-      {
-        side: ["top", "bottom"],
-        align: "center",
-        class: "left-1/2 -translate-x-1/2",
+        class: "slide-in-from-left-1 slide-out-to-left-1",
       },
       {
         side: ["top", "bottom"],
         align: "end",
-        class: "slide-in-from-right-1 slide-out-to-right-1 right-0",
-      },
-      {
-        side: ["left", "right"],
-        align: "start",
-        class: "top-0",
-      },
-      {
-        side: ["left", "right"],
-        align: "center",
-        class: "top-1/2 -translate-y-1/2",
-      },
-      {
-        side: ["left", "right"],
-        align: "end",
-        class: "bottom-0",
+        class: "slide-in-from-right-1 slide-out-to-right-1",
       },
     ],
     defaultVariants: {

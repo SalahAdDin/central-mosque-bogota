@@ -1,16 +1,16 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
-import { cn } from '@utils/styles.utils'
+import { cn } from "@utils/styles.utils";
 
 import {
   dialogBackdropVariants,
   dialogContentVariants,
   dialogCloseButtonVariants,
   type DialogContentVariants,
-} from './variants'
-import Icon from '@components/data/display/Icons/Icon.astro'
-import { getLangFromUrl, useTranslations } from '@i18n/utils'
+} from "./variants";
+import Icon from "@components/data/display/Icons/Icon.astro";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
 
 /**
  * @component DialogContent
@@ -81,9 +81,9 @@ const {
   class: className,
   animationDuration = 200,
   ...rest
-} = Astro.props as Props
+} = Astro.props as Props;
 
-const lang = getLangFromUrl(Astro.url)
+const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
@@ -112,18 +112,44 @@ const t = useTranslations(lang);
     type="button"
     class={dialogCloseButtonVariants()}
     data-dialog-close
-    aria-label={t('dialog.close')}
+    aria-label={t("dialog.close")}
   >
     <slot name="icon">
       <Icon name="close" class="size-5 transition-opacity" />
     </slot>
-    <span class="sr-only">{t('sheet.close')}</span>
+    <span class="sr-only">{t("sheet.close")}</span>
   </button>
+  <div
+    class="pointer-events-none fixed inset-0"
+    data-floating-root
+    data-slot="floating-root"
+  >
+  </div>
 </dialog>
 
 <style>
+
+
+
+
+
+
+
+
+
+
   .dialog-content {
     --nested-offset: 1rem;
     --nested-scale: 0.05;
   }
+
+
+
+
+
+
+
+
+
+
 </style>

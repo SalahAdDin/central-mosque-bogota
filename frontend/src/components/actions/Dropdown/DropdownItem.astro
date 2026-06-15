@@ -4,6 +4,8 @@ import { cn } from "@utils/styles.utils";
 
 import { dropdownItemVariants, type DropdownItemVariants } from "./variants";
 
+// TODO: documentation removed ought of https://github.com/withastro/compiler/issues/1159
+
 /**
  * @component DropdownItem
  * @title Dropdown Item
@@ -11,25 +13,8 @@ import { dropdownItemVariants, type DropdownItemVariants } from "./variants";
  *
  * @preview
  *
- * <Dropdown>
- *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
- *   <DropdownContent>
- *     <DropdownItem>Profile</DropdownItem>
- *     <DropdownItem as="a" href="/settings">Settings</DropdownItem>
- *     <DropdownItem disabled={true}>Disabled</DropdownItem>
- *   </DropdownContent>
- * </Dropdown>
- *
  * @usage
  *
- * ```astro nocollapse
- * ---
- * import { DropdownItem } from "@components/actions/Dropdown";
- * ---
- *
- * <DropdownItem>Profile</DropdownItem>
- * <DropdownItem as="a" href="/settings">Settings</DropdownItem>
- * ```
  */
 
 interface Props<Tag extends HTMLTag = "button" | "a"> extends Polymorphic<

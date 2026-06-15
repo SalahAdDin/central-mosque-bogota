@@ -11,9 +11,20 @@ function nextId(prefix: string): string {
   return `${prefix}-${String(idCounter)}`;
 }
 
+function resolveTriggerElement(wrapper: HTMLElement): HTMLElement | null {
+  if (wrapper.hasAttribute("data-dropdown-as-child")) {
+    return wrapper.firstElementChild instanceof HTMLElement
+      ? wrapper.firstElementChild
+      : null;
+  }
+  return wrapper;
+}
+
 function getMenuContainer(element: Element | null): HTMLElement | null {
   return (
-    element?.closest<HTMLElement>("[data-dropdown-content],[data-dropdown-sub-content]") ?? null
+    element?.closest<HTMLElement>(
+      "[data-dropdown-content],[data-dropdown-sub-content]"
+    ) ?? null
   );
 }
 
@@ -48,10 +59,10 @@ function prefersReducedMotion(): boolean {
 function getSide(element: HTMLElement): DropdownSide {
   const side = element.dataset.side;
   if (
-    side === "bottom"
-    || side === "top"
-    || side === "left"
-    || side === "right"
+    side === "bottom" ||
+    side === "top" ||
+    side === "left" ||
+    side === "right"
   ) {
     return side;
   }
@@ -82,7 +93,9 @@ async function animateOpen(menu: HTMLElement): Promise<void> {
   const base = getMatrixString(window.getComputedStyle(menu).transform);
   const side = getSide(menu);
   const offset = getClosedOffset(side);
-  const from = base.multiply(new DOMMatrix().translate(offset.x, offset.y).scale(0.95));
+  const from = base.multiply(
+    new DOMMatrix().translate(offset.x, offset.y).scale(0.95)
+  );
 
   const animation = menu.animate(
     [
@@ -98,8 +111,7 @@ async function animateOpen(menu: HTMLElement): Promise<void> {
 
   try {
     await animation.finished;
-  }
-  catch {
+  } catch {
     animation.cancel();
     return;
   }
@@ -117,7 +129,9 @@ async function animateClose(menu: HTMLElement): Promise<void> {
   const base = getMatrixString(window.getComputedStyle(menu).transform);
   const side = getSide(menu);
   const offset = getClosedOffset(side);
-  const to = base.multiply(new DOMMatrix().translate(offset.x, offset.y).scale(0.95));
+  const to = base.multiply(
+    new DOMMatrix().translate(offset.x, offset.y).scale(0.95)
+  );
 
   const animation = menu.animate(
     [
@@ -133,8 +147,7 @@ async function animateClose(menu: HTMLElement): Promise<void> {
 
   try {
     await animation.finished;
-  }
-  catch {
+  } catch {
     animation.cancel();
     return;
   }
@@ -147,10 +160,12 @@ function setMenuInteractive(menu: HTMLElement, interactive: boolean): void {
 }
 
 function getEnabledItems(menu: HTMLElement): Array<HTMLElement> {
-  const candidates = Array.from(menu.querySelectorAll<HTMLElement>("[data-dropdown-item]"));
+  const candidates = Array.from(
+    menu.querySelectorAll<HTMLElement>("[data-dropdown-item]")
+  );
   return candidates
-    .filter(el => getMenuContainer(el) === menu)
-    .filter(el => !isDisabled(el));
+    .filter((el) => getMenuContainer(el) === menu)
+    .filter((el) => !isDisabled(el));
 }
 
 function setRovingTabindex(
@@ -185,8 +200,8 @@ function focusNext(menu: HTMLElement, direction: 1 | -1): void {
 
   const active = document.activeElement as HTMLElement | null;
   const currentIndex = active ? items.indexOf(active) : -1;
-  const startIndex
-    = currentIndex === -1 ? (direction === 1 ? -1 : items.length) : currentIndex;
+  const startIndex =
+    currentIndex === -1 ? (direction === 1 ? -1 : items.length) : currentIndex;
   const nextIndex = (startIndex + direction + items.length) % items.length;
   const next = items[nextIndex];
   setRovingTabindex(menu, next);
@@ -315,7 +330,8 @@ class SubmenuController {
 
 class DropdownRootController {
   private readonly root: HTMLElement;
-  private trigger: HTMLButtonElement | null = null;
+  private triggers: Array<HTMLElement> = [];
+  private primaryTrigger: HTMLElement | null = null;
   private menu: HTMLElement | null = null;
   private open = false;
   private closeTimer: number | null = null;
@@ -324,6 +340,7 @@ class DropdownRootController {
   private submenuByMenu = new WeakMap<HTMLElement, SubmenuController>();
   private typeahead = "";
   private typeaheadTimer: number | null = null;
+  private returnFocusTo: HTMLElement | null = null;
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -331,80 +348,43 @@ class DropdownRootController {
   }
 
   private initialize(): void {
-    let trigger = this.root.querySelector<HTMLButtonElement>("[data-dropdown-trigger]");
-    if (trigger?.hasAttribute("data-dropdown-as-child")) {
-      trigger = trigger.firstElementChild as HTMLButtonElement;
-    }
-    const menu = this.root.querySelector<HTMLElement>("[data-dropdown-content]");
-    if (!trigger || !menu) return;
+    const triggerWrapper = this.root.querySelector<HTMLElement>(
+      "[data-dropdown-trigger]"
+    );
+    const menu = this.root.querySelector<HTMLElement>(
+      "[data-dropdown-content]"
+    );
+    if (!triggerWrapper || !menu) return;
 
-    this.trigger = trigger;
     this.menu = menu;
 
+    this.ensureRootId();
     this.ensureIds();
+    this.registerTrigger(triggerWrapper);
     this.applyA11y();
     this.attachEvents();
     this.initSubmenus();
     this.closeInstant();
   }
 
+  public ensureRootId(): string {
+    if (!this.root.id) this.root.id = nextId("dropdown-root");
+    return this.root.id;
+  }
+
   private ensureIds(): void {
-    if (!this.trigger || !this.menu) return;
-    if (!this.trigger.id) this.trigger.id = nextId("dropdown-trigger");
+    if (!this.menu) return;
     if (!this.menu.id) this.menu.id = nextId("dropdown-menu");
   }
 
   private applyA11y(): void {
-    if (!this.trigger || !this.menu) return;
-    this.trigger.setAttribute("aria-haspopup", "menu");
-    this.trigger.setAttribute("aria-expanded", "false");
-    this.trigger.setAttribute("aria-controls", this.menu.id);
-
-    this.menu.setAttribute("aria-labelledby", this.trigger.id);
+    if (!this.menu || !this.primaryTrigger) return;
+    this.menu.setAttribute("aria-labelledby", this.primaryTrigger.id);
   }
 
   private attachEvents(): void {
-    const trigger = this.trigger;
     const menu = this.menu;
-    if (!trigger || !menu) return;
-
-    trigger.addEventListener("click", (event) => {
-      if (isDisabled(trigger)) return;
-      event.preventDefault();
-      if (this.open) {
-        void this.close({ returnFocus: true });
-        return;
-      }
-      void this.openMenu({ focus: "none" });
-    });
-
-    trigger.addEventListener("keydown", (event) => {
-      if (event.key === "Tab") {
-        if (this.open) void this.close({ returnFocus: false });
-        return;
-      }
-      if (event.key === "Escape") {
-        if (this.open) {
-          event.preventDefault();
-          void this.close({ returnFocus: true });
-        }
-        return;
-      }
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        void this.openMenu({ focus: "first" });
-        return;
-      }
-      if (event.key === "ArrowUp") {
-        event.preventDefault();
-        void this.openMenu({ focus: "last" });
-        return;
-      }
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        void this.openMenu({ focus: "first" });
-      }
-    });
+    if (!menu) return;
 
     menu.addEventListener("keydown", (event) => {
       this.onMenuKeydown(event);
@@ -415,7 +395,7 @@ class DropdownRootController {
 
     this.root.addEventListener("pointerenter", () => {
       if (!this.openOnHoverEnabled()) return;
-      if (!this.trigger || isDisabled(this.trigger)) return;
+      if (!this.primaryTrigger || isDisabled(this.primaryTrigger)) return;
       this.cancelCloseTimer();
       void this.openMenu({ focus: "none" });
     });
@@ -425,17 +405,37 @@ class DropdownRootController {
       if (!this.open) return;
       this.scheduleClose(this.getCloseDelay());
     });
+
+    this.root.addEventListener("dropdown:open", () => {
+      void this.openMenu({ focus: "none" });
+    });
+    this.root.addEventListener("dropdown:close", () => {
+      void this.close({ returnFocus: false });
+    });
+    this.root.addEventListener("dropdown:toggle", () => {
+      if (this.open) {
+        void this.close({ returnFocus: false });
+        return;
+      }
+      void this.openMenu({ focus: "none" });
+    });
   }
 
   private initSubmenus(): void {
     if (!this.menu) return;
 
-    const wrappers = Array.from(this.menu.querySelectorAll<HTMLElement>("[data-dropdown-sub]")).filter(wrapper => getMenuContainer(wrapper) === this.menu);
+    const wrappers = Array.from(
+      this.menu.querySelectorAll<HTMLElement>("[data-dropdown-sub]")
+    ).filter((wrapper) => getMenuContainer(wrapper) === this.menu);
 
     this.submenus = wrappers
       .map((wrapper) => {
-        const trigger = wrapper.querySelector<HTMLButtonElement>("[data-dropdown-sub-trigger]");
-        const menu = wrapper.querySelector<HTMLElement>("[data-dropdown-sub-content]");
+        const trigger = wrapper.querySelector<HTMLButtonElement>(
+          "[data-dropdown-sub-trigger]"
+        );
+        const menu = wrapper.querySelector<HTMLElement>(
+          "[data-dropdown-sub-content]"
+        );
         if (!trigger || !menu) return null;
         const controller = new SubmenuController(this, wrapper, trigger, menu);
         this.submenuByTrigger.set(trigger, controller);
@@ -471,10 +471,80 @@ class DropdownRootController {
     }
   }
 
+  private updateTriggerA11y(): void {
+    if (!this.menu) return;
+    this.triggers.forEach((trigger) => {
+      trigger.setAttribute("aria-haspopup", "menu");
+      trigger.setAttribute("aria-expanded", this.open ? "true" : "false");
+      trigger.setAttribute("aria-controls", this.menu?.id ?? "");
+    });
+  }
+
+  private attachTriggerEvents(trigger: HTMLElement): void {
+    trigger.addEventListener("click", (event) => {
+      if (isDisabled(trigger)) return;
+      event.preventDefault();
+      this.returnFocusTo = trigger;
+      if (this.open) {
+        void this.close({ returnFocus: true });
+        return;
+      }
+      void this.openMenu({ focus: "none" });
+    });
+
+    trigger.addEventListener("keydown", (event) => {
+      this.returnFocusTo = trigger;
+      if (event.key === "Tab") {
+        if (this.open) void this.close({ returnFocus: false });
+        return;
+      }
+      if (event.key === "Escape") {
+        if (this.open) {
+          event.preventDefault();
+          void this.close({ returnFocus: true });
+        }
+        return;
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        void this.openMenu({ focus: "first" });
+        return;
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        void this.openMenu({ focus: "last" });
+        return;
+      }
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        void this.openMenu({ focus: "first" });
+      }
+    });
+  }
+
+  private registerTrigger(wrapper: HTMLElement): void {
+    if (!this.menu) return;
+    const trigger = resolveTriggerElement(wrapper);
+    if (!trigger) return;
+
+    if (!trigger.id) trigger.id = nextId("dropdown-trigger");
+    this.primaryTrigger ??= trigger;
+    if (this.triggers.includes(trigger)) return;
+
+    this.triggers.push(trigger);
+    this.attachTriggerEvents(trigger);
+    this.updateTriggerA11y();
+    this.applyA11y();
+  }
+
+  public registerExternalTrigger(wrapper: HTMLElement): void {
+    this.registerTrigger(wrapper);
+  }
+
   public async openMenu(options: {
     focus: "none" | "first" | "last";
   }): Promise<void> {
-    if (!this.trigger || !this.menu) return;
+    if (!this.menu) return;
     this.cancelCloseTimer();
 
     if (!this.open) {
@@ -485,7 +555,7 @@ class DropdownRootController {
       this.menu.dataset.state = "open";
       this.menu.style.display = "block";
       setMenuInteractive(this.menu, true);
-      this.trigger.setAttribute("aria-expanded", "true");
+      this.updateTriggerA11y();
       await animateOpen(this.menu);
     }
 
@@ -497,7 +567,7 @@ class DropdownRootController {
   }
 
   public async close(options: { returnFocus: boolean }): Promise<void> {
-    if (!this.trigger || !this.menu) return;
+    if (!this.menu) return;
     this.cancelCloseTimer();
 
     this.closeAllSubmenus({ returnFocus: false });
@@ -508,15 +578,18 @@ class DropdownRootController {
 
     this.menu.dataset.state = "closed";
     setMenuInteractive(this.menu, false);
-    this.trigger.setAttribute("aria-expanded", "false");
+    this.updateTriggerA11y();
     await animateClose(this.menu);
     this.menu.style.display = "none";
 
-    if (options.returnFocus) this.trigger.focus();
+    if (options.returnFocus) {
+      (this.returnFocusTo ?? this.primaryTrigger)?.focus();
+    }
+    this.returnFocusTo = null;
   }
 
   public closeInstant(): void {
-    if (!this.trigger || !this.menu) return;
+    if (!this.menu) return;
 
     this.cancelCloseTimer();
     this.closeAllSubmenus({ returnFocus: false, instant: true });
@@ -526,8 +599,9 @@ class DropdownRootController {
 
     this.menu.dataset.state = "closed";
     setMenuInteractive(this.menu, false);
-    this.trigger.setAttribute("aria-expanded", "false");
+    this.updateTriggerA11y();
     this.menu.style.display = "none";
+    this.returnFocusTo = null;
   }
 
   public contains(node: Node): boolean {
@@ -590,11 +664,11 @@ class DropdownRootController {
     const query = this.typeahead;
     const current = document.activeElement as HTMLElement | null;
     const currentIndex = current ? items.indexOf(current) : -1;
-    const ordered
-      = currentIndex >= 0
+    const ordered =
+      currentIndex >= 0
         ? items.slice(currentIndex + 1).concat(items.slice(0, currentIndex + 1))
         : items;
-    const match = ordered.find(item => getItemText(item).startsWith(query));
+    const match = ordered.find((item) => getItemText(item).startsWith(query));
     if (!match) return;
     setRovingTabindex(menu, match);
     match.focus();
@@ -698,7 +772,9 @@ class DropdownRootController {
   }
 }
 
-function closeAllDropdowns(options: { except?: DropdownRootController } = {}): void {
+function closeAllDropdowns(
+  options: { except?: DropdownRootController } = {}
+): void {
   Array.from(openDropdowns).forEach((dropdown) => {
     if (options.except && dropdown === options.except) return;
     if (!dropdown.isOpen()) {
@@ -718,7 +794,9 @@ function attachGlobalListeners(): void {
     (event) => {
       const target = event.target as Node | null;
       if (!target) return;
-      const inside = Array.from(openDropdowns).some(dropdown => dropdown.contains(target));
+      const inside = Array.from(openDropdowns).some((dropdown) =>
+        dropdown.contains(target)
+      );
       if (inside) return;
       closeAllDropdowns();
     },
@@ -730,7 +808,9 @@ function attachGlobalListeners(): void {
     (event) => {
       const target = event.target as Node | null;
       if (!target) return;
-      const inside = Array.from(openDropdowns).some(dropdown => dropdown.contains(target));
+      const inside = Array.from(openDropdowns).some((dropdown) =>
+        dropdown.contains(target)
+      );
       if (inside) return;
       closeAllDropdowns();
     },
@@ -748,11 +828,29 @@ function attachGlobalListeners(): void {
 export function initDropdowns(): void {
   attachGlobalListeners();
 
+  const roots = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-dropdown-root]")
+  );
+
+  roots.forEach((root) => {
+    if (!dropdownInstances.has(root)) {
+      dropdownInstances.set(root, new DropdownRootController(root));
+    }
+  });
+
+  const controllersById = new Map<string, DropdownRootController>();
+  roots.forEach((root) => {
+    const controller = dropdownInstances.get(root);
+    if (!controller) return;
+    controllersById.set(controller.ensureRootId(), controller);
+  });
+
   document
-    .querySelectorAll<HTMLElement>("[data-dropdown-root]")
-    .forEach((root) => {
-      if (!dropdownInstances.has(root)) {
-        dropdownInstances.set(root, new DropdownRootController(root));
-      }
+    .querySelectorAll<HTMLElement>("[data-dropdown-trigger][data-dropdown-for]")
+    .forEach((wrapper) => {
+      const targetId = wrapper.getAttribute("data-dropdown-for");
+      if (!targetId) return;
+      const controller = controllersById.get(targetId);
+      controller?.registerExternalTrigger(wrapper);
     });
 }
