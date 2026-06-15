@@ -1,4 +1,5 @@
 import preview from "@storybook/preview";
+import { ICON_NAMES, SIZES } from "@utils/ui.constants";
 
 import Icon from "./Icon.astro";
 
@@ -12,6 +13,20 @@ const meta = preview.meta({
     size: "md",
     variant: "outlined",
     ariaLabel: "Icon",
+  },
+  argTypes: {
+    name: {
+      control: "select",
+      options: ICON_NAMES,
+    },
+    size: {
+      control: "select",
+      options: SIZES,
+    },
+    variant: {
+      control: "select",
+      options: ["outlined", "rounded", "sharp"],
+    },
   },
 });
 

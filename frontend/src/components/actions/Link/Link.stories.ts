@@ -1,17 +1,18 @@
-// import { COLORS, SIZES } from "@utils/ui.constants.ts";
-
 import preview from "@storybook/preview";
+import { COLORS, SIZES } from "@utils/ui.constants.ts";
 
 import Link from "./Link.astro";
 
 const meta = preview.meta({
   title: "Components/Actions/Link",
-  component: Link,
+  component: Link as unknown,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
+    slots: {
+      default: "Link",
+    },
     href: "/",
     // In Astro stories, the default slot is passed via this "default" arg
-    default: "Link text",
     size: "md",
     color: "primary",
     ariaLabel: undefined,
@@ -19,14 +20,14 @@ const meta = preview.meta({
     target: undefined,
     rel: undefined,
   },
-  /*   argTypes: {
-    href: {
-      control: "text",
-    },
-    default: {
-      control: "text",
+  argTypes: {
+    /* slots: {
+      control: "object",
       name: "label",
       description: "Visible label rendered in the default slot",
+    }, */
+    href: {
+      control: "text",
     },
     ariaLabel: {
       control: "text",
@@ -35,12 +36,12 @@ const meta = preview.meta({
     size: {
       control: "select",
       options: SIZES,
-      description: "Typography size of the link text",
+      // description: "Typography size of the link text",
     },
     color: {
       control: "select",
       options: COLORS,
-      description: "Semantic color variant",
+      // description: "Semantic color variant",
     },
     disabled: {
       control: "boolean",
@@ -60,14 +61,14 @@ const meta = preview.meta({
       control: false,
       table: { disable: true },
     },
-  }, */
+  },
 });
 
 export const Primary = meta.story({
   args: {
     color: "primary",
     href: "/",
-    default: "Primary link",
+    slots: { default: "Primary link" },
   },
 });
 
@@ -75,7 +76,7 @@ export const Secondary = meta.story({
   args: {
     color: "secondary",
     href: "/",
-    default: "Secondary link",
+    slots: { default: "Secondary link" },
   },
 });
 
@@ -83,7 +84,7 @@ export const Neutral = meta.story({
   args: {
     color: "neutral",
     href: "/",
-    default: "Neutral link",
+    slots: { default: "Neutral link" },
   },
 });
 
@@ -91,7 +92,7 @@ export const Disabled = meta.story({
   args: {
     disabled: true,
     href: "/disabled",
-    default: "Disabled link",
+    slots: { default: "Disabled link" },
   },
 });
 
@@ -100,14 +101,14 @@ export const External = meta.story({
     href: "https://example.com",
     target: "_blank",
     rel: "noopener noreferrer",
-    default: "External link",
+    slots: { default: "External link" },
   },
 });
 
 export const Sizes = meta.story({
   args: {
     href: "/",
-    default: "Medium link",
+    slots: { default: "Medium link" },
     size: "md",
   },
 });

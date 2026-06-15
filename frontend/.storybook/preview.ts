@@ -1,7 +1,7 @@
 import { definePreview, type AstroRenderer } from "@storybook-astro/framework";
 import addonA11y from "@storybook/addon-a11y";
 import addonDocs from "@storybook/addon-docs";
-import { withThemeByDataAttribute } from "@storybook/addon-themes";
+import addonThemes, { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { INITIAL_VIEWPORTS } from "storybook/viewport";
 
 import { CUSTOM_VIEW_PORTS } from "./constants";
@@ -9,7 +9,7 @@ import { CUSTOM_VIEW_PORTS } from "./constants";
 import "@/styles/global.css";
 
 export default definePreview({
-  addons: [addonA11y(), addonDocs()],
+  addons: [addonA11y(), addonDocs(), addonThemes()],
   decorators: [
     withThemeByDataAttribute<AstroRenderer>({
       themes: {

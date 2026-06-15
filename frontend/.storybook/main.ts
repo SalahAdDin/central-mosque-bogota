@@ -22,24 +22,4 @@ export default defineMain({
   framework: {
     name: "@storybook-astro/framework",
   },
-  /*
-  TODO: it seems path aliases are supported by default
-  viteFinal: async (config) => {
-    const { mergeConfig } = await import("vite");
-
-    return mergeConfig(config, {
-      resolve: {
-        alias: {
-          "@components": path.resolve(dirname, "../src/components"),
-          "@i18n": path.resolve(dirname, "../src/i18n"),
-          "@layouts": path.resolve(dirname, "../src/layouts"),
-          "@pages": path.resolve(dirname, "../src/pages"),
-          "@styles": path.resolve(dirname, "../src/styles"),
-          "@utils": path.resolve(dirname, "../src/utils"),
-          "@": path.resolve(dirname, "../src"),
-        },
-      },
-    });
-  },
-  */
 });
