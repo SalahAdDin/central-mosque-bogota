@@ -55,27 +55,27 @@ import {
  * </div>
  */
 
-interface Props extends HTMLAttributes<'div'>, DropdownContentVariants {
+interface Props extends HTMLAttributes<"div">, DropdownContentVariants {
   /**
    * Side of the dropdown
    * @default bottom
    */
-  side?: TDropdownPosition
+  side?: TDropdownPosition;
   /**
    * Alignment of the dropdown
    * @default start
    */
-  align?: TDropdownAlign
+  align?: TDropdownAlign;
   /**
    * Offset distance in pixels
    * @default 4
    */
-  sideOffset?: number
+  sideOffset?: number;
   /**
    * Open and close animation duration in milliseconds
    * @default 150
    */
-  animationDuration?: number
+  animationDuration?: number;
 }
 
 const {

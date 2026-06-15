@@ -59,17 +59,14 @@ export const SVG_ICONS = [
 ## SVG Icons
 
 <IconGallery>
+  <style>
+  {`
+    svg {padding: 2px }
+  `}
+  </style>
   {SVG_ICONS.map(({ name, story }) => (
     <IconItem key={name} name={name}>
-      <div
-        style={{
-          background: "#0f172a",
-          borderRadius: 12,
-          padding: 12,
-          display: "inline-flex",
-        }}>
-        <Story of={story} />
-      </div>
+      <Story of={story}  inline={true}/>
     </IconItem>
   ))}
 </IconGallery>

@@ -77,15 +77,25 @@ const iconVariants = cva('items-center justify-center', {
 })
 
 interface Props
-  extends VariantProps<typeof iconVariants>, HTMLAttributes<'span'> {
+  extends VariantProps<typeof iconVariants>, HTMLAttributes<"span"> {
+  /**
+   * Size of the icon.
+   * @default md
+   */
+  size?: VariantProps<typeof iconVariants>["size"];
+  /**
+   * Visual style of the icon glyph.
+   * @default outlined
+   */
+  variant?: VariantProps<typeof iconVariants>["variant"];
   /**
    * Name of the Material Symbols glyph to render, e.g. "menu" or "search".
    */
-  name: string
+  name: TIconName;
   /**
    * Accessible label for the icon. When omitted, the icon is treated as decorative.
    */
-  ariaLabel?: string
+  ariaLabel?: string;
 }
 
 const {

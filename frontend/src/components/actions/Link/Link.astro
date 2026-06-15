@@ -155,17 +155,28 @@ const linkVariants = cva(
 
 type LinkVariants = VariantProps<typeof linkVariants>
 
-interface Props extends LinkVariants, Omit<HTMLAttributes<'a'>, 'color'> {
+interface Props extends LinkVariants, Omit<HTMLAttributes<"a">, "color"> {
+  /**
+   * Size of the link (controls font size and spacing).
+   * @default md
+   */
+  size?: LinkVariants["size"];
+  /**
+   * Color theme applied to the link.
+   * @default primary
+   */
+  color?: LinkVariants["color"];
   /**
    * Accessible label for assistive technologies.
    * Recommended when `onlyIcon` is true and there is no visible text.
    */
-  ariaLabel?: string
+  ariaLabel?: string;
   /**
    * When true, visually and functionally disables the link.
    * Applies a strike-through style, disables pointer events and sets aria-disabled.
+   * @default false
    */
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 const {

@@ -69,11 +69,12 @@ import { getLangFromUrl, useTranslations } from '@i18n/utils'
  * - The default close button can be hidden with CSS by targeting `[data-dialog-close]` inside this component.
  */
 
-interface Props extends HTMLAttributes<'dialog'>, DialogContentVariants {
+interface Props extends HTMLAttributes<"dialog">, DialogContentVariants {
   /**
    * Open and close animation duration in milliseconds
+   * @default 200
    */
-  animationDuration?: number
+  animationDuration?: number;
 }
 
 const {

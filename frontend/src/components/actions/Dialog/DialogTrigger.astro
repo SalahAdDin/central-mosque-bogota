@@ -79,16 +79,17 @@ import type { HTMLAttributes } from 'astro/types'
  * - Use `asChild` when you need to render a custom interactive element to avoid invalid nested buttons/links.
  */
 
-interface Props extends Omit<HTMLAttributes<'button'>, 'type'> {
+interface Props extends Omit<HTMLAttributes<"button">, "type"> {
   /**
    * When true, the component will render its child element with a simple wrapper instead of a button component
+   * @default false
    */
-  asChild?: boolean
+  asChild?: boolean;
   /**
    * Optional ID of the dialog to trigger. If not provided and the trigger is inside a Dialog component,
    * it will automatically target that dialog. Required when used outside a Dialog component.
    */
-  target?: string
+  target?: string;
 }
 
 const {

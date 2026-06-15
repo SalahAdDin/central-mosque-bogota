@@ -59,11 +59,17 @@ import {
 interface Props
   extends
   DropdownTriggerVariants,
-  Omit<HTMLAttributes<'button'>, 'role' | 'type'> {
+    Omit<HTMLAttributes<"button">, "role" | "type"> {
   /**
    * When true, the component will render its child element with a simple wrapper instead of a button component
+   * @default false
    */
-  asChild?: boolean
+  asChild?: boolean;
+  /**
+   * Optional ID of the dropdown to control. When omitted, the trigger targets
+   * the dropdown it is nested within.
+   */
+  for?: string;
 }
 
 const { class: className, asChild = false, ...rest } = Astro.props

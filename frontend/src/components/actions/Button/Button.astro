@@ -413,22 +413,47 @@ type ButtonVariants = VariantProps<typeof buttonVariants>
  * Extends visual variants from `buttonVariants` and adds behavior and
  * accessibility-focused options like `href`, `type`, and `ariaLabel`.
  */
-interface Props<Tag extends HTMLTag = 'button' | 'a'> extends Polymorphic<
+interface Props<Tag extends HTMLTag = "button" | "a"> extends Polymorphic<
   { as: Tag } & ButtonVariants
 > {
   /**
-   * Disables interaction and applies disabled visual styles.
+   * Visual emphasis style of the button.
+   * @default solid
    */
-  disabled?: boolean
+  variant?: ButtonVariants["variant"];
+  /**
+   * Size of the button (controls padding and font size).
+   * @default md
+   */
+  size?: ButtonVariants["size"];
+  /**
+   * Color theme applied to the button.
+   * @default primary
+   */
+  color?: ButtonVariants["color"];
+  /**
+   * Square dimensions used when rendering an icon-only button.
+   */
+  iconSize?: ButtonVariants["iconSize"];
+  /**
+   * Disables interaction and applies disabled visual styles.
+   * @default false
+   */
+  disabled?: boolean;
   /**
    * When true, stretches the button to the full available width (`w-full`).
+   * @default false
    */
-  fullWidth?: boolean
+  fullWidth?: boolean;
   /**
    * Accessible label used as the rendered element's `aria-label`.
    * Required when `onlyIcon` is `true` (because there is no visible text label).
    */
-  ariaLabel?: string
+  ariaLabel?: string;
+  /**
+   * Optional class name to apply to the button element.
+   */
+  class?: string;
 }
 
 const {

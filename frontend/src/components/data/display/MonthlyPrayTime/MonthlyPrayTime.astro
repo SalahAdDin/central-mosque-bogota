@@ -107,7 +107,10 @@ interface Props {
   monthLabel: string
   /** Daily data for the month. */
   rows: Array<MonthlyRow>
-  /** IANA timezone used for “today” checking and labels. Defaults to "America/Bogota". */
+  /**
+   * IANA timezone used for “today” checking and labels.
+   * @default America/Bogota
+   */
   timeZone?: string
   /** Selected anchor month in YYYY-MM, used to build the month dropdown. */
   selectedYm: string

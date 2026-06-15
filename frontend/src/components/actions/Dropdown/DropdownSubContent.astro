@@ -37,12 +37,18 @@ import { dropdownContentVariants } from './variants'
  * ```
  */
 
-interface Props extends HTMLAttributes<'div'> {
+interface Props extends HTMLAttributes<"div"> {
+  /**
+   * Offset (in pixels) applied to the submenu content position relative to the trigger.
+   * This is passed through as a `data-side-offset` attribute for the dropdown positioning logic.
+   * @default 0
+   */
+  sideOffset?: number;
   /**
    * Open and close animation duration in milliseconds
    * @default 150
    */
-  animationDuration?: number
+  animationDuration?: number;
 }
 
 const {

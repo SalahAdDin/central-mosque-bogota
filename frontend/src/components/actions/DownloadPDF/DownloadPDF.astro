@@ -1,9 +1,9 @@
 ---
-import Button from '@components/actions/Button/Button.astro'
-import Icon from '@components/data/display/Icons/Icon.astro'
-import type { ComponentProps } from 'astro/types'
-import { getLangFromUrl, useTranslations } from '@i18n/utils'
-import { cn } from '@utils/styles.utils'
+import Button from "@components/actions/Button/Button.astro";
+import Icon from "@components/data/display/Icons/Icon.astro";
+import type { ComponentProps } from "astro/types";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+import { cn } from "@utils/styles.utils";
 
 /**
  * @component DownloadPDF
@@ -39,23 +39,32 @@ import { cn } from '@utils/styles.utils'
  */
 interface DownloadPDFProps extends Pick<
   ComponentProps<typeof Button>,
-  'class' | 'variant' | 'color'
+  "class" | "variant" | "color"
 > {
-  documentTitle: string
-  targetAttr?: string
-  marginMm?: number
+  /**
+   * The title of the document to be downloaded.
+   */
+  documentTitle: string;
+  /**
+   * The attribute selector to find the printable element.
+   */
+  targetAttr?: string;
+  /**
+   * The margin in millimeters to apply to the PDF.
+   */
+  marginMm?: number;
 }
 
 const {
   documentTitle,
-  targetAttr = 'data-document-prayer-calendar-table',
+  targetAttr = "data-document-prayer-calendar-table",
   marginMm = 10,
-  variant = 'solid',
-  color = 'primary',
-  class: className = '',
-} = Astro.props as DownloadPDFProps
+  variant = "solid",
+  color = "primary",
+  class: className = "",
+} = Astro.props as DownloadPDFProps;
 
-const lang = getLangFromUrl(Astro.url)
+const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
@@ -63,16 +72,16 @@ const t = useTranslations(lang);
   color={color}
   variant={variant}
   data-action="download-pdf"
-  class={cn('print:hidden', className)}
+  class={cn("print:hidden", className)}
   data-document-title={documentTitle}
   data-target-attr={targetAttr}
   data-pdf-margin-mm={marginMm}
-  data-loading-label={t('download.preparing')}
-  data-error-label={t('download.error')}
-  ariaLabel={t('actions.download-pdf')}
+  data-loading-label={t("download.preparing")}
+  data-error-label={t("download.error")}
+  ariaLabel={t("actions.download-pdf")}
 >
   <Icon name="picture_as_pdf" />
-  <span>{t('download.download-pdf')}</span>
+  <span>{t("download.download-pdf")}</span>
 </Button>
 
 <script>

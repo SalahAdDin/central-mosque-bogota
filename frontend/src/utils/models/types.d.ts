@@ -20,6 +20,11 @@ export type TColor = (typeof COLORS)[number];
 export type TIconPosition = (typeof ICON_POSITIONS)[number];
 
 /**
+ * Type representing a valid icon name from the design system.
+ */
+export type TIconName = (typeof ICON_NAMES)[number];
+
+/**
  * Type representing available custom SVG icons.
  */
 export type TSVGIcon = (typeof SVG_ICONS)[number];

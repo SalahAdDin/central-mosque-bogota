@@ -95,23 +95,25 @@ interface Props {
   /**
    * Optional short tagline/description for the mosque.
    */
-  lemma: string
+  lemma: string;
   /**
    * Optional list of social links with an icon.
+   * @default []
    */
-  socialNetworkLinks: Array<TNavLink & { icon: TSVGIcon }>
+  socialNetworkLinks: Array<TNavLink & { icon: TSVGIcon }>;
   /**
    * Optional list of quick navigation links.
+   * @default []
    */
-  fastLinks: Array<TNavLink>
+  fastLinks: Array<TNavLink>;
   /**
    * Contact information displayed in the footer.
    */
-  contactInfo: TContactInfo
+  contactInfo: TContactInfo;
   /**
    * Rights text displayed in the footer.
    */
-  rightsText: TRightsTexts
+  rightsText: TRightsTexts;
 }
 
 const {

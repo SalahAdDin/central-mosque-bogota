@@ -35,7 +35,13 @@ import { Image } from "astro:assets";
  *   imageUrl="https://example.com/image.jpg"
  * />
  */
-interface Props extends TAcademyArticle {}
+interface Props extends TAcademyArticle {
+  /**
+   * Badge color tone shown at the top-left of the card.
+   * @default primary
+   */
+  badgeTone?: TAcademyArticle["badgeTone"];
+}
 
 const {
   title,

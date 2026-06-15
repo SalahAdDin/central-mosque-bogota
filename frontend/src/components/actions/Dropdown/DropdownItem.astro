@@ -38,6 +38,7 @@ interface Props<Tag extends HTMLTag = "button" | "a"> extends Polymorphic<
   /**
    * When true, makes the item non-interactive.
    * Sets `aria-disabled`, removes it from roving tab focus, and prevents selection via keyboard navigation.
+   * @default false
    */
   disabled?: boolean;
 }

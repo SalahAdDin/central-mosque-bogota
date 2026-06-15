@@ -31,11 +31,12 @@ import type { HTMLAttributes } from 'astro/types'
  * ```
  */
 
-interface Props extends Omit<HTMLAttributes<'button'>, 'type' | 'role'> {
+interface Props extends Omit<HTMLAttributes<"button">, "type" | "role"> {
   /**
    * When true, the component will render its child element instead of a button
+   * @default false
    */
-  asChild?: boolean
+  asChild?: boolean;
 }
 
 const { class: className, asChild = false, ...rest } = Astro.props as Props
