@@ -29,9 +29,9 @@ describe("DownloadPDF", () => {
       expect(classAttr).toMatch(/print:hidden/);
       expect(classAttr).toMatch(/custom-class/);
 
-      expect(btn.getAttribute("data-loading-label")).toBe("Preparando...");
+      expect(btn.getAttribute("data-loading-label")).toBe("Loading");
       expect(btn.getAttribute("data-error-label")).toMatch(/Error/i);
-      expect(btn.getAttribute("aria-label")).toBe("Descargar PDF");
+      expect(btn.getAttribute("aria-label")).toBe("Download");
     } finally {
       await close();
     }

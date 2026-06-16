@@ -2,7 +2,6 @@
 import Button from "@components/actions/Button/Button.astro";
 import Icon from "@components/data/display/Icons/Icon.astro";
 import type { ComponentProps } from "astro/types";
-import { getLangFromUrl, useTranslations } from "@i18n/utils";
 import { cn } from "@utils/styles.utils";
 
 /**
@@ -30,13 +29,44 @@ import { cn } from "@utils/styles.utils";
  * import DownloadPDF from "@components/actions/DownloadPDF/DownloadPDF.astro";
  * ---
  *
- * <DownloadPDF documentTitle="Calendario de Oración" />
+ * <DownloadPDF
+ *   documentTitle="Calendario de Oración"
+ *   labels={{ button: "Descargar PDF", aria: "Descargar PDF" }}
+ * />
  *
  * <section data-document-prayer-calendar-table>
  *   <!-- content to export -->
  * </section>
  * ```
  */
+
+/**
+ * UI labels rendered by the download button. Provided (and translated) by the
+ * parent so this component stays free of i18n concerns.
+ */
+type DownloadPDFLabels = {
+  /**
+   * The visible button text.
+   * @default "Download"
+   */
+  button: string;
+  /**
+   * The accessible label applied to the button (`aria-label`).
+   * @default "Download"
+   */
+  aria: string;
+  /**
+   * Status text announced while the PDF is being generated.
+   * @default "Loading"
+   */
+  loading: string;
+  /**
+   * Status text announced when PDF generation fails.
+   * @default "Error"
+   */
+  error: string;
+};
+
 interface DownloadPDFProps extends Pick<
   ComponentProps<typeof Button>,
   "class" | "variant" | "color"
@@ -54,10 +84,10 @@ interface DownloadPDFProps extends Pick<
    */
   marginMm?: number;
   /**
-   * The visible button label.
-   * @default t("download.download-pdf")
+   * All UI labels rendered by the button, normally translated by the parent.
+   * Falls back to a plain English label set when the prop is omitted entirely.
    */
-  label?: string;
+  labels?: Partial<DownloadPDFLabels>;
 }
 
 const {
@@ -67,13 +97,13 @@ const {
   variant = "solid",
   color = "primary",
   class: className = "",
-  label,
+  labels = {
+    aria: "Download",
+    button: "Download",
+    loading: "Loading",
+    error: "Error",
+  },
 } = Astro.props as DownloadPDFProps;
-
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
-
-const resolvedLabel = label ?? t("download.download-pdf");
 ---
 
 <Button
@@ -84,12 +114,12 @@ const resolvedLabel = label ?? t("download.download-pdf");
   data-document-title={documentTitle}
   data-target-attr={targetAttr}
   data-pdf-margin-mm={marginMm}
-  data-loading-label={t("download.preparing")}
-  data-error-label={t("download.error")}
-  ariaLabel={t("actions.download-pdf")}
+  data-loading-label={labels.loading}
+  data-error-label={labels.error}
+  ariaLabel={labels.aria}
 >
   <Icon name="picture_as_pdf" />
-  <span>{resolvedLabel}</span>
+  <span>{labels.button}</span>
 </Button>
 
 <script>

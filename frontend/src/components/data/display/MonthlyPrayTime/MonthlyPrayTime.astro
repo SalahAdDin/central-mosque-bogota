@@ -322,7 +322,12 @@ const getCellClasses = (
         </Dropdown>
         <DownloadPDF
           documentTitle={`calendar-prayer-${monthLabel}`}
-          label={t("download.download-pdf")}
+          label={{
+            aria: t("download.download-pdf"),
+            button: t("download.download-pdf"),
+            loading: t("download.preparing"),
+            error: t("download.error"),
+          }}
         />
       </div>
     </header>
@@ -470,6 +475,26 @@ const getCellClasses = (
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   [data-action="show-more"] [data-monthly-toggle-less] {
     display: none;
   }
@@ -522,9 +547,49 @@ const getCellClasses = (
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </style>
 
 <script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -557,6 +622,26 @@ const getCellClasses = (
     initMonthlyPrayTimes();
   }
   document.addEventListener("astro:after-swap", initMonthlyPrayTimes);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
