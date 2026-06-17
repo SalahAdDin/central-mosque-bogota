@@ -4,8 +4,8 @@ import { getViteConfig } from "astro/config";
 import path from "node:path";
 import { coverageConfigDefaults } from "vitest/config";
 
-const dirname
-  = typeof __dirname !== "undefined"
+const dirname =
+  typeof __dirname !== "undefined"
     ? __dirname
     : path.dirname(new URL(import.meta.url).pathname);
 

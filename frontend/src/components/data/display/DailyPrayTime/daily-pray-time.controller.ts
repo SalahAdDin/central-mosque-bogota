@@ -52,14 +52,18 @@ function updateUI(root: HTMLElement): void {
 }
 
 export function initDailyPrayerTimes(): void {
-  const roots = Array.from(document.querySelectorAll<HTMLElement>("[data-prayer-schedule]"));
+  const roots = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-prayer-schedule]")
+  );
   if (roots.length === 0) return;
 
   for (const root of roots) updateUI(root);
 
   if (updateTimer !== null) window.clearInterval(updateTimer);
   updateTimer = window.setInterval(() => {
-    const nextRoots = Array.from(document.querySelectorAll<HTMLElement>("[data-prayer-schedule]"));
+    const nextRoots = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-prayer-schedule]")
+    );
     for (const root of nextRoots) updateUI(root);
   }, CONFIG.updateIntervalMs);
 }

@@ -39,8 +39,7 @@ describe("Footer", () => {
       expect(getByText(root, "Mezquita Central")).toBeInTheDocument();
       expect(getByText(root, "de Bogotá")).toBeInTheDocument();
       expect(getByText(root, lemma)).toBeInTheDocument();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -70,8 +69,7 @@ describe("Footer", () => {
       expect(getByText(root, "Enlaces rápidos")).toBeInTheDocument();
       expect(getByText(root, "Contacto")).toBeInTheDocument();
       expect(getByText(root, "Boletín")).toBeInTheDocument();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -104,8 +102,7 @@ describe("Footer", () => {
 
       const donateLink = getByRole(root, "link", { name: "Donar" });
       expect(donateLink).toBeInTheDocument();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -139,8 +136,7 @@ describe("Footer", () => {
       const instagramLink = getByRole(root, "link", { name: "Instagram" });
       expect(instagramLink).toBeInTheDocument();
       expect(instagramLink.getAttribute("aria-label")).toBe("Instagram");
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -192,8 +188,7 @@ describe("Footer", () => {
 
       const termsLink = getByText(root, rightsText.termsAndConditions.label);
       expect(termsLink).toBeInTheDocument();
-    }
-    finally {
+    } finally {
       await close();
     }
   });

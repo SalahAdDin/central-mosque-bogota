@@ -14,14 +14,18 @@ describe("Table", () => {
     if (!caption) throw new Error("Expected a <caption> element");
     expect(caption.textContent.trim()).toBe("A list of your recent orders.");
 
-    const headerCells = Array.from(table.querySelectorAll("thead th")).map(th => th.textContent.trim());
+    const headerCells = Array.from(table.querySelectorAll("thead th")).map(
+      (th) => th.textContent.trim()
+    );
     expect(headerCells).toEqual(["Order", "Status", "Customer", "Total"]);
 
     const bodyRows = table.querySelectorAll("tbody tr");
     expect(bodyRows.length).toBe(4);
 
     const firstBodyRow = bodyRows.item(0);
-    const firstBodyRowCells = Array.from(firstBodyRow.querySelectorAll("td")).map(td => td.textContent.trim());
+    const firstBodyRowCells = Array.from(
+      firstBodyRow.querySelectorAll("td")
+    ).map((td) => td.textContent.trim());
     expect(firstBodyRowCells).toEqual([
       "ORD1001",
       "Shipped",
@@ -29,7 +33,9 @@ describe("Table", () => {
       "$120.00",
     ]);
 
-    const footerCells = Array.from(table.querySelectorAll("tfoot td")).map(td => td.textContent.trim());
+    const footerCells = Array.from(table.querySelectorAll("tfoot td")).map(
+      (td) => td.textContent.trim()
+    );
     expect(footerCells).toEqual(["Total Orders", "$450.00"]);
 
     await close();

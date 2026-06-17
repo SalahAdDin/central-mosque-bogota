@@ -37,7 +37,9 @@ async function setupSheetDom(): Promise<SetupResult> {
   });
   ensureDialogApi(dialog);
 
-  const backdrop = document.querySelector<HTMLElement>("[data-dialog-backdrop]");
+  const backdrop = document.querySelector<HTMLElement>(
+    "[data-dialog-backdrop]"
+  );
   if (!backdrop)
     throw new Error("Expected sheet mock to render a backdrop element");
   ensureElementGetAnimations(backdrop);
@@ -75,15 +77,14 @@ describe("Sheet Component", () => {
       expect(root.dataset.closeOnEsc).toBe("true");
       expect(root.dataset.lockScroll).toBe("true");
       expect(root.className).toContain("relative");
-    }
-    finally {
+    } finally {
       await close();
     }
   });
 
   it("should open the sheet when the trigger is clicked", async () => {
-    const { initDialogs }
-      = await import("@components/actions/Dialog/dialog.controller");
+    const { initDialogs } =
+      await import("@components/actions/Dialog/dialog.controller");
     const { window, close, trigger, dialog, backdrop } = await setupSheetDom();
     const user = await createUser(window);
 
@@ -96,17 +97,16 @@ describe("Sheet Component", () => {
       expect(dialog.dataset.state).toBe("open");
       expect(backdrop.dataset.state).toBe("open");
       expect(window.document.body.style.overflow).toBe("hidden");
-    }
-    finally {
+    } finally {
       await close();
     }
   });
 
   it("should close the sheet when a close control is clicked", async () => {
-    const { initDialogs }
-      = await import("@components/actions/Dialog/dialog.controller");
-    const { window, close, trigger, dialog, closeButton }
-      = await setupSheetDom();
+    const { initDialogs } =
+      await import("@components/actions/Dialog/dialog.controller");
+    const { window, close, trigger, dialog, closeButton } =
+      await setupSheetDom();
     const user = await createUser(window);
 
     try {
@@ -123,15 +123,14 @@ describe("Sheet Component", () => {
       expect(dialog.dataset.state).toBe("closed");
       expect(dialog.hasAttribute("open")).toBe(false);
       expect(window.document.body.style.overflow).toBe("");
-    }
-    finally {
+    } finally {
       await close();
     }
   });
 
   it("should close the sheet when Escape is pressed", async () => {
-    const { initDialogs }
-      = await import("@components/actions/Dialog/dialog.controller");
+    const { initDialogs } =
+      await import("@components/actions/Dialog/dialog.controller");
     const { window, close, trigger, dialog } = await setupSheetDom();
     const user = await createUser(window);
 
@@ -149,8 +148,7 @@ describe("Sheet Component", () => {
 
       expect(dialog.dataset.state).toBe("closed");
       expect(dialog.hasAttribute("open")).toBe(false);
-    }
-    finally {
+    } finally {
       await close();
     }
   });

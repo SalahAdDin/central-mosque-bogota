@@ -22,8 +22,7 @@ describe("CommunityServiceCard", () => {
       expect(title).toBeInTheDocument();
       expect(getByText(root, props.description)).toBeInTheDocument();
       expect(getByText(root, props.icon)).toBeInTheDocument();
-    }
-    finally {
+    } finally {
       await close();
     }
   });

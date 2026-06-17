@@ -73,8 +73,8 @@ const fetchPrayerTimes = async ({
     const currentDate = date ? new Date(date) : new Date();
 
     if (isMonthly) {
-      const { data }
-        = await fetchIslamicData<TIslamicApiPrayerTimeMonthResponse>(
+      const { data } =
+        await fetchIslamicData<TIslamicApiPrayerTimeMonthResponse>(
           endpoint,
           params
         );
@@ -93,8 +93,8 @@ const fetchPrayerTimes = async ({
         })),
       };
     } else {
-      const { data }
-        = await fetchIslamicData<TIslamicApiPrayerTimeSingleResponse>(
+      const { data } =
+        await fetchIslamicData<TIslamicApiPrayerTimeSingleResponse>(
           endpoint,
           params
         );

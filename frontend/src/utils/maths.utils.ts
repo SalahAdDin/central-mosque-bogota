@@ -8,10 +8,10 @@ export const parseAmount = (value: string): number => {
 export const calculateProgress = (goal: string, raised: string): number => {
   const goalAmount = parseAmount(goal);
   const raisedAmount = parseAmount(raised);
-  const progressRaw
-    = Number.isFinite(goalAmount)
-      && goalAmount > 0
-      && Number.isFinite(raisedAmount)
+  const progressRaw =
+    Number.isFinite(goalAmount) &&
+    goalAmount > 0 &&
+    Number.isFinite(raisedAmount)
       ? (raisedAmount / goalAmount) * 100
       : 0;
 

@@ -10,17 +10,17 @@ import type { TDailyPrayerSchedule } from "./types";
 
 export type TIslamicApiDateYm = `${number}-${number}`;
 export type TIslamicApiDateYmd = `${number}-${number}-${number}`;
-export type TIslamicApiPrayerTimeDateParam
-  = | TIslamicApiDateYmd
-    | TIslamicApiDateYm;
+export type TIslamicApiPrayerTimeDateParam =
+  | TIslamicApiDateYmd
+  | TIslamicApiDateYm;
 
-export type TIslamicApiPrayerCalculationMethod
-  = (typeof ISLAMIC_API_PRAYER_CALCULATION_METHODS)[number];
+export type TIslamicApiPrayerCalculationMethod =
+  (typeof ISLAMIC_API_PRAYER_CALCULATION_METHODS)[number];
 
 export type TIslamicApiAsrSchool = (typeof ISLAMIC_API_ASR_SCHOOLS)[number];
 
-export type TIslamicApiCalendarMethod
-  = (typeof ISLAMIC_API_CALENDAR_METHODS)[number];
+export type TIslamicApiCalendarMethod =
+  (typeof ISLAMIC_API_CALENDAR_METHODS)[number];
 
 export type TIslamicApiHijriShift = (typeof ISLAMIC_API_HIJRI_SHIFTS)[number];
 
@@ -153,8 +153,8 @@ export type TIslamicApiPrayerTimeMonthDayData = {
   prohibited_times: TIslamicApiProhibitedTimes;
 };
 
-export type TIslamicApiPrayerTimeSingleResponse
-  = TIslamicApiSuccessResponse<TIslamicApiPrayerTimeSingleDayData>;
+export type TIslamicApiPrayerTimeSingleResponse =
+  TIslamicApiSuccessResponse<TIslamicApiPrayerTimeSingleDayData>;
 
 export type TIslamicApiPrayerTimeMonthResponse = {
   code: number;
@@ -164,10 +164,10 @@ export type TIslamicApiPrayerTimeMonthResponse = {
   timezone: TIslamicApiTimezone;
 };
 
-export type TIslamicApiPrayerTimeResponse
-  = | TIslamicApiPrayerTimeSingleResponse
-    | TIslamicApiPrayerTimeMonthResponse
-    | TIslamicApiErrorResponse;
+export type TIslamicApiPrayerTimeResponse =
+  | TIslamicApiPrayerTimeSingleResponse
+  | TIslamicApiPrayerTimeMonthResponse
+  | TIslamicApiErrorResponse;
 
 export type TIslamicResponse = {
   location: string;

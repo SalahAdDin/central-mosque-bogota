@@ -31,8 +31,7 @@ describe("HomeSection", () => {
       const body = getByRole(root, "list");
       expect(body.getAttribute("class") ?? "").toContain("grid");
       expect(body.querySelectorAll("li").length).toBe(2);
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -50,8 +49,7 @@ describe("HomeSection", () => {
 
     try {
       expect(queryByRole(root, "link", { name: "See more" })).toBeNull();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -76,8 +74,7 @@ describe("HomeSection", () => {
       }
       expect(body).toBeInTheDocument();
       expect(getByText(body, "Content")).toBeInTheDocument();
-    }
-    finally {
+    } finally {
       await close();
     }
   });

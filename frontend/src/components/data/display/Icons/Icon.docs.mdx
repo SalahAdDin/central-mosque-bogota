@@ -60,13 +60,13 @@ export const SVG_ICONS = [
 
 <IconGallery>
   <style>
-  {`
+    {`
     svg {padding: 2px }
   `}
   </style>
   {SVG_ICONS.map(({ name, story }) => (
     <IconItem key={name} name={name}>
-      <Story of={story}  inline={true}/>
+      <Story of={story} inline={true} />
     </IconItem>
   ))}
 </IconGallery>

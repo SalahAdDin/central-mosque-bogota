@@ -16,8 +16,7 @@ describe("Link", () => {
       expect(link.getAttribute("href")).toBe(href);
       expect(link.getAttribute("target")).toBeNull();
       expect(link.getAttribute("rel")).toBeNull();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -43,8 +42,7 @@ describe("Link", () => {
       expect(classValue.includes("opacity-60")).toBe(true);
       expect(link.getAttribute("target")).toBeNull();
       expect(link.getAttribute("rel")).toBeNull();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -58,8 +56,7 @@ describe("Link", () => {
     try {
       const link = getByRole(root, "link", { name: "Open link" });
       expect(link.getAttribute("aria-label")).toBe("Open link");
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -75,8 +72,7 @@ describe("Link", () => {
       const classValue = link.getAttribute("class") ?? "";
       expect(classValue.includes("text-xs")).toBe(true);
       expect(classValue.includes("text-secondary")).toBe(true);
-    }
-    finally {
+    } finally {
       await close();
     }
   });

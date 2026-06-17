@@ -53,7 +53,9 @@ class ThemeToggleHandler {
     if (this.initializing) return;
     const next: ThemeSetting = getNextTheme(getStoredTheme());
     applyTheme(next);
-    document.dispatchEvent(new CustomEvent("theme:change", { detail: { theme: next } }));
+    document.dispatchEvent(
+      new CustomEvent("theme:change", { detail: { theme: next } })
+    );
   }
 
   /**
@@ -104,7 +106,9 @@ export function setupThemeToggles(clearExisting = false) {
  */
 function handleThemeChange(event: Event) {
   const { theme } = (event as CustomEvent<{ theme: ThemeSetting }>).detail;
-  activeToggles.forEach(toggle => toggleInstances.get(toggle)?.syncState(theme));
+  activeToggles.forEach((toggle) =>
+    toggleInstances.get(toggle)?.syncState(theme)
+  );
 }
 
 // Listen for global theme changes to keep multiple buttons in sync
@@ -121,13 +125,17 @@ export function initThemeToggle() {
   applyTheme(initial);
   setupThemeToggles(true);
 
-  activeToggles.forEach(toggle => toggleInstances.get(toggle)?.syncState(initial));
+  activeToggles.forEach((toggle) =>
+    toggleInstances.get(toggle)?.syncState(initial)
+  );
 
   const mql = window.matchMedia("(prefers-color-scheme: dark)");
   const handleSystemChange = () => {
     if (getStoredTheme() !== "system") return;
     applyTheme("system");
-    document.dispatchEvent(new CustomEvent("theme:change", { detail: { theme: "system" } }));
+    document.dispatchEvent(
+      new CustomEvent("theme:change", { detail: { theme: "system" } })
+    );
   };
   mql.addEventListener("change", handleSystemChange);
 }

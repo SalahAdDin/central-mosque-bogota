@@ -44,7 +44,9 @@ describe("NextEventsSection", () => {
     });
 
     try {
-      expect(getByRole(root, "heading", { level: 2, name: props.title })).toBeInTheDocument();
+      expect(
+        getByRole(root, "heading", { level: 2, name: props.title })
+      ).toBeInTheDocument();
       expect(getByText(root, props.description)).toBeInTheDocument();
 
       const cta = getByRole(root, "link", { name: new RegExp(props.ctaLabel) });
@@ -52,9 +54,10 @@ describe("NextEventsSection", () => {
 
       const cardHeadings = getAllByRole(root, "heading", { level: 3 });
       expect(cardHeadings.length).toBe(props.events.length);
-      expect(cardHeadings.map(h => h.textContent.trim())).toEqual(expect.arrayContaining(props.events.map(e => e.title)));
-    }
-    finally {
+      expect(cardHeadings.map((h) => h.textContent.trim())).toEqual(
+        expect.arrayContaining(props.events.map((e) => e.title))
+      );
+    } finally {
       await close();
     }
   });
@@ -71,10 +74,11 @@ describe("NextEventsSection", () => {
     });
 
     try {
-      expect(getByRole(root, "heading", { level: 2, name: "Próximos Eventos" })).toBeInTheDocument();
+      expect(
+        getByRole(root, "heading", { level: 2, name: "Próximos Eventos" })
+      ).toBeInTheDocument();
       expect(queryAllByRole(root, "heading", { level: 3 }).length).toBe(0);
-    }
-    finally {
+    } finally {
       await close();
     }
   });

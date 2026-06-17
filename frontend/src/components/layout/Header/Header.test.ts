@@ -39,8 +39,12 @@ describe("Header", () => {
     });
 
     try {
-      expect(getAllByRole(root, "link", { name: "Inicio", hidden: true }).length).toBe(2);
-      expect(getAllByRole(root, "link", { name: "Eventos", hidden: true }).length).toBe(2);
+      expect(
+        getAllByRole(root, "link", { name: "Inicio", hidden: true }).length
+      ).toBe(2);
+      expect(
+        getAllByRole(root, "link", { name: "Eventos", hidden: true }).length
+      ).toBe(2);
     } finally {
       await close();
     }

@@ -34,13 +34,18 @@ describe("CommunityServicesSection", () => {
     );
 
     try {
-      expect(getByRole(root, "heading", { level: 2, name: props.title })).toBeInTheDocument();
-      expect(getByText(root, props.services[0].description)).toBeInTheDocument();
+      expect(
+        getByRole(root, "heading", { level: 2, name: props.title })
+      ).toBeInTheDocument();
+      expect(
+        getByText(root, props.services[0].description)
+      ).toBeInTheDocument();
 
       const titles = getAllByRole(root, "heading", { level: 3 });
-      expect(titles.map(h => h.textContent.trim())).toEqual(expect.arrayContaining(props.services.map(s => s.title)));
-    }
-    finally {
+      expect(titles.map((h) => h.textContent.trim())).toEqual(
+        expect.arrayContaining(props.services.map((s) => s.title))
+      );
+    } finally {
       await close();
     }
   });
@@ -57,10 +62,11 @@ describe("CommunityServicesSection", () => {
     );
 
     try {
-      expect(getByRole(root, "heading", { level: 2, name: "Servicios" })).toBeInTheDocument();
+      expect(
+        getByRole(root, "heading", { level: 2, name: "Servicios" })
+      ).toBeInTheDocument();
       expect(queryAllByRole(root, "heading", { level: 3 }).length).toBe(0);
-    }
-    finally {
+    } finally {
       await close();
     }
   });

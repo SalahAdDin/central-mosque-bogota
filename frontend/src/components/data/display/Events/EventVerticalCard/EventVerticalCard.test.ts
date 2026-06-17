@@ -24,7 +24,9 @@ describe("EventVerticalCard", () => {
       expect(image.getAttribute("src")).toBe(props.image);
 
       expect(getByText(root, props.category)).toBeInTheDocument();
-      expect(getByRole(root, "heading", { level: 3, name: props.title })).toBeInTheDocument();
+      expect(
+        getByRole(root, "heading", { level: 3, name: props.title })
+      ).toBeInTheDocument();
       expect(getByText(root, props.description)).toBeInTheDocument();
       expect(getByText(root, props.schedule)).toBeInTheDocument();
       expect(getByText(root, props.date.month)).toBeInTheDocument();
@@ -32,8 +34,7 @@ describe("EventVerticalCard", () => {
 
       const cta = getByRole(root, "link", { name: /ver más/i });
       expect(cta.getAttribute("href")).toBe(props.url);
-    }
-    finally {
+    } finally {
       await close();
     }
   });

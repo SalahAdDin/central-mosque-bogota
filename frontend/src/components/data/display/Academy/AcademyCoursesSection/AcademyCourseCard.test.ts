@@ -31,15 +31,16 @@ describe("AcademyCourseCard", () => {
       const badgeClass = badge.getAttribute("class") ?? "";
       expect(badgeClass.includes("bg-primary")).toBe(true);
 
-      expect(getByRole(root, "heading", { level: 3, name: props.title })).toBeInTheDocument();
+      expect(
+        getByRole(root, "heading", { level: 3, name: props.title })
+      ).toBeInTheDocument();
       expect(getByText(root, props.description)).toBeInTheDocument();
 
       const cta = getByRole(root, "link", { name: /ver curso/i });
       expect(cta.getAttribute("href")).toBe(props.href);
       expect(cta.textContent.includes(props.ctaLabel)).toBe(true);
       expect(getByText(root, props.ctaIcon)).toBeInTheDocument();
-    }
-    finally {
+    } finally {
       await close();
     }
   });
@@ -63,8 +64,7 @@ describe("AcademyCourseCard", () => {
       const badge = getByText(root, "Intermedio");
       const badgeClass = badge.getAttribute("class") ?? "";
       expect(badgeClass.includes("bg-secondary")).toBe(true);
-    }
-    finally {
+    } finally {
       await close();
     }
   });

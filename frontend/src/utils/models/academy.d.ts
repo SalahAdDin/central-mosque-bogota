@@ -1,4 +1,4 @@
-type TAcademyArticle = {
+export type TAcademyArticle = {
   /**
    * Title of the article
    */

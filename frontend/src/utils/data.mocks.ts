@@ -1,8 +1,8 @@
 import type { TEvent } from "./models/events";
 import type { TCommunityService } from "./models/services";
 
-export const lemma
-  = "La primera y principal mezquita de Bogotá, brindando servicios espirituales y sociales a la comunidad desde hace más de 30 años.";
+export const lemma =
+  "La primera y principal mezquita de Bogotá, brindando servicios espirituales y sociales a la comunidad desde hace más de 30 años.";
 
 export const contactInfo = {
   address: "Calle 80 #30-45, Bogotá D.C., Colombia",
