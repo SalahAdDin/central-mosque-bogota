@@ -12,6 +12,7 @@ type GlobalDomShim = {
   HTMLButtonElement: typeof HTMLButtonElement;
   HTMLElement: typeof HTMLElement;
   Event: typeof Event;
+  CustomEvent: typeof CustomEvent;
   MouseEvent: typeof MouseEvent;
   KeyboardEvent: typeof KeyboardEvent;
   requestAnimationFrame: typeof requestAnimationFrame;
@@ -38,6 +39,7 @@ export function installDomGlobals(window: Window, document: Document): void {
     window.HTMLButtonElement as unknown as typeof HTMLButtonElement;
   globalDom.HTMLElement = window.HTMLElement as unknown as typeof HTMLElement;
   globalDom.Event = window.Event as unknown as typeof Event;
+  globalDom.CustomEvent = window.CustomEvent as unknown as typeof CustomEvent;
   globalDom.MouseEvent = window.MouseEvent as unknown as typeof MouseEvent;
   globalDom.KeyboardEvent =
     window.KeyboardEvent as unknown as typeof KeyboardEvent;

@@ -26,6 +26,7 @@ export const ICON_POSITIONS = ["leading", "trailing"] as const;
 export const ICON_NAMES = [
   "menu",
   "search",
+  "check",
   "chevron_right",
   "favorite",
   "location_on",

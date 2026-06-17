@@ -119,7 +119,11 @@ describe("time.utils", () => {
         .mockReturnValue(22);
 
       expect(getCurrentMinutes("Invalid/Zone")).toBe(11 * 60 + 22);
-      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("Timezone \"Invalid/Zone\" failed, falling back to local time."));
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining(
+          "Timezone \"Invalid/Zone\" failed, falling back to local time."
+        )
+      );
 
       getMinutesSpy.mockRestore();
       getHoursSpy.mockRestore();

@@ -1,12 +1,12 @@
 import { ISLAMIC_API_URL } from "astro:env/client";
 import { getSecret } from "astro:env/server";
 
-export type TIslamicApiQueryValue
-  = | string
-    | number
-    | boolean
-    | null
-    | undefined;
+export type TIslamicApiQueryValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined;
 export type TIslamicApiQueryParams = Record<string, TIslamicApiQueryValue>;
 
 /**
@@ -19,7 +19,7 @@ export type TIslamicApiQueryParams = Record<string, TIslamicApiQueryValue>;
  */
 export const fetchIslamicData = async <
   TResult,
-  TParams extends TIslamicApiQueryParams = TIslamicApiQueryParams
+  TParams extends TIslamicApiQueryParams = TIslamicApiQueryParams,
 >(
   target: string,
   params: TParams = {} as TParams,
@@ -48,5 +48,5 @@ export const fetchIslamicData = async <
     throw new Error(`Islamic API request failed (${String(res.status)})`);
   }
 
-  return (await res.json()) as unknown as TResult;
+  return (await res.json()) as TResult;
 };
