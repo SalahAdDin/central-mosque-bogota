@@ -271,8 +271,28 @@ class DialogController {
 
     if (!this.dialog.id) this.dialog.id = nextId("dialog");
     this.dialog.setAttribute("aria-modal", "true");
+    this.setupAccessibility();
     this.attachEvents();
     this.closeInstant({ returnFocus: false });
+  }
+
+  private setupAccessibility(): void {
+    // Give the dialog an accessible name from its first heading, unless the
+    // author already provided one explicitly.
+    if (
+      this.dialog.hasAttribute("aria-label") ||
+      this.dialog.hasAttribute("aria-labelledby")
+    ) {
+      return;
+    }
+
+    const heading = this.dialog.querySelector<HTMLElement>(
+      "h1, h2, h3, h4, h5, h6"
+    );
+    if (!heading) return;
+
+    if (!heading.id) heading.id = nextId("dialog-title");
+    this.dialog.setAttribute("aria-labelledby", heading.id);
   }
 
   public isConnected(): boolean {
@@ -313,6 +333,40 @@ class DialogController {
     this.backdrop?.addEventListener("click", () => {
       if (this.options.closeOnBackdropClick)
         void this.close({ returnFocus: false });
+    });
+
+    // Programmatic control: dispatch these events on the DialogContent element
+    // (the `<dialog>` carrying the id) to open/close/toggle without a click.
+    this.dialog.addEventListener("dialog:open", () => {
+      void this.openFromTrigger(null);
+    });
+
+    this.dialog.addEventListener("dialog:close", () => {
+      void this.close({ returnFocus: true });
+    });
+
+    this.dialog.addEventListener("dialog:toggle", () => {
+      if (this.open) {
+        void this.close({ returnFocus: true });
+      } else {
+        void this.openFromTrigger(null);
+      }
+    });
+
+    // Intercept `<form method="dialog">` submissions so they close through our
+    // animated path (focus return + scroll unlock) instead of the browser's
+    // instant native close. The submit event bubbles, so one delegated listener
+    // also covers forms added after setup.
+    this.dialog.addEventListener("submit", (e) => {
+      const form = e.target;
+      if (
+        form instanceof HTMLElement &&
+        form.tagName === "FORM" &&
+        (form as HTMLFormElement).method === "dialog"
+      ) {
+        e.preventDefault();
+        void this.close({ returnFocus: true });
+      }
     });
   }
 

@@ -8,26 +8,91 @@ import DialogTitle from "./DialogTitle.astro";
 import DialogDescription from "./DialogDescription.astro";
 import DialogFooter from "./DialogFooter.astro";
 import DialogClose from "./DialogClose.astro";
+import Dropdown from "@components/actions/Dropdown/Dropdown.astro";
+import DropdownTrigger from "@components/actions/Dropdown/DropdownTrigger.astro";
+import DropdownContent from "@components/actions/Dropdown/DropdownContent.astro";
+import DropdownLabel from "@components/actions/Dropdown/DropdownLabel.astro";
+import DropdownItem from "@components/actions/Dropdown/DropdownItem.astro";
+
+const DIALOG_ID = "demo-dialog";
 ---
 
-<Dialog>
-  <DialogTrigger asChild>
-    <Button>Open Dialog</Button>
-  </DialogTrigger>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Example Dialog</DialogTitle>
-      <DialogDescription>
-        This is a simple dialog example that demonstrates the basic
-        functionality.
-      </DialogDescription>
-    </DialogHeader>
-    <div class="py-4">Your dialog content goes here.</div>
-    <DialogFooter>
-      <DialogClose asChild>
-        <Button variant="outline">Cancel</Button>
-      </DialogClose>
-      <Button>Save Changes</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+<div class="flex flex-wrap gap-2">
+  <Dialog>
+    <DialogTrigger asChild>
+      <Button>Open Dialog</Button>
+    </DialogTrigger>
+
+    <!-- Programmatic control: any element can drive the dialog by dispatching
+         dialog:open / dialog:close / dialog:toggle on the DialogContent id. -->
+    <Button variant="outline" data-dialog-action="open">Open via JS</Button>
+    <Button variant="outline" data-dialog-action="toggle">Toggle via JS</Button>
+
+    <DialogContent id={DIALOG_ID}>
+      <DialogHeader>
+        <DialogTitle>Example Dialog</DialogTitle>
+        <DialogDescription>
+          This is a simple dialog example that demonstrates the basic
+          functionality.
+        </DialogDescription>
+      </DialogHeader>
+      <div class="py-4">
+        <p class="mb-2">Your dialog content goes here.</p>
+        <!-- A nested Dropdown portals its content into the dialog's
+             [data-floating-root], so it renders above the dialog and clicking
+             it does not close the dialog. -->
+        <Dropdown>
+          <DropdownTrigger asChild>
+            <Button variant="outline">Open Menu</Button>
+          </DropdownTrigger>
+          <DropdownContent>
+            <DropdownLabel>My Account</DropdownLabel>
+            <DropdownItem as="a" href="#">Profile</DropdownItem>
+            <DropdownItem>Settings</DropdownItem>
+            <DropdownItem>Help</DropdownItem>
+          </DropdownContent>
+        </Dropdown>
+      </div>
+      <!-- method="dialog" submissions are intercepted and routed through the
+           animated close path. -->
+      <form method="dialog">
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button type="submit">Save Changes</Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>
+</div>
+
+<script is:inline>
+
+
+
+
+
+
+
+
+
+
+  const dialog = document.getElementById("demo-dialog");
+  document.querySelectorAll("[data-dialog-action]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const action = button.getAttribute("data-dialog-action");
+      dialog?.dispatchEvent(new CustomEvent(`dialog:${action}`));
+    });
+  });
+
+
+
+
+
+
+
+
+
+
+</script>

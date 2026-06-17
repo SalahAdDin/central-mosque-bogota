@@ -152,4 +152,91 @@ describe("Dialog Component", () => {
       await close();
     }
   });
+
+  it("should derive an accessible name from the first heading when no aria-label is provided", async () => {
+    const { initDialogs } = await import("./dialog.controller");
+    const { close, dialog } = await setupDialogDom();
+
+    try {
+      initDialogs();
+
+      const labelledBy = dialog.getAttribute("aria-labelledby");
+      expect(labelledBy).toBeTruthy();
+
+      const heading = dialog.querySelector("h1, h2, h3, h4, h5, h6");
+      expect(heading?.id).toBe(labelledBy);
+      expect(heading?.textContent).toContain("Example Dialog");
+    } finally {
+      await close();
+    }
+  });
+
+  it("should open and close when dialog:open and dialog:close events are dispatched", async () => {
+    const { initDialogs } = await import("./dialog.controller");
+    const { window, close, dialog, backdrop } = await setupDialogDom();
+
+    try {
+      initDialogs();
+
+      dialog.dispatchEvent(new window.CustomEvent("dialog:open"));
+      await vi.runAllTimersAsync();
+
+      expect(dialog.dataset.state).toBe("open");
+      expect(backdrop.dataset.state).toBe("open");
+
+      dialog.dispatchEvent(new window.CustomEvent("dialog:close"));
+      await vi.runAllTimersAsync();
+
+      expect(dialog.dataset.state).toBe("closed");
+      expect(dialog.hasAttribute("open")).toBe(false);
+    } finally {
+      await close();
+    }
+  });
+
+  it("should toggle open and closed when the dialog:toggle event is dispatched", async () => {
+    const { initDialogs } = await import("./dialog.controller");
+    const { window, close, dialog } = await setupDialogDom();
+
+    try {
+      initDialogs();
+
+      dialog.dispatchEvent(new window.CustomEvent("dialog:toggle"));
+      await vi.runAllTimersAsync();
+      expect(dialog.dataset.state).toBe("open");
+
+      dialog.dispatchEvent(new window.CustomEvent("dialog:toggle"));
+      await vi.runAllTimersAsync();
+      expect(dialog.dataset.state).toBe("closed");
+    } finally {
+      await close();
+    }
+  });
+
+  it("should close when a method=\"dialog\" form is submitted", async () => {
+    const { initDialogs } = await import("./dialog.controller");
+    const { window, close, trigger, dialog } = await setupDialogDom();
+    const user = await createUser(window);
+
+    try {
+      initDialogs();
+
+      await user.click(trigger);
+      await vi.runAllTimersAsync();
+      expect(dialog.dataset.state).toBe("open");
+
+      const form = dialog.querySelector("form");
+      expect(form?.method).toBe("dialog");
+
+      form?.dispatchEvent(
+        new window.Event("submit", { bubbles: true, cancelable: true })
+      );
+      await vi.runAllTimersAsync();
+
+      expect(dialog.dataset.state).toBe("closed");
+      expect(dialog.hasAttribute("open")).toBe(false);
+    } finally {
+      await close();
+    }
+  });
 });

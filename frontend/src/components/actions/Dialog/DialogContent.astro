@@ -64,9 +64,36 @@ import { getLangFromUrl, useTranslations } from "@i18n/utils";
  * </Dialog>
  * ```
  *
+ * ### Programmatic control
+ *
+ * Dispatch `dialog:open`, `dialog:close`, or `dialog:toggle` on the dialog element
+ * (the one carrying the `id`) to control it from your own scripts.
+ *
+ * ```astro nocollapse
+ * ---
+ * import { Dialog, DialogContent } from "@components/actions/Dialog";
+ * ---
+ *
+ * <Dialog>
+ *   <DialogContent id="my-dialog">
+ *     Dialog content
+ *   </DialogContent>
+ * </Dialog>
+ *
+ * <button type="button" id="open-it">Open</button>
+ *
+ * <script>
+ *   document.getElementById("open-it")?.addEventListener("click", () => {
+ *     document.getElementById("my-dialog")?.dispatchEvent(new CustomEvent("dialog:open"));
+ *   });
+ * </script>
+ * ```
+ *
  * Notes:
  * - The `id` attribute can be used with `DialogTrigger target="..."` to open a specific dialog.
  * - The default close button can be hidden with CSS by targeting `[data-dialog-close]` inside this component.
+ * - The dialog's accessible name is derived automatically from its first heading (e.g. `DialogTitle`) via `aria-labelledby`, unless you set `aria-label`/`aria-labelledby` yourself.
+ * - A `<form method="dialog">` inside the dialog closes it through the animated close path on submit.
  */
 
 interface Props extends HTMLAttributes<"dialog">, DialogContentVariants {
@@ -138,10 +165,30 @@ const t = useTranslations(lang);
 
 
 
+
+
+
+
+
+
+
+
+
+
   .dialog-content {
     --nested-offset: 1rem;
     --nested-scale: 0.05;
   }
+
+
+
+
+
+
+
+
+
+
 
 
 

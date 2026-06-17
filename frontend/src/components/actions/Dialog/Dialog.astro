@@ -102,7 +102,13 @@ const {
 
   const setup = () => initDialogs();
 
-  document.addEventListener("DOMContentLoaded", setup);
+  // Run immediately when the DOM is already parsed (e.g. when injected by
+  // Storybook after DOMContentLoaded has fired); otherwise wait for it.
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setup);
+  } else {
+    setup();
+  }
   document.addEventListener("astro:after-swap", setup);
 
 
