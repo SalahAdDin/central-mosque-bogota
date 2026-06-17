@@ -44,13 +44,53 @@ export type DropdownContentVariants = VariantProps<
   typeof dropdownContentVariants
 >;
 
-export const dropdownItemVariants = cva(`
+export const dropdownItemVariants = cva(
+  `
     focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 transition-colors outline-none select-none
-    aria-disabled::pointer-events-none aria-disabled:opacity-50 disabled:pointer-events-none disabled:opacity-50
+    aria-disabled:pointer-events-none aria-disabled:opacity-50 disabled:pointer-events-none disabled:opacity-50
     group/dropdown-item [&>svg]:size-4 [&>svg]:shrink-0
-  `);
+  `,
+  {
+    variants: {
+      inset: {
+        true: "pl-8",
+      },
+    },
+  }
+);
 
 export type DropdownItemVariants = VariantProps<typeof dropdownItemVariants>;
+
+export const dropdownCheckboxItemVariants = cva(
+  `
+    focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 transition-colors outline-none select-none
+    aria-disabled:pointer-events-none aria-disabled:opacity-50
+    group/dropdown-item [&>svg]:size-4 [&>svg]:shrink-0
+  `
+);
+
+export type DropdownCheckboxItemVariants = VariantProps<
+  typeof dropdownCheckboxItemVariants
+>;
+
+export const dropdownLabelVariants = cva(
+  "text-muted-foreground px-2 py-1.5 text-sm font-medium",
+  {
+    variants: {
+      inset: {
+        true: "pl-8",
+      },
+    },
+  }
+);
+
+export type DropdownLabelVariants = VariantProps<typeof dropdownLabelVariants>;
+
+export const dropdownSeparatorVariants = cva("bg-border -mx-1 my-1 h-px");
+
+export type DropdownSeparatorVariants = VariantProps<
+  typeof dropdownSeparatorVariants
+>;
 
 export const dropdownTriggerVariants = cva(`
     inline-flex items-center justify-center

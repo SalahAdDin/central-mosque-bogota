@@ -1,0 +1,16 @@
+---
+import Dropdown from "./Dropdown.astro";
+import DropdownTrigger from "./DropdownTrigger.astro";
+import DropdownContent from "./DropdownContent.astro";
+import DropdownCheckboxItem from "./DropdownCheckboxItem.astro";
+---
+
+<Dropdown>
+  <DropdownTrigger>Open Menu</DropdownTrigger>
+  <DropdownContent>
+    <DropdownCheckboxItem>Show toolbar</DropdownCheckboxItem>
+    <DropdownCheckboxItem closeOnClick={true}>
+      Show sidebar
+    </DropdownCheckboxItem>
+  </DropdownContent>
+</Dropdown>

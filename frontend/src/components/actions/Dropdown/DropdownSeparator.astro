@@ -1,0 +1,46 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+
+import { dropdownSeparatorVariants } from "./variants";
+
+/**
+ * @component DropdownSeparator
+ * @title Dropdown Separator
+ * @description Thin horizontal divider used to visually separate groups of items inside dropdown content.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownItem>Profile</DropdownItem>
+ *     <DropdownSeparator />
+ *     <DropdownItem>Log out</DropdownItem>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DropdownSeparator } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <DropdownSeparator />
+ * ```
+ */
+
+type Props = HTMLAttributes<"div">;
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<div
+  class={cn(dropdownSeparatorVariants(), className)}
+  role="separator"
+  aria-orientation="horizontal"
+  data-dropdown-separator
+  {...rest}
+>
+</div>

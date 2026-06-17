@@ -1,3 +1,6 @@
+import type { TDropdownAlign } from "@utils/models/types";
+import { getTransformOrigin, resolvePlacement } from "@utils/positioning.utils";
+
 type DropdownSide = "bottom" | "top" | "left" | "right";
 
 const dropdownInstances = new WeakMap<HTMLElement, DropdownRootController>();
@@ -212,12 +215,209 @@ function getItemText(item: HTMLElement): string {
   return item.textContent.trim().replace(/\s+/g, " ").toLowerCase();
 }
 
+function getAlign(element: HTMLElement): TDropdownAlign {
+  const align = element.dataset.align;
+  if (align === "start" || align === "center" || align === "end") {
+    return align;
+  }
+  return "start";
+}
+
+function getSideOffset(element: HTMLElement): number {
+  const raw = element.dataset.sideOffset;
+  const parsed = raw ? Number.parseInt(raw, 10) : 0;
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+// Find where the floating content should be appended so it escapes any
+// `overflow`/stacking context (e.g. a dialog or sheet). Mirrors the
+// `data-floating-root` markup our Dialog/Sheet content already render.
+function resolvePortalTarget(trigger: HTMLElement): HTMLElement {
+  const currentFloatingRoot = trigger.closest("[data-floating-root]");
+  if (currentFloatingRoot instanceof HTMLElement) {
+    return currentFloatingRoot;
+  }
+
+  const dialogHost = trigger.closest(
+    "dialog[data-slot=dialog-content], dialog[data-slot=sheet-content]"
+  );
+  const dialogFloatingRoot = dialogHost?.querySelector<HTMLElement>(
+    ":scope > [data-floating-root]"
+  );
+  if (dialogFloatingRoot instanceof HTMLElement) {
+    return dialogFloatingRoot;
+  }
+
+  return document.body;
+}
+
+function positionMenu(
+  content: HTMLElement,
+  trigger: HTMLElement,
+  portalTarget: HTMLElement | null,
+  options?: { avoidCollisions?: boolean }
+): void {
+  const resolved = resolvePlacement({
+    side: getSide(content),
+    align: getAlign(content),
+    sideOffset: getSideOffset(content),
+    triggerRect: trigger.getBoundingClientRect(),
+    contentWidth: content.offsetWidth,
+    contentHeight: content.offsetHeight,
+    viewportWidth: window.innerWidth,
+    viewportHeight: window.innerHeight,
+    viewportPadding: 8,
+    avoidCollisions: options?.avoidCollisions ?? true,
+  });
+
+  // When portaled into a floating root the content is positioned `absolute`
+  // relative to that element, so subtract its origin from the viewport coords.
+  const portalTargetRect =
+    portalTarget && portalTarget !== document.body
+      ? portalTarget.getBoundingClientRect()
+      : null;
+  const left = portalTargetRect
+    ? resolved.left - portalTargetRect.left
+    : resolved.left;
+  const top = portalTargetRect
+    ? resolved.top - portalTargetRect.top
+    : resolved.top;
+
+  content.style.left = `${String(Math.round(left))}px`;
+  content.style.top = `${String(Math.round(top))}px`;
+  content.style.transformOrigin = getTransformOrigin(
+    resolved.side,
+    resolved.align
+  );
+  content.setAttribute("data-side", resolved.side);
+  content.setAttribute("data-align", resolved.align);
+}
+
+/**
+ * Portals a menu's content to the resolved floating root, anchors it to its
+ * trigger with collision-aware positioning, and keeps it positioned while open
+ * via scroll/resize listeners and a `ResizeObserver`. Restores the content to
+ * its original DOM location on `unmount`.
+ */
+class FloatingController {
+  private placeholder: Comment | null = null;
+  private portalTarget: HTMLElement | null = null;
+  private cleanup: (() => void) | null = null;
+
+  constructor(
+    private readonly content: HTMLElement,
+    private readonly trigger: HTMLElement,
+    private readonly options: {
+      shouldHover: () => boolean;
+      onPointerEnter: () => void;
+      onPointerLeave: () => void;
+    }
+  ) {}
+
+  public mount(): void {
+    const portalTarget = resolvePortalTarget(this.trigger);
+    if (this.placeholder || this.content.parentElement === portalTarget) {
+      this.reposition({ avoidCollisions: true });
+      return;
+    }
+
+    // Save the original position with a placeholder, then move the content out.
+    this.placeholder = document.createComment("dropdown-content-placeholder");
+    this.content.parentNode?.insertBefore(this.placeholder, this.content);
+    portalTarget.appendChild(this.content);
+    this.portalTarget = portalTarget;
+
+    this.content.style.position =
+      portalTarget === document.body ? "fixed" : "absolute";
+
+    this.reposition({ avoidCollisions: true });
+
+    const handleScroll = (): void => {
+      this.reposition({ avoidCollisions: false });
+    };
+    const handleResize = (): void => {
+      this.reposition({ avoidCollisions: true });
+    };
+    window.addEventListener("scroll", handleScroll, true);
+    window.addEventListener("resize", handleResize);
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => {
+            this.reposition({ avoidCollisions: true });
+          })
+        : null;
+    resizeObserver?.observe(this.content);
+    resizeObserver?.observe(this.trigger);
+
+    const onPointerEnter = (event: PointerEvent): void => {
+      if (event.pointerType !== "mouse") return;
+      this.options.onPointerEnter();
+    };
+    const onPointerLeave = (event: PointerEvent): void => {
+      if (event.pointerType !== "mouse") return;
+      this.options.onPointerLeave();
+    };
+    const hoverEnabled = this.options.shouldHover();
+    if (hoverEnabled) {
+      this.content.addEventListener("pointerenter", onPointerEnter);
+      this.content.addEventListener("pointerleave", onPointerLeave);
+    }
+
+    this.cleanup = (): void => {
+      window.removeEventListener("scroll", handleScroll, true);
+      window.removeEventListener("resize", handleResize);
+      resizeObserver?.disconnect();
+      if (hoverEnabled) {
+        this.content.removeEventListener("pointerenter", onPointerEnter);
+        this.content.removeEventListener("pointerleave", onPointerLeave);
+      }
+    };
+  }
+
+  public reposition(options?: { avoidCollisions?: boolean }): void {
+    positionMenu(this.content, this.trigger, this.portalTarget, options);
+  }
+
+  public unmount(): void {
+    this.cleanup?.();
+    this.cleanup = null;
+
+    // Move content back to its original position.
+    if (this.placeholder) {
+      if (this.placeholder.parentNode) {
+        this.placeholder.parentNode.insertBefore(
+          this.content,
+          this.placeholder
+        );
+      } else if (this.content.parentNode) {
+        this.content.remove();
+      }
+      this.placeholder.remove();
+      this.placeholder = null;
+    } else if (
+      this.content.parentNode &&
+      this.portalTarget &&
+      this.portalTarget !== document.body
+    ) {
+      this.content.remove();
+    }
+
+    this.portalTarget = null;
+    this.content.style.removeProperty("position");
+    this.content.style.removeProperty("top");
+    this.content.style.removeProperty("left");
+    this.content.style.removeProperty("transform-origin");
+  }
+}
+
 class SubmenuController {
   public readonly wrapper: HTMLElement;
   public readonly trigger: HTMLButtonElement;
   public readonly menu: HTMLElement;
   private readonly root: DropdownRootController;
   private closeTimer: number | null = null;
+  private floating: FloatingController | null = null;
   private open = false;
 
   constructor(
@@ -249,6 +449,19 @@ class SubmenuController {
   }
 
   private attachEvents(): void {
+    // The content is portaled out of the root menu when open, so its keyboard
+    // and click handling can no longer rely on bubbling to the root listener.
+    // Delegate to the root controller and stop propagation to avoid the root
+    // listener also handling the event while the submenu is still nested.
+    this.menu.addEventListener("keydown", (event) => {
+      this.root.handleMenuKeydown(event);
+      event.stopPropagation();
+    });
+    this.menu.addEventListener("click", (event) => {
+      this.root.handleMenuClick(event);
+      event.stopPropagation();
+    });
+
     this.trigger.addEventListener("click", (event) => {
       if (isDisabled(this.trigger)) return;
       event.preventDefault();
@@ -292,6 +505,23 @@ class SubmenuController {
     }
   }
 
+  public menuContains(node: Node): boolean {
+    return this.menu.contains(node);
+  }
+
+  private mountFloating(): void {
+    this.floating = new FloatingController(this.menu, this.trigger, {
+      shouldHover: (): boolean => this.root.openOnHoverEnabled(),
+      onPointerEnter: (): void => {
+        this.cancelCloseTimer();
+      },
+      onPointerLeave: (): void => {
+        this.scheduleClose(this.root.getCloseDelay());
+      },
+    });
+    this.floating.mount();
+  }
+
   public async openMenu(): Promise<void> {
     this.cancelCloseTimer();
     if (this.open) return;
@@ -301,6 +531,7 @@ class SubmenuController {
     this.menu.dataset.state = "open";
     this.menu.style.display = "block";
     setMenuInteractive(this.menu, true);
+    this.mountFloating();
     await animateOpen(this.menu);
   }
 
@@ -314,6 +545,8 @@ class SubmenuController {
     setMenuInteractive(this.menu, false);
     await animateClose(this.menu);
     this.menu.style.display = "none";
+    this.floating?.unmount();
+    this.floating = null;
 
     if (options.returnFocus) this.trigger.focus();
   }
@@ -325,6 +558,8 @@ class SubmenuController {
     this.menu.dataset.state = "closed";
     setMenuInteractive(this.menu, false);
     this.menu.style.display = "none";
+    this.floating?.unmount();
+    this.floating = null;
   }
 }
 
@@ -341,6 +576,7 @@ class DropdownRootController {
   private typeahead = "";
   private typeaheadTimer: number | null = null;
   private returnFocusTo: HTMLElement | null = null;
+  private floating: FloatingController | null = null;
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -541,6 +777,31 @@ class DropdownRootController {
     this.registerTrigger(wrapper);
   }
 
+  private mountFloating(): void {
+    if (!this.menu) return;
+    const trigger = this.returnFocusTo ?? this.primaryTrigger;
+    if (!trigger) return;
+
+    this.floating = new FloatingController(this.menu, trigger, {
+      shouldHover: (): boolean => this.openOnHoverEnabled(),
+      onPointerEnter: (): void => {
+        this.cancelCloseTimer();
+      },
+      onPointerLeave: (): void => {
+        this.scheduleClose(this.getCloseDelay());
+      },
+    });
+    this.floating.mount();
+  }
+
+  public handleMenuKeydown(event: KeyboardEvent): void {
+    this.onMenuKeydown(event);
+  }
+
+  public handleMenuClick(event: MouseEvent): void {
+    this.onMenuClick(event);
+  }
+
   public async openMenu(options: {
     focus: "none" | "first" | "last";
   }): Promise<void> {
@@ -556,6 +817,7 @@ class DropdownRootController {
       this.menu.style.display = "block";
       setMenuInteractive(this.menu, true);
       this.updateTriggerA11y();
+      this.mountFloating();
       await animateOpen(this.menu);
     }
 
@@ -581,6 +843,8 @@ class DropdownRootController {
     this.updateTriggerA11y();
     await animateClose(this.menu);
     this.menu.style.display = "none";
+    this.floating?.unmount();
+    this.floating = null;
 
     if (options.returnFocus) {
       (this.returnFocusTo ?? this.primaryTrigger)?.focus();
@@ -601,11 +865,17 @@ class DropdownRootController {
     setMenuInteractive(this.menu, false);
     this.updateTriggerA11y();
     this.menu.style.display = "none";
+    this.floating?.unmount();
+    this.floating = null;
     this.returnFocusTo = null;
   }
 
   public contains(node: Node): boolean {
-    return this.root.contains(node);
+    // Content (and submenu content) is portaled out of the root while open, so
+    // check those elements directly in addition to the root wrapper.
+    if (this.root.contains(node)) return true;
+    if (this.menu?.contains(node)) return true;
+    return this.submenus.some((submenu) => submenu.menuContains(node));
   }
 
   public isOpen(): boolean {
@@ -633,6 +903,20 @@ class DropdownRootController {
     });
   }
 
+  private toggleCheckboxItem(item: HTMLElement): boolean {
+    if (!item.hasAttribute("data-dropdown-checkbox-item")) return false;
+
+    const checked = item.getAttribute("aria-checked") === "true";
+    item.setAttribute("aria-checked", checked ? "false" : "true");
+    item.dispatchEvent(
+      new CustomEvent("dropdown:checked-change", {
+        bubbles: true,
+        detail: { checked: !checked },
+      })
+    );
+    return true;
+  }
+
   private onMenuClick(event: MouseEvent): void {
     if (!this.menu) return;
     const target = event.target as Element | null;
@@ -642,6 +926,15 @@ class DropdownRootController {
     if (isDisabled(item)) return;
 
     if (item.hasAttribute("data-dropdown-sub-trigger")) return;
+
+    // Checkbox items toggle in place and keep the menu open unless they opt in
+    // to closing via `closeOnClick`.
+    if (this.toggleCheckboxItem(item)) {
+      if (item.getAttribute("data-close-on-click") === "true") {
+        void this.close({ returnFocus: false });
+      }
+      return;
+    }
 
     void this.close({ returnFocus: false });
   }
@@ -762,8 +1055,9 @@ class DropdownRootController {
 
       if (active.hasAttribute("data-dropdown-item")) {
         event.preventDefault();
+        // Defer to the click handler, which closes for plain items and toggles
+        // (keeping the menu open) for checkbox items.
         active.click();
-        void this.close({ returnFocus: false });
       }
       return;
     }
@@ -818,9 +1112,6 @@ function attachGlobalListeners(): void {
   );
 
   window.addEventListener("blur", () => {
-    closeAllDropdowns();
-  });
-  window.addEventListener("resize", () => {
     closeAllDropdowns();
   });
 }

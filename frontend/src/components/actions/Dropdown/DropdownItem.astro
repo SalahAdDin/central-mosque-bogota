@@ -46,11 +46,12 @@ interface Props<Tag extends HTMLTag = "button" | "a"> extends Polymorphic<
 const {
   as: Tag = "button",
   disabled = false,
+  inset = false,
   class: className,
   ...rest
 } = Astro.props as Props<typeof Tag>;
 
-const classes = cn(dropdownItemVariants(), className);
+const classes = cn(dropdownItemVariants({ inset }), className);
 ---
 
 <Tag

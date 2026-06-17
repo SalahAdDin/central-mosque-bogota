@@ -1,0 +1,239 @@
+---
+import Button from "@components/actions/Button/Button.astro";
+import Icon from "@components/data/display/Icons/Icon.astro";
+
+import Dropdown from "./Dropdown.astro";
+import DropdownCheckboxItem from "./DropdownCheckboxItem.astro";
+import DropdownContent from "./DropdownContent.astro";
+import DropdownGroup from "./DropdownGroup.astro";
+import DropdownItem from "./DropdownItem.astro";
+import DropdownLabel from "./DropdownLabel.astro";
+import DropdownSeparator from "./DropdownSeparator.astro";
+import DropdownShortcut from "./DropdownShortcut.astro";
+import DropdownSub from "./DropdownSub.astro";
+import DropdownSubContent from "./DropdownSubContent.astro";
+import DropdownSubTrigger from "./DropdownSubTrigger.astro";
+import DropdownTrigger from "./DropdownTrigger.astro";
+
+type DropdownStoryVariant = "basic" | "navigation" | "hover" | "submenu" | "shortcuts" | "placement" | "icons" | "checkbox";
+
+interface Props {
+  /**
+   * Which documentation example to render.
+   * @default basic
+   */
+  variant?: DropdownStoryVariant;
+}
+
+const { variant = "basic" } = Astro.props as Props;
+---
+
+<div class="flex min-h-72 items-start gap-6 p-6">
+  {
+    variant === "basic" && (
+      <Dropdown>
+        <DropdownTrigger asChild>
+          <Button>Open Menu</Button>
+        </DropdownTrigger>
+        <DropdownContent>
+          <DropdownLabel>My Account</DropdownLabel>
+          <DropdownItem>Profile</DropdownItem>
+          <DropdownItem>Billing</DropdownItem>
+          <DropdownItem>Settings</DropdownItem>
+          <DropdownSeparator />
+          <DropdownItem disabled>Sign out</DropdownItem>
+        </DropdownContent>
+      </Dropdown>
+    )
+  }
+
+  {
+    variant === "navigation" && (
+      <Dropdown>
+        <DropdownTrigger asChild>
+          <Button>Navigation</Button>
+        </DropdownTrigger>
+        <DropdownContent>
+          <DropdownItem as="a" href="/">
+            Home
+          </DropdownItem>
+          <DropdownItem as="a" href="/about">
+            About
+          </DropdownItem>
+          <DropdownItem as="a" href="/blog">
+            Blog
+          </DropdownItem>
+          <DropdownSeparator />
+          <DropdownItem as="a" href="/contact">
+            Contact
+          </DropdownItem>
+        </DropdownContent>
+      </Dropdown>
+    )
+  }
+
+  {
+    variant === "hover" && (
+      <Dropdown openOnHover={true} closeDelay={200}>
+        <DropdownTrigger asChild>
+          <Button>Hover Me</Button>
+        </DropdownTrigger>
+        <DropdownContent>
+          <DropdownItem>Item one</DropdownItem>
+          <DropdownItem>Item two</DropdownItem>
+          <DropdownItem>Item three</DropdownItem>
+        </DropdownContent>
+      </Dropdown>
+    )
+  }
+
+  {
+    variant === "submenu" && (
+      <Dropdown>
+        <DropdownTrigger asChild>
+          <Button>Open</Button>
+        </DropdownTrigger>
+        <DropdownContent>
+          <DropdownItem>
+            New Tab
+            <DropdownShortcut>⌘T</DropdownShortcut>
+          </DropdownItem>
+          <DropdownSub>
+            <DropdownSubTrigger>More Tools</DropdownSubTrigger>
+            <DropdownSubContent>
+              <DropdownItem>
+                Save Page
+                <DropdownShortcut>⌘S</DropdownShortcut>
+              </DropdownItem>
+              <DropdownItem>Developer Tools</DropdownItem>
+              <DropdownSub>
+                <DropdownSubTrigger>Even More</DropdownSubTrigger>
+                <DropdownSubContent>
+                  <DropdownItem>Item A</DropdownItem>
+                  <DropdownItem>Item B</DropdownItem>
+                </DropdownSubContent>
+              </DropdownSub>
+            </DropdownSubContent>
+          </DropdownSub>
+          <DropdownSeparator />
+          <DropdownItem>
+            Close Window
+            <DropdownShortcut>⌘W</DropdownShortcut>
+          </DropdownItem>
+        </DropdownContent>
+      </Dropdown>
+    )
+  }
+
+  {
+    variant === "shortcuts" && (
+      <Dropdown>
+        <DropdownTrigger asChild>
+          <Button>Open</Button>
+        </DropdownTrigger>
+        <DropdownContent>
+          <DropdownItem>
+            Profile
+            <DropdownShortcut>⇧⌘P</DropdownShortcut>
+          </DropdownItem>
+          <DropdownItem>
+            Settings
+            <DropdownShortcut>⌘,</DropdownShortcut>
+          </DropdownItem>
+          <DropdownItem>
+            Search
+            <DropdownShortcut>⌘K</DropdownShortcut>
+          </DropdownItem>
+        </DropdownContent>
+      </Dropdown>
+    )
+  }
+
+  {
+    variant === "placement" && (
+      <>
+        <Dropdown>
+          <DropdownTrigger asChild>
+            <Button>Left (Start)</Button>
+          </DropdownTrigger>
+          <DropdownContent side="bottom" align="start">
+            <DropdownItem>Item one</DropdownItem>
+            <DropdownItem>Item two</DropdownItem>
+          </DropdownContent>
+        </Dropdown>
+
+        <Dropdown>
+          <DropdownTrigger asChild>
+            <Button>Center</Button>
+          </DropdownTrigger>
+          <DropdownContent side="bottom" align="center">
+            <DropdownItem>Item one</DropdownItem>
+            <DropdownItem>Item two</DropdownItem>
+          </DropdownContent>
+        </Dropdown>
+
+        <Dropdown>
+          <DropdownTrigger asChild>
+            <Button>Right (End)</Button>
+          </DropdownTrigger>
+          <DropdownContent side="bottom" align="end">
+            <DropdownItem>Item one</DropdownItem>
+            <DropdownItem>Item two</DropdownItem>
+          </DropdownContent>
+        </Dropdown>
+      </>
+    )
+  }
+
+  {
+    variant === "icons" && (
+      <Dropdown>
+        <DropdownTrigger asChild>
+          <Button>Actions</Button>
+        </DropdownTrigger>
+        <DropdownContent>
+          <DropdownLabel inset>Actions</DropdownLabel>
+          <DropdownItem>
+            <Icon name="favorite" />
+            Add to favorites
+            <DropdownShortcut>⌘D</DropdownShortcut>
+          </DropdownItem>
+          <DropdownItem>
+            <Icon name="email" />
+            Email link
+          </DropdownItem>
+          <DropdownSeparator />
+          <DropdownGroup>
+            <DropdownLabel inset>More</DropdownLabel>
+            <DropdownItem inset>Aligned without icon</DropdownItem>
+            <DropdownItem disabled>
+              <Icon name="close" />
+              Remove (disabled)
+            </DropdownItem>
+          </DropdownGroup>
+        </DropdownContent>
+      </Dropdown>
+    )
+  }
+
+  {
+    variant === "checkbox" && (
+      <Dropdown>
+        <DropdownTrigger asChild>
+          <Button>View Options</Button>
+        </DropdownTrigger>
+        <DropdownContent>
+          <DropdownLabel inset>Appearance</DropdownLabel>
+          <DropdownCheckboxItem checked={true}>
+            Show toolbar
+          </DropdownCheckboxItem>
+          <DropdownCheckboxItem>Show sidebar</DropdownCheckboxItem>
+          <DropdownSeparator />
+          <DropdownCheckboxItem closeOnClick={true}>
+            Close on select
+          </DropdownCheckboxItem>
+        </DropdownContent>
+      </Dropdown>
+    )
+  }
+</div>

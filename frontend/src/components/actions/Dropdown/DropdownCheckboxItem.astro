@@ -1,0 +1,84 @@
+---
+import { cn } from "@utils/styles.utils";
+import type { HTMLAttributes } from "astro/types";
+import Icon from "@components/data/display/Icons/Icon.astro";
+
+import { dropdownCheckboxItemVariants } from "./variants";
+
+/**
+ * @component DropdownCheckboxItem
+ * @title Dropdown Checkbox Item
+ * @description Toggleable menu item with a checked state. Unlike a plain `DropdownItem`, it keeps the menu open on selection by default so multiple options can be toggled.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownCheckboxItem checked={true}>Show toolbar</DropdownCheckboxItem>
+ *     <DropdownCheckboxItem>Show sidebar</DropdownCheckboxItem>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DropdownCheckboxItem } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <DropdownCheckboxItem checked={true}>Show toolbar</DropdownCheckboxItem>
+ * ```
+ */
+
+interface Props extends Omit<HTMLAttributes<"div">, "role" | "aria-checked"> {
+  /**
+   * Whether the item is checked.
+   * @default false
+   */
+  checked?: boolean;
+  /**
+   * When true, makes the item non-interactive.
+   * @default false
+   */
+  disabled?: boolean;
+  /**
+   * When true, closes the dropdown after the item is toggled.
+   * @default false
+   */
+  closeOnClick?: boolean;
+}
+
+const {
+  checked = false,
+  disabled = false,
+  closeOnClick = false,
+  class: className,
+  ...rest
+} = Astro.props as Props;
+---
+
+<div
+  class={cn(dropdownCheckboxItemVariants(), className)}
+  role="menuitemcheckbox"
+  aria-checked={checked ? "true" : "false"}
+  aria-disabled={disabled || undefined}
+  tabindex={disabled ? "-1" : "0"}
+  data-dropdown-item
+  data-dropdown-checkbox-item
+  data-close-on-click={closeOnClick ? "true" : undefined}
+  {...rest}
+>
+  <span
+    class="
+      pointer-events-none absolute left-2 flex size-4 items-center
+      justify-center opacity-0
+      group-aria-checked/dropdown-item:opacity-100
+    "
+  >
+    <slot name="indicator">
+      <Icon name="check" class="text-[18px]" />
+    </slot>
+  </span>
+  <slot />
+</div>

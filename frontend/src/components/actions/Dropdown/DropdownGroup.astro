@@ -1,0 +1,43 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * @component DropdownGroup
+ * @title Dropdown Group
+ * @description Semantic wrapper that groups related items inside dropdown content. Typically paired with a `DropdownLabel`.
+ *
+ * @preview
+ *
+ * <Dropdown>
+ *   <DropdownTrigger class="rounded-md border px-3 py-2">Open</DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownGroup>
+ *       <DropdownLabel>Account</DropdownLabel>
+ *       <DropdownItem>Profile</DropdownItem>
+ *       <DropdownItem>Settings</DropdownItem>
+ *     </DropdownGroup>
+ *   </DropdownContent>
+ * </Dropdown>
+ *
+ * @usage
+ *
+ * ```astro nocollapse
+ * ---
+ * import { DropdownGroup, DropdownItem, DropdownLabel } from "@components/actions/Dropdown";
+ * ---
+ *
+ * <DropdownGroup>
+ *   <DropdownLabel>Account</DropdownLabel>
+ *   <DropdownItem>Profile</DropdownItem>
+ * </DropdownGroup>
+ * ```
+ */
+
+type Props = HTMLAttributes<"div">;
+
+const { class: className, ...rest } = Astro.props as Props;
+---
+
+<div class={className} role="group" data-dropdown-group {...rest}>
+  <slot />
+</div>
