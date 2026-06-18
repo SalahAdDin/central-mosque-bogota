@@ -61,6 +61,21 @@ import type { HTMLAttributes } from "astro/types";
  *     </DropdownSub>
  *   </DropdownContent>
  * </Dropdown>
+ *
+ * ### Context menu
+ *
+ * Set `menuMode="context-menu"` to open the menu at the pointer on right-click
+ * (or long-press on touch, or the ContextMenu/Shift+F10 keys).
+ *
+ * <Dropdown menuMode="context-menu">
+ *   <DropdownTrigger asChild>
+ *     <div class="rounded-md border border-dashed p-8 text-center">Right-click here</div>
+ *   </DropdownTrigger>
+ *   <DropdownContent>
+ *     <DropdownItem>Back</DropdownItem>
+ *     <DropdownItem>Reload</DropdownItem>
+ *   </DropdownContent>
+ * </Dropdown>
  */
 
 interface Props extends HTMLAttributes<"div"> {
@@ -73,12 +88,21 @@ interface Props extends HTMLAttributes<"div"> {
    * @default 200
    */
   closeDelay?: number;
+  /**
+   * Interaction mode. `"dropdown"` opens on click/keyboard from the trigger.
+   * `"context-menu"` opens at the pointer on right-click (or long-press on
+   * touch, or the ContextMenu/Shift+F10 keys) and anchors the menu to the
+   * cursor instead of the trigger.
+   * @default "dropdown"
+   */
+  menuMode?: "dropdown" | "context-menu";
 }
 
 const {
   class: className,
   openOnHover = false,
   closeDelay = 200,
+  menuMode = "dropdown",
   ...rest
 } = Astro.props as Props;
 ---
@@ -87,6 +111,7 @@ const {
   class={cn("relative", className)}
   data-open-on-hover={openOnHover ? "true" : undefined}
   data-close-delay={closeDelay}
+  data-menu-mode={menuMode}
   data-dropdown-root
   {...rest}
 >
@@ -94,6 +119,16 @@ const {
 </div>
 
 <script>
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -136,6 +171,16 @@ const {
     setup();
   }
   document.addEventListener("astro:after-swap", setup);
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -255,13 +255,16 @@ function positionMenu(
   content: HTMLElement,
   trigger: HTMLElement,
   portalTarget: HTMLElement | null,
-  options?: { avoidCollisions?: boolean }
+  options?: { avoidCollisions?: boolean; anchorRect?: DOMRect | null }
 ): void {
+  // Context menus anchor to the pointer position (a zero-size rect at the
+  // cursor) rather than the trigger's bounding box.
+  const triggerRect = options?.anchorRect ?? trigger.getBoundingClientRect();
   const resolved = resolvePlacement({
     side: getSide(content),
     align: getAlign(content),
     sideOffset: getSideOffset(content),
-    triggerRect: trigger.getBoundingClientRect(),
+    triggerRect,
     contentWidth: content.offsetWidth,
     contentHeight: content.offsetHeight,
     viewportWidth: window.innerWidth,
@@ -311,6 +314,7 @@ class FloatingController {
       shouldHover: () => boolean;
       onPointerEnter: () => void;
       onPointerLeave: () => void;
+      getAnchorRect?: () => DOMRect | null;
     }
   ) {}
 
@@ -376,7 +380,10 @@ class FloatingController {
   }
 
   public reposition(options?: { avoidCollisions?: boolean }): void {
-    positionMenu(this.content, this.trigger, this.portalTarget, options);
+    positionMenu(this.content, this.trigger, this.portalTarget, {
+      avoidCollisions: options?.avoidCollisions,
+      anchorRect: this.options.getAnchorRect?.() ?? null,
+    });
   }
 
   public unmount(): void {
@@ -578,6 +585,14 @@ class DropdownRootController {
   private returnFocusTo: HTMLElement | null = null;
   private floating: FloatingController | null = null;
 
+  // Context-menu mode state
+  private contextMenu = false;
+  private contextAnchorRect: DOMRect | null = null;
+  private longPressTimer: number | null = null;
+  private touchStartPoint: { x: number; y: number } | null = null;
+  private suppressContextMenuUntil = 0;
+  private suppressItemClickUntil = 0;
+
   constructor(root: HTMLElement) {
     this.root = root;
     this.initialize();
@@ -593,6 +608,7 @@ class DropdownRootController {
     if (!triggerWrapper || !menu) return;
 
     this.menu = menu;
+    this.contextMenu = this.root.dataset.menuMode === "context-menu";
 
     this.ensureRootId();
     this.ensureIds();
@@ -717,6 +733,11 @@ class DropdownRootController {
   }
 
   private attachTriggerEvents(trigger: HTMLElement): void {
+    if (this.contextMenu) {
+      this.attachContextMenuTriggerEvents(trigger);
+      return;
+    }
+
     trigger.addEventListener("click", (event) => {
       if (isDisabled(trigger)) return;
       event.preventDefault();
@@ -758,6 +779,115 @@ class DropdownRootController {
     });
   }
 
+  private attachContextMenuTriggerEvents(trigger: HTMLElement): void {
+    trigger.addEventListener("contextmenu", (event) => {
+      if (isDisabled(trigger)) return;
+      event.preventDefault();
+      // Skip the synthetic contextmenu some browsers fire after a long-press.
+      if (Date.now() < this.suppressContextMenuUntil) return;
+      this.returnFocusTo = trigger;
+      this.openAtPoint(event.clientX, event.clientY);
+    });
+
+    trigger.addEventListener("keydown", (event) => {
+      if (
+        event.key === "ContextMenu" ||
+        (event.shiftKey && event.key === "F10")
+      ) {
+        if (isDisabled(trigger)) return;
+        event.preventDefault();
+        this.returnFocusTo = trigger;
+        this.openAtTrigger(trigger);
+        return;
+      }
+      if (event.key === "Escape" && this.open) {
+        event.preventDefault();
+        void this.close({ returnFocus: true });
+        return;
+      }
+      if (this.open && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+        event.preventDefault();
+        if (!this.menu) return;
+        if (event.key === "ArrowDown") focusFirst(this.menu);
+        else focusLast(this.menu);
+      }
+    });
+
+    trigger.addEventListener(
+      "touchstart",
+      (event) => {
+        if (event.touches.length !== 1) {
+          this.clearLongPressTimer();
+          this.touchStartPoint = null;
+          return;
+        }
+        const touch = event.touches[0];
+        this.touchStartPoint = { x: touch.clientX, y: touch.clientY };
+        this.returnFocusTo = trigger;
+        this.clearLongPressTimer();
+        this.longPressTimer = window.setTimeout(() => {
+          if (!this.touchStartPoint || isDisabled(trigger)) return;
+          this.openAtPoint(
+            this.touchStartPoint.x,
+            this.touchStartPoint.y,
+            10,
+            10
+          );
+          // Block the trailing synthetic contextmenu/click after the long-press.
+          this.suppressContextMenuUntil = Date.now() + 700;
+          this.suppressItemClickUntil = Date.now() + 700;
+        }, 500);
+      },
+      { passive: true }
+    );
+
+    trigger.addEventListener(
+      "touchmove",
+      (event) => {
+        if (!this.touchStartPoint || event.touches.length !== 1) {
+          this.clearLongPressTimer();
+          return;
+        }
+        const touch = event.touches[0];
+        if (
+          Math.abs(touch.clientX - this.touchStartPoint.x) > 10 ||
+          Math.abs(touch.clientY - this.touchStartPoint.y) > 10
+        ) {
+          this.clearLongPressTimer();
+        }
+      },
+      { passive: true }
+    );
+
+    const cancelLongPress = (): void => {
+      this.clearLongPressTimer();
+      this.touchStartPoint = null;
+    };
+    trigger.addEventListener("touchend", cancelLongPress);
+    trigger.addEventListener("touchcancel", cancelLongPress);
+  }
+
+  private clearLongPressTimer(): void {
+    if (this.longPressTimer !== null) {
+      window.clearTimeout(this.longPressTimer);
+      this.longPressTimer = null;
+    }
+  }
+
+  private openAtPoint(x: number, y: number, width = 0, height = 0): void {
+    this.contextAnchorRect = new DOMRect(x, y, width, height);
+    if (this.open) {
+      this.floating?.reposition({ avoidCollisions: true });
+      return;
+    }
+    void this.openMenu({ focus: "none" });
+  }
+
+  private openAtTrigger(trigger: HTMLElement): void {
+    const rect = trigger.getBoundingClientRect();
+    this.openAtPoint(rect.left, rect.bottom);
+  }
+
   private registerTrigger(wrapper: HTMLElement): void {
     if (!this.menu) return;
     const trigger = resolveTriggerElement(wrapper);
@@ -790,6 +920,8 @@ class DropdownRootController {
       onPointerLeave: (): void => {
         this.scheduleClose(this.getCloseDelay());
       },
+      getAnchorRect: (): DOMRect | null =>
+        this.contextMenu ? this.contextAnchorRect : null,
     });
     this.floating.mount();
   }
@@ -845,6 +977,7 @@ class DropdownRootController {
     this.menu.style.display = "none";
     this.floating?.unmount();
     this.floating = null;
+    this.contextAnchorRect = null;
 
     if (options.returnFocus) {
       (this.returnFocusTo ?? this.primaryTrigger)?.focus();
@@ -867,6 +1000,8 @@ class DropdownRootController {
     this.menu.style.display = "none";
     this.floating?.unmount();
     this.floating = null;
+    this.contextAnchorRect = null;
+    this.clearLongPressTimer();
     this.returnFocusTo = null;
   }
 
@@ -876,6 +1011,17 @@ class DropdownRootController {
     if (this.root.contains(node)) return true;
     if (this.menu?.contains(node)) return true;
     return this.submenus.some((submenu) => submenu.menuContains(node));
+  }
+
+  // Which nodes count as "inside" for outside-click/focus dismissal. A context
+  // menu must dismiss when clicking its trigger region too (only the portaled
+  // menu content keeps it open), whereas a regular dropdown counts its trigger.
+  public containsOpenSurface(node: Node): boolean {
+    if (this.menu?.contains(node)) return true;
+    if (this.submenus.some((submenu) => submenu.menuContains(node)))
+      return true;
+    if (!this.contextMenu && this.root.contains(node)) return true;
+    return false;
   }
 
   public isOpen(): boolean {
@@ -919,6 +1065,9 @@ class DropdownRootController {
 
   private onMenuClick(event: MouseEvent): void {
     if (!this.menu) return;
+    // Ignore the synthetic click fired by the finger lifting right after a
+    // long-press opened a context menu over an item.
+    if (Date.now() < this.suppressItemClickUntil) return;
     const target = event.target as Element | null;
     const item = target?.closest<HTMLElement>("[data-dropdown-item]");
     if (!item) return;
@@ -1086,10 +1235,12 @@ function attachGlobalListeners(): void {
   document.addEventListener(
     "pointerdown",
     (event) => {
+      // Right-clicks open/reposition context menus; never let them dismiss.
+      if (event.button === 2) return;
       const target = event.target as Node | null;
       if (!target) return;
       const inside = Array.from(openDropdowns).some((dropdown) =>
-        dropdown.contains(target)
+        dropdown.containsOpenSurface(target)
       );
       if (inside) return;
       closeAllDropdowns();
@@ -1103,7 +1254,7 @@ function attachGlobalListeners(): void {
       const target = event.target as Node | null;
       if (!target) return;
       const inside = Array.from(openDropdowns).some((dropdown) =>
-        dropdown.contains(target)
+        dropdown.containsOpenSurface(target)
       );
       if (inside) return;
       closeAllDropdowns();
