@@ -2,7 +2,11 @@
 import { cn } from "@utils/styles.utils";
 import type { HTMLAttributes } from "astro/types";
 import Icon from "@components/data/display/Icons/Icon.astro";
-import { dropdownItemVariants, type DropdownItemVariants } from "./variants";
+import {
+  dropdownItemVariants,
+  dropdownSubTriggerVariants,
+  type DropdownItemVariants,
+} from "./variants";
 
 /**
  * @component DropdownSubTrigger
@@ -65,7 +69,7 @@ const {
   type="button"
   class={cn(
     dropdownItemVariants(),
-    "[&[aria-expanded='true']_[data-dropdown-chevron]]:rotate-90",
+    dropdownSubTriggerVariants(),
     className,
   )}
   role="menuitem"

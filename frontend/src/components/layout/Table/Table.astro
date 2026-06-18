@@ -1,7 +1,9 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
-import { cn } from '@utils/styles.utils'
+import { cn } from "@utils/styles.utils";
+
+import { tableVariants } from "./variants";
 
 /**
  * @component Table
@@ -57,13 +59,13 @@ import { cn } from '@utils/styles.utils'
  * </Table>
  * ```
  */
-type Props = HTMLAttributes<'table'>
+type Props = HTMLAttributes<"table">;
 
 const { class: className, ...rest } = Astro.props as Props;
 ---
 
-<div class="relative w-full overflow-auto">
-  <table class={cn('w-full caption-bottom text-sm', className)} {...rest}>
+<div data-slot="table-container" class="relative w-full overflow-x-auto">
+  <table role="table" class={cn(tableVariants(), className)} {...rest} data-slot="table">
     <slot />
   </table>
 </div>

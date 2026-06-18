@@ -1,7 +1,9 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
-import { cn } from '@utils/styles.utils'
+import { cn } from "@utils/styles.utils";
+
+import { tableHeaderVariants } from "./variants";
 
 /**
  * @component TableHeader
@@ -25,11 +27,11 @@ import { cn } from '@utils/styles.utils'
  * </Table>
  * ```
  */
-type Props = HTMLAttributes<'thead'>
+type Props = HTMLAttributes<"thead">;
 
 const { class: className, ...rest } = Astro.props as Props;
 ---
 
-<thead class={cn('[&_tr]:border-b', className)} {...rest}>
+<thead class={cn(tableHeaderVariants(), className)} {...rest} data-slot="table-header">
   <slot />
 </thead>

@@ -1,7 +1,9 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
-import { cn } from '@utils/styles.utils'
+import { cn } from "@utils/styles.utils";
+
+import { tableRowVariants } from "./variants";
 
 /**
  * @component TableRow
@@ -31,21 +33,11 @@ import { cn } from '@utils/styles.utils'
  * </Table>
  * ```
  */
-type Props = HTMLAttributes<'tr'>
+type Props = HTMLAttributes<"tr">;
 
 const { class: className, ...rest } = Astro.props as Props;
 ---
 
-<tr
-  class={cn(
-    `
-      border-b transition-colors
-      hover:bg-muted/50
-      data-[state=selected]:bg-muted
-    `,
-    className,
-  )}
-  {...rest}
->
+<tr role="row" class={cn(tableRowVariants(), className)} {...rest} data-slot="table-row">
   <slot />
 </tr>

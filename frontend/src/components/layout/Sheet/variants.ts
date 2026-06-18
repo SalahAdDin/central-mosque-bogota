@@ -47,3 +47,11 @@ export const sheetCloseButtonVariants = cva(`
   text-foreground absolute top-4 right-4 rounded-xs [&>span]:opacity-70 hover:[&>span]:opacity-100
   focus-visible:ring-outline/50 transition-[color,box-shadow] outline-none focus-visible:ring-3
 `);
+
+export const sheetHeaderVariants = cva("flex flex-col gap-1.5 p-4");
+
+export const sheetFooterVariants = cva("mt-auto flex flex-col gap-2 p-4");
+
+export const sheetTitleVariants = cva("font-semibold text-foreground");
+
+export const sheetDescriptionVariants = cva("text-sm text-muted-foreground");

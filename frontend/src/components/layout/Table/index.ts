@@ -6,6 +6,27 @@ import TableFooter from "./TableFooter.astro";
 import TableHead from "./TableHead.astro";
 import TableHeader from "./TableHeader.astro";
 import TableRow from "./TableRow.astro";
+import {
+  tableBodyVariants,
+  tableCaptionVariants,
+  tableCellVariants,
+  tableFooterVariants,
+  tableHeadVariants,
+  tableHeaderVariants,
+  tableRowVariants,
+  tableVariants,
+} from "./variants";
+
+const TableVariants = {
+  tableVariants,
+  tableBodyVariants,
+  tableCaptionVariants,
+  tableCellVariants,
+  tableFooterVariants,
+  tableHeadVariants,
+  tableHeaderVariants,
+  tableRowVariants,
+};
 
 export {
   Table,
@@ -16,4 +37,5 @@ export {
   TableHead,
   TableHeader,
   TableRow,
+  TableVariants,
 };

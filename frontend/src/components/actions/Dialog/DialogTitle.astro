@@ -2,6 +2,8 @@
 import { cn } from "@utils/styles.utils";
 import type { HTMLAttributes } from "astro/types";
 
+import { dialogTitleVariants } from "./variants";
+
 /**
  * @component DialogTitle
  * @title Dialog Title
@@ -36,7 +38,7 @@ const { class: className, ...rest } = Astro.props;
 ---
 
 <h2
-  class={cn("text-xl leading-none font-semibold tracking-tight", className)}
+  class={cn(dialogTitleVariants(), className)}
   {...rest}
 >
   <slot />

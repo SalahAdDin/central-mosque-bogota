@@ -2,6 +2,8 @@
 import { cn } from "@utils/styles.utils";
 import type { HTMLAttributes } from "astro/types";
 
+import { dialogHeaderVariants } from "./variants";
+
 /**
  * @component DialogHeader
  * @title Dialog Header
@@ -35,15 +37,6 @@ interface Props extends HTMLAttributes<"header"> {}
 const { class: className, ...rest } = Astro.props;
 ---
 
-<header
-  class={cn(
-    `
-      flex flex-col space-y-2 text-center
-      sm:text-left
-    `,
-    className,
-  )}
-  {...rest}
->
+<header class={cn(dialogHeaderVariants(), className)} {...rest}>
   <slot />
 </header>

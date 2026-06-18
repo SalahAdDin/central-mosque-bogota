@@ -6,10 +6,24 @@ import DialogFooter from "./DialogFooter.astro";
 import DialogHeader from "./DialogHeader.astro";
 import DialogTitle from "./DialogTitle.astro";
 import DialogTrigger from "./DialogTrigger.astro";
-import { dialogContentVariants } from "./variants";
+import {
+  dialogBackdropVariants,
+  dialogCloseButtonVariants,
+  dialogContentVariants,
+  dialogDescriptionVariants,
+  dialogFooterVariants,
+  dialogHeaderVariants,
+  dialogTitleVariants,
+} from "./variants";
 
 const DialogVariants = {
+  dialogBackdropVariants,
   dialogContentVariants,
+  dialogCloseButtonVariants,
+  dialogHeaderVariants,
+  dialogFooterVariants,
+  dialogTitleVariants,
+  dialogDescriptionVariants,
 };
 
 export {

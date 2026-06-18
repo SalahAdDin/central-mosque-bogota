@@ -46,7 +46,7 @@ describe("Table", () => {
 
     const table = getByRole(root, "table");
     const wrapper = table.parentElement;
-    expect(wrapper?.className.includes("overflow-auto")).toBe(true);
+    expect(wrapper?.className.includes("overflow-x-auto")).toBe(true);
 
     const firstBodyRow = table.querySelector("tbody tr");
     if (!firstBodyRow) throw new Error("Expected at least one <tbody><tr> row");

@@ -25,3 +25,19 @@ export const dialogCloseButtonVariants = cva(`
   absolute top-5.5 right-5.5 rounded-sm [&>span]:opacity-70 hover:[&>span]:opacity-100
   focus-visible:ring-outline/50 transition-[color,box-shadow] outline-none focus-visible:ring-3
 `);
+
+export const dialogHeaderVariants = cva(`
+  flex flex-col space-y-2 text-center
+  sm:text-left
+`);
+
+export const dialogFooterVariants = cva(`
+  flex flex-col-reverse gap-2
+  sm:flex-row sm:justify-end
+`);
+
+export const dialogTitleVariants = cva(
+  "text-xl leading-none font-semibold tracking-tight"
+);
+
+export const dialogDescriptionVariants = cva("text-muted-foreground");

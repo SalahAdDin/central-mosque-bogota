@@ -16,6 +16,9 @@ import {
   dropdownItemVariants,
   dropdownLabelVariants,
   dropdownSeparatorVariants,
+  dropdownShortcutVariants,
+  dropdownSubTriggerVariants,
+  dropdownSubVariants,
   dropdownTriggerVariants,
 } from "./variants";
 
@@ -26,6 +29,9 @@ const DropdownVariants = {
   dropdownLabelVariants,
   dropdownSeparatorVariants,
   dropdownTriggerVariants,
+  dropdownShortcutVariants,
+  dropdownSubVariants,
+  dropdownSubTriggerVariants,
 };
 
 export {

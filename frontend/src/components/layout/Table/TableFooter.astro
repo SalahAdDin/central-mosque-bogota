@@ -1,7 +1,9 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
-import { cn } from '@utils/styles.utils'
+import { cn } from "@utils/styles.utils";
+
+import { tableFooterVariants } from "./variants";
 
 /**
  * @component TableFooter
@@ -23,20 +25,11 @@ import { cn } from '@utils/styles.utils'
  * </Table>
  * ```
  */
-type Props = HTMLAttributes<'tfoot'>
+type Props = HTMLAttributes<"tfoot">;
 
 const { class: className, ...rest } = Astro.props as Props;
 ---
 
-<tfoot
-  class={cn(
-    `
-      border-t bg-muted/50 font-medium
-      [&>tr]:last:border-b-0
-    `,
-    className,
-  )}
-  {...rest}
->
+<tfoot class={cn(tableFooterVariants(), className)} {...rest} data-slot="table-footer">
   <slot />
 </tfoot>

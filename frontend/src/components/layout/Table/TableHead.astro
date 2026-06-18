@@ -1,7 +1,9 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
-import { cn } from '@utils/styles.utils'
+import { cn } from "@utils/styles.utils";
+
+import { tableHeadVariants } from "./variants";
 
 /**
  * @component TableHead
@@ -25,20 +27,16 @@ import { cn } from '@utils/styles.utils'
  * </Table>
  * ```
  */
-type Props = HTMLAttributes<'th'>
+type Props = HTMLAttributes<"th">;
 
 const { class: className, ...rest } = Astro.props as Props;
 ---
 
 <th
-  class={cn(
-    `
-      h-12 px-4 text-left align-middle font-medium text-muted-foreground
-      [&:has([role=checkbox])]:pr-0
-    `,
-    className,
-  )}
+  role="columnheader"
+  class={cn(tableHeadVariants(), className)}
   {...rest}
+  data-slot="table-head"
 >
   <slot />
 </th>

@@ -1,7 +1,9 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
-import { cn } from '@utils/styles.utils'
+import { cn } from "@utils/styles.utils";
+
+import { tableBodyVariants } from "./variants";
 
 /**
  * @component TableBody
@@ -28,11 +30,11 @@ import { cn } from '@utils/styles.utils'
  * </Table>
  * ```
  */
-type Props = HTMLAttributes<'tbody'>
+type Props = HTMLAttributes<"tbody">;
 
 const { class: className, ...rest } = Astro.props as Props;
 ---
 
-<tbody class={cn('[&_tr:last-child]:border-0', className)} {...rest}>
+<tbody class={cn(tableBodyVariants(), className)} {...rest} data-slot="table-body">
   <slot />
 </tbody>

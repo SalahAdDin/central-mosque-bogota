@@ -101,3 +101,14 @@ export const dropdownTriggerVariants = cva(`
 export type DropdownTriggerVariants = VariantProps<
   typeof dropdownTriggerVariants
 >;
+
+export const dropdownShortcutVariants = cva(`
+    ml-auto text-sm tracking-widest text-muted-foreground transition-colors
+    group-focus/dropdown-item:text-accent-foreground
+  `);
+
+export const dropdownSubVariants = cva("relative");
+
+export const dropdownSubTriggerVariants = cva(
+  "[&[aria-expanded='true']_[data-dropdown-chevron]]:rotate-90"
+);

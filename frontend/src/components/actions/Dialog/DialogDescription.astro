@@ -2,6 +2,8 @@
 import { cn } from "@utils/styles.utils";
 import type { HTMLAttributes } from "astro/types";
 
+import { dialogDescriptionVariants } from "./variants";
+
 /**
  * @component DialogDescription
  * @title Dialog Description
@@ -30,7 +32,7 @@ const { class: className, ...rest } = Astro.props;
 ---
 
 <p
-  class={cn("text-muted-foreground", className)}
+  class={cn(dialogDescriptionVariants(), className)}
   {...rest}
   data-slot="dialog-description"
 >

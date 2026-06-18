@@ -1,7 +1,9 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
-import { cn } from '@utils/styles.utils'
+import { cn } from "@utils/styles.utils";
+
+import { tableCaptionVariants } from "./variants";
 
 /**
  * @component TableCaption
@@ -18,11 +20,11 @@ import { cn } from '@utils/styles.utils'
  * </Table>
  * ```
  */
-type Props = HTMLAttributes<'caption'>
+type Props = HTMLAttributes<"caption">;
 
 const { class: className, ...rest } = Astro.props as Props;
 ---
 
-<caption class={cn('mt-4 text-sm text-muted-foreground', className)} {...rest}>
+<caption class={cn(tableCaptionVariants(), className)} {...rest} data-slot="table-caption">
   <slot />
 </caption>

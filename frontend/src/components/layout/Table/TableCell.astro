@@ -1,7 +1,9 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from "astro/types";
 
-import { cn } from '@utils/styles.utils'
+import { cn } from "@utils/styles.utils";
+
+import { tableCellVariants } from "./variants";
 
 /**
  * @component TableCell
@@ -25,17 +27,11 @@ import { cn } from '@utils/styles.utils'
  * </Table>
  * ```
  */
-type Props = HTMLAttributes<'td'>
+type Props = HTMLAttributes<"td">;
 
 const { class: className, ...rest } = Astro.props as Props;
 ---
 
-<td
-  class={cn(`
-    p-4 align-middle
-    [&:has([role=checkbox])]:pr-0
-  `, className)}
-  {...rest}
->
+<td class={cn(tableCellVariants(), className)} {...rest} data-slot="table-cell">
   <slot />
 </td>

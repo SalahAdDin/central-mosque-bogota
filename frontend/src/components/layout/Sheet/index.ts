@@ -10,12 +10,20 @@ import {
   dialogBackdropVariants,
   sheetCloseButtonVariants,
   sheetContentVariants,
+  sheetDescriptionVariants,
+  sheetFooterVariants,
+  sheetHeaderVariants,
+  sheetTitleVariants,
 } from "./variants";
 
 const SheetVariants = {
   dialogBackdropVariants,
   sheetContentVariants,
   sheetCloseButtonVariants,
+  sheetHeaderVariants,
+  sheetFooterVariants,
+  sheetTitleVariants,
+  sheetDescriptionVariants,
 };
 
 export {
