@@ -1,37 +1,39 @@
 ---
-import Layout from '@layouts/Layout.astro'
-import HeroHijri from '@components/layout/HeroHijri.astro'
-import DailyPrayerTime from '@components/data/display/DailyPrayTime/DailyPrayTime.astro'
-import CommunityServicesSection from '@components/data/display/CommunityServicesSection/CommunityServicesSection.astro'
-import AcademyCoursesSection from '@components/data/display/Academy/AcademyCoursesSection/AcademyCoursesSection.astro'
-import NextEventsSection from '@components/data/display/Events/NextEventsSection/NextEventsSection.astro'
-import MediaHighlightsSection from '@components/data/display/Media/MediaHighlightsSection/MediaHighlightsSection.astro'
-import { getLangFromUrl, useTranslations } from '@i18n/utils'
-import DonationImpactSection from '@components/data/display/Donations/DonationImpactSection/DonationImpactSection.astro'
-import { ui, type TLang } from '@i18n/ui'
+import Layout from "@layouts/Layout.astro";
+import HeroHijri from "@components/layout/HeroHijri/HeroHijri.astro";
+import DailyPrayerTime from "@components/data/display/DailyPrayTime/DailyPrayTime.astro";
+import CommunityServicesSection from "@components/data/display/CommunityServicesSection/CommunityServicesSection.astro";
+import AcademyCoursesSection from "@components/data/display/Academy/AcademyCoursesSection/AcademyCoursesSection.astro";
+import NextEventsSection from "@components/data/display/Events/NextEventsSection/NextEventsSection.astro";
+import MediaHighlightsSection from "@components/data/display/Media/MediaHighlightsSection/MediaHighlightsSection.astro";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+import DonationImpactSection from "@components/data/display/Donations/DonationImpactSection/DonationImpactSection.astro";
+import { ui, type TLang } from "@i18n/ui";
 import {
   academyCourses,
   defaultServices,
   events,
   featuredDonation,
   mediaHighlights,
-} from '@utils/data.mocks'
-import { getLiveEntry } from 'astro:content'
-import type { TAcademyArticle } from '@utils/models/academy'
+} from "@utils/data.mocks";
+import { getLiveEntry } from "astro:content";
+import type { TAcademyArticle } from "@utils/models/academy";
 
 export function getStaticPaths() {
-  const langs = Object.keys(ui) as Array<TLang>
-  return langs.map(lang => ({ params: { lang } }))
+  const langs = Object.keys(ui) as Array<TLang>;
+  return langs.map((lang) => ({ params: { lang } }));
 }
 
-const lang = getLangFromUrl(Astro.url)
-const t = useTranslations(lang)
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
-const { entry, error } = await getLiveEntry('prayerTimes', {
+const live = await getLiveEntry("prayerTimes", {
   languageCode: lang,
-})
+});
 
-// TODO: rafactor to get default values from entry
+const { entry, error } = live;
+
+// TODO: refactor to get default values from entry
 const { times, location, hijriDate, currentDate } = entry!.data || {};
 ---
 
@@ -50,20 +52,20 @@ const { times, location, hijriDate, currentDate } = entry!.data || {};
     schedule={times}
   />
   <CommunityServicesSection
-    title={t('services.community-services')}
+    title={t("services.community-services")}
     services={defaultServices}
   />
   {
     academyCourses.length > 0 && (
       <AcademyCoursesSection
-        title={t('academy.home-title')}
-        description={t('academy.home-description')}
-        ctaLabel={t('academy.home-cta-label')}
-        articleCtaLabel={t('academy.article-cta-label')}
+        title={t("academy.home-title")}
+        description={t("academy.home-description")}
+        ctaLabel={t("academy.home-cta-label")}
+        articleCtaLabel={t("academy.article-cta-label")}
         academyHref="/academy"
-        articles={academyCourses.map<TAcademyArticle>(courses => ({
+        articles={academyCourses.map<TAcademyArticle>((courses) => ({
           ...courses,
-          ctaLabel: t('academy.article-cta-label'),
+          ctaLabel: t("academy.article-cta-label"),
         }))}
       />
     )
@@ -71,9 +73,9 @@ const { times, location, hijriDate, currentDate } = entry!.data || {};
   {
     events.length > 0 && (
       <NextEventsSection
-        title={t('events.next-events')}
-        description={t('events.join-us')}
-        ctaLabel={t('events.see-calendar')}
+        title={t("events.next-events")}
+        description={t("events.join-us")}
+        ctaLabel={t("events.see-calendar")}
         events={events}
       />
     )
@@ -81,10 +83,10 @@ const { times, location, hijriDate, currentDate } = entry!.data || {};
   {
     mediaHighlights.length > 0 && (
       <MediaHighlightsSection
-        title={t('media-highlights.title')}
-        description={t('media-highlights.description')}
-        cardCtaLabel={t('media-highlights.cta-card')}
-        ctaLabel={t('media-highlights.cta')}
+        title={t("media-highlights.title")}
+        description={t("media-highlights.description")}
+        cardCtaLabel={t("media-highlights.cta-card")}
+        ctaLabel={t("media-highlights.cta")}
         mediaHref="/media"
         highlights={mediaHighlights}
       />
