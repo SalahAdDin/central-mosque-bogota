@@ -4,7 +4,7 @@ import MediaHighlightCard from "./MediaHighlightCard.astro";
 
 const meta = preview.meta({
   title: "Components/Data/Display/Media/MediaHighlightCard",
-  component: MediaHighlightCard as unknown,
+  component: MediaHighlightCard,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     title: "La importancia de leer el Sagrado Corán",

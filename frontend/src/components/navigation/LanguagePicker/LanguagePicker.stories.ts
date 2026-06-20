@@ -4,7 +4,7 @@ import LanguagePicker from "./LanguagePicker.astro";
 
 const meta = preview.meta({
   title: "Components/Navigation/LanguagePicker",
-  component: LanguagePicker as unknown,
+  component: LanguagePicker,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     side: "bottom",

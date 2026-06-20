@@ -4,7 +4,7 @@ import Header from "./Header.astro";
 
 const meta = preview.meta({
   title: "Components/Layout/Header",
-  component: Header as unknown,
+  component: Header,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     navLinks: [

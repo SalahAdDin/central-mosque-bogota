@@ -4,7 +4,7 @@ import EventVerticalCard from "./EventVerticalCard.astro";
 
 const meta = preview.meta({
   title: "Components/Data/Display/Events/EventVerticalCard",
-  component: EventVerticalCard as unknown,
+  component: EventVerticalCard,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     category: "Educación",

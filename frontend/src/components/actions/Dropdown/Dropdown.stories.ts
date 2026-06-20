@@ -15,7 +15,7 @@ const VARIANTS = [
 
 const meta = preview.meta({
   title: "Components/Actions/Dropdown",
-  component: StoriesMock as unknown,
+  component: StoriesMock,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     variant: "basic",

@@ -4,7 +4,7 @@ import Footer from "./Footer.astro";
 
 const meta = preview.meta({
   title: "Components/Layout/Footer",
-  component: Footer as unknown,
+  component: Footer,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     lemma:

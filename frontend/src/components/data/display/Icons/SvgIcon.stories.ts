@@ -5,7 +5,7 @@ import SvgIcon from "./SvgIcon.astro";
 
 const meta = preview.meta({
   title: "Components/Data/Display/Icons/SvgIcon",
-  component: SvgIcon as unknown,
+  component: SvgIcon,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     name: "facebook",

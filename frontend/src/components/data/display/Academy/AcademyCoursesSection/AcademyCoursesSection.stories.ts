@@ -4,7 +4,7 @@ import AcademyCoursesSection from "./AcademyCoursesSection.astro";
 
 const meta = preview.meta({
   title: "Components/Data/Display/Academy/AcademyCoursesSection",
-  component: AcademyCoursesSection as unknown,
+  component: AcademyCoursesSection,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     title: "Academia de Estudios Islámicos",

@@ -16,7 +16,7 @@ const BUTTON_COLORS = [
 
 const meta = preview.meta({
   title: "Components/Actions/Button",
-  component: Button as unknown,
+  component: Button,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     slots: {

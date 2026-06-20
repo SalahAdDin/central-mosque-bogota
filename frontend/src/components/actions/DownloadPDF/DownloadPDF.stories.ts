@@ -4,7 +4,7 @@ import Mock from "./Mock.astro";
 
 const meta = preview.meta({
   title: "Components/Actions/DownloadPDF",
-  component: Mock as unknown,
+  component: Mock,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
 });
 

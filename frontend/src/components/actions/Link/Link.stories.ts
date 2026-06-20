@@ -5,7 +5,7 @@ import Link from "./Link.astro";
 
 const meta = preview.meta({
   title: "Components/Actions/Link",
-  component: Link as unknown,
+  component: Link,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     slots: {

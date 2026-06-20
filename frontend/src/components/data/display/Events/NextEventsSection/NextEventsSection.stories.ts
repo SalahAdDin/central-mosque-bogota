@@ -4,7 +4,7 @@ import NextEventsSection from "./NextEventsSection.astro";
 
 const meta = preview.meta({
   title: "Components/Data/Display/Events/NextEventsSection",
-  component: NextEventsSection as unknown,
+  component: NextEventsSection,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     title: "Próximos Eventos",

@@ -4,7 +4,7 @@ import MediaHighlightsSection from "./MediaHighlightsSection.astro";
 
 const meta = preview.meta({
   title: "Components/Data/Display/Media/MediaHighlightsSection",
-  component: MediaHighlightsSection as unknown,
+  component: MediaHighlightsSection,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     title: "Podcast & Reflexiones",

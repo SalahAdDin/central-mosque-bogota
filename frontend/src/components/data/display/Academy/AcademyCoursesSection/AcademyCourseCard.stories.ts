@@ -4,7 +4,7 @@ import AcademyCourseCard from "./AcademyCourseCard.astro";
 
 const meta = preview.meta({
   title: "Components/Data/Display/Academy/AcademyCourseCard",
-  component: AcademyCourseCard as unknown,
+  component: AcademyCourseCard,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     title: "Introducción al Árabe Coránico",

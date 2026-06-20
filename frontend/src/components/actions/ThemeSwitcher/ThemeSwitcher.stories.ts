@@ -4,7 +4,7 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
 
 const meta = preview.meta({
   title: "Components/Actions/ThemeSwitcher",
-  component: ThemeSwitcher as unknown,
+  component: ThemeSwitcher,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {
     size: "md",

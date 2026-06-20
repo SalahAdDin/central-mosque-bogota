@@ -1,10 +1,10 @@
 import preview from "@storybook/preview";
 
-import Mock from "./Mock.astro";
+import Welcome from "./Welcome.astro";
 
 const meta = preview.meta({
-  title: "Components/Layout/Sheet",
-  component: Mock,
+  title: "Components/Welcome",
+  component: Welcome,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
 });
 
