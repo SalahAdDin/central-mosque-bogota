@@ -108,6 +108,7 @@ export default defineConfig([
     },
   },
   astro.configs.recommended,
+  astro.configs["jsx-a11y-recommended"],
   {
     files: ["**/*.astro"],
     extends: [betterTailwindcss.configs.recommended],
