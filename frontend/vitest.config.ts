@@ -46,7 +46,6 @@ export default getViteConfig({
           setupFiles: ["./src/vitest.setup.ts"],
         },
       },
-      // TODO: https://github.com/withastro/astro/issues/16275
       {
         extends: true,
         plugins: [

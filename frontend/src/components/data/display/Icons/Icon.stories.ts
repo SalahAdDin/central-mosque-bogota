@@ -5,7 +5,6 @@ import Icon from "./Icon.astro";
 
 const meta = preview.meta({
   title: "Components/Data/Display/Icons/Icon",
-  // TODO: https://github.com/storybook-astro/storybook-astro/issues/61
   component: Icon,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {

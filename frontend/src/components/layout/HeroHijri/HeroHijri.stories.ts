@@ -4,8 +4,6 @@ import HeroHijri from "./HeroHijri.astro";
 
 const meta = preview.meta({
   title: "Components/Layout/HeroHijri",
-  // https://github.com/storybook-astro/storybook-astro/issues/61
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   component: HeroHijri,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {

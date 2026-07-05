@@ -22,4 +22,13 @@ export default defineMain({
   framework: {
     name: "@storybook-astro/framework",
   },
+  viteFinal: (config) => {
+    config.optimizeDeps ??= {};
+    config.optimizeDeps.include = [
+      ...(config.optimizeDeps.include ?? []),
+      "html2canvas-pro",
+      "jspdf",
+    ];
+    return config;
+  },
 });

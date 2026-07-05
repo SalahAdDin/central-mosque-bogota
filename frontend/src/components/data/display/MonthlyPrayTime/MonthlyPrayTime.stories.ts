@@ -4,8 +4,6 @@ import MonthlyPrayTime from "./MonthlyPrayTime.astro";
 
 const meta = preview.meta({
   title: "Components/Data/Display/MonthlyPrayTime",
-  // https://github.com/storybook-astro/storybook-astro/issues/61
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   component: MonthlyPrayTime,
   tags: ["autodocs", "version:0.0.1", "new", "alpha"],
   args: {

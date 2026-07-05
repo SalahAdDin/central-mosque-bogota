@@ -9,7 +9,6 @@ import { languages, localeFlags, routes, type TLang } from "@i18n/ui";
 import { getLangFromUrl, isSupportedLang, useTranslations } from "@i18n/utils";
 import type { TDropdownAlign, TDropdownPosition } from "@utils/models/types";
 
-// TODO: https://github.com/starwind-ui/starwind-ui/issues/135
 interface Props {
   /**
    * Position of the dropdown menu relative to its trigger element.
@@ -23,7 +22,7 @@ interface Props {
   align?: TDropdownAlign;
 }
 
-const { side = "bottom", align = "end" } = Astro.props as Props;
+const { side, align } = Astro.props as Props;
 
 const currentLang = getLangFromUrl(Astro.url);
 const t = useTranslations(currentLang);
@@ -83,7 +82,6 @@ const buildLangHref = (targetLang: TLang): string => {
       data-language-chevron
     />
   </DropdownTrigger>
-  <!-- TODO: calculate align and side based on the picker position -->
   <DropdownContent
     align={align}
     side={side}
